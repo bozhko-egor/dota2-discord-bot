@@ -1,7 +1,7 @@
 token_and_api_key.py
 /__pycache__/*
 rename.py
-/images/wow.png
+/images/twitch/wow.png
 Procfile
 requirements.txt
 runtime.txt
@@ -9,3 +9,4 @@ sqlite.py
 test.sqlite
 test*.py
 data.txt
+patchnotes*.txt
