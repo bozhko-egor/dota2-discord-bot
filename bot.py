@@ -63,6 +63,7 @@ def last_match(player_id, match_number):
     global match, match_search_args, hero_dic, item_dic
     custom_args = {
                 'result.players.account_id': player_id}
+    custom_args.update(match_search_args)
     cursor = db['{}'.format(player_id)].find(custom_args)
     cursor.sort('result.start_time', -1)
     match = list(cursor)[match_number]['result']
@@ -127,6 +128,7 @@ def last_match(player_id, match_number):
 
 
 def avg_stats(player_id, number_of_games):
+    global match_search_args
     array2 = [0]*10
     array_stat = ['kills',
                   'deaths',
@@ -141,11 +143,12 @@ def avg_stats(player_id, number_of_games):
                   ]
     custom_args = {
                 'result.players.account_id': player_id}
+    custom_args.update(match_search_args)
     cursor = db['{}'.format(player_id)].find(custom_args)
     cursor.sort('result.start_time', -1)
-
+    hist = list(cursor)
     for j in range(number_of_games):
-        match = list(cursor)[j]['result']
+        match = hist[j]['result']
 
         for i in range(10):
             if player_id == match['players'][i]['account_id']:
