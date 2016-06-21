@@ -1,12 +1,14 @@
 import discord
-import dota2api
 import logging
 import time
 import sys
 import cv2
+import pymongo
 import numpy as np
 from datetime import datetime, timedelta
 from token_and_api_key import *
+from hero_dictionary import hero_dic
+from hero_dictionary import item_dic
 # TO DO : 1. match mode
 #         2. сделать, чтобы можно было смотреть любой матч(например, пятый с конца)
 #         3. средний ммр? какая-нибудь статистика?
@@ -16,8 +18,8 @@ from token_and_api_key import *
 #         7. итемы медведя
 logging.basicConfig(level=logging.INFO)
 client = discord.Client()
-api = dota2api.Initialise(api_key)
-
+conn = pymongo.MongoClient()
+db = conn['dota-db']
 
 def time_diff(start_time):
     time_passed = timedelta(seconds=int(time.time() - start_time))
@@ -45,29 +47,26 @@ def win_lose(player_id):  # in dire need of refactoring
                 game_type = "party with: "
                 array3.append('{} ({})'.format(
                     dic_reverse[match['players'][i]['account_id']],
-                    match['players'][i]['hero_name']))
+                    hero_dic[match['players'][i]['hero_id']]))
     game_status = game_type + ", ".join(array3)
     if (player_index > 4 and match['radiant_win']) or (
         player_index < 5 and not match['radiant_win']
     ):
-        return "Lost as {}".format(match['players'][player_index]['hero_name'])
+        return "Lost as {}".format(hero_dic[match['players'][player_index]['hero_id']])
     elif (player_index > 4 and not match['radiant_win']) or (
           player_index < 5 and match['radiant_win']
     ):
-        return "Won as {}".format(match['players'][player_index]['hero_name'])
+        return "Won as {}".format(hero_dic[match['players'][player_index]['hero_id']])
 
 
 def last_match(player_id, match_number):
-    global match
-    while True:
-        try:
-            hist = api.get_match_history(account_id='{}'.format(player_id))
-            last_match_id = (hist['matches'][match_number]['match_id'])
-            match = api.get_match_details(match_id='{}'.format(last_match_id))
-        except dota2api.src.exceptions.APITimeoutError:
-            continue
-        else:
-            break
+    global match, match_search_args, hero_dic, item_dic
+    custom_args = {
+                'result.players.account_id': player_id}
+    cursor = db['{}'.format(player_id)].find(custom_args)
+    cursor.sort('result.start_time', -1)
+    match = list(cursor)[match_number]['result']
+
     stats = {}
     stats['result'] = win_lose(player_id)
     # =========================== hero images
@@ -77,8 +76,8 @@ def last_match(player_id, match_number):
 
     for j in range(10):  # объявление 10 переменных и присвоение им
         img_dic['img{}'.format(j)] = cv2.imread(  # картинки героя
-            'images/heroes/{} icon.png'.format(
-                match['players'][j]['hero_name'].lower()
+            'images/heroes/{} icon.png'.format(hero_dic[
+                match['players'][j]['hero_id']].lower()
                 ), -1  # cv2 -flag
                                  )
         if j == 5:  # пустое изображение для пробела между командами
@@ -89,19 +88,19 @@ def last_match(player_id, match_number):
     whole_image = np.hstack(array1)
     cv2.imwrite('images/heroes/lineup/lineup.png', whole_image)
     # ================================= item images
-    item_dic = {}
+    item_dic1 = {}
     array2 = []
     for j in range(6):
         try:
-            item_dic['img{}'.format(j)] = cv2.imread(
-                'images/items/{} icon.png'.format(
+            item_dic1['img{}'.format(j)] = cv2.imread(
+                'images/items/{} icon.png'.format(item_dic[
                     match['players'][player_index][
-                        'item_{}_name'.format(j)].lower()
+                        'item_{}'.format(j)]].lower()
                 ), 1  # cv2 -flag
             )
-            array2.append(item_dic['img{}'.format(j)])
+            array2.append(item_dic1['img{}'.format(j)])
         except KeyError:  # если айтем отсутствует в слоте
-            item_dic['img{}'.format(j)] = cv2.imread(
+            item_dic1['img{}'.format(j)] = cv2.imread(
                 'images/items/empty icon.png', -1)
 
     whole_items = np.hstack(array2)
@@ -129,13 +128,6 @@ def last_match(player_id, match_number):
 
 def avg_stats(player_id, number_of_games):
     array2 = [0]*10
-    while True:
-        try:
-            hist = api.get_match_history(account_id='{}'.format(player_id))
-        except dota2api.src.exceptions.APITimeoutError:
-            continue
-        else:
-            break
     array_stat = ['kills',
                   'deaths',
                   'assists',
@@ -147,22 +139,20 @@ def avg_stats(player_id, number_of_games):
                   'tower_damage',
                   'level'
                   ]
-    for i in range(number_of_games):
-        while True:
-            try:
-                match_id = (hist['matches'][i]['match_id'])
-                match = api.get_match_details(match_id='{}'.format(match_id))
-            except dota2api.src.exceptions.APITimeoutError:
-                continue
-            else:
-                break
+    custom_args = {
+                'result.players.account_id': player_id}
+    cursor = db['{}'.format(player_id)].find(custom_args)
+    cursor.sort('result.start_time', -1)
+
+    for j in range(number_of_games):
+        match = list(cursor)[j]['result']
 
         for i in range(10):
             if player_id == match['players'][i]['account_id']:
                 player_index = i
         x = match['players'][player_index]
-        for i in range(10):
-            array2[i] += x[array_stat[i]]
+        for k in range(10):
+            array2[k] += x[array_stat[k]]
 
     statList = [round(x / number_of_games, 2) for x in array2]
     return """Your avg stats in last {} games: **k**:{} **d**:{} **a**:{}, **last hits**: {}, **denies**: {}, **gpm**: {}, **xpm**: {}, **hero damage**: {}, **tower_damage**: {}, **level**: {}""".format(number_of_games, *statList)
@@ -213,14 +203,7 @@ async def on_message(message):
             player_id = player_dic[message.author.name]
             stats = avg_stats(player_id, n)
             await client.send_message(message.channel, stats)
-    except dota2api.src.exceptions.APIError:
-        await client.send_message(
-            message.channel,
-            "Cannot get match history for a user that hasn't allowed it.")
-    # except dota2api.src.exceptions.APITimeoutError:
-    #    await client.send_message(
-    #        message.channel,
-    #        "HTTP 503: Please try again later.")
+
     except ValueError:
         await client.send_message(
            message.channel, " :(")
