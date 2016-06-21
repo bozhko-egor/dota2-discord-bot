@@ -5,7 +5,6 @@ import pymongo
 
 conn = pymongo.MongoClient()
 db = conn['dota-db']
-array_of_ids=[33996915, 33333138, 54175368, 34611253, 34807546, 44880594, 110286120, 282441032, 55504473, 139351413]
 
 k = 0
 
