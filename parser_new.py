@@ -24,9 +24,9 @@ for player_id in array_of_ids:
     data = json.loads(html.decode('utf-8'))
     k = 0
     while True:
-        if hist[k]['result']['match_id'] != data['result']['matches'][k]['match_id']:
+        if hist[0]['result']['match_id'] != data['result']['matches'][k]['match_id']:
             match_ids.append(data['result']['matches'][k]['match_id'])
-            print(k)
+            print("{}k".format(k))
             k += 1
         else:
             break

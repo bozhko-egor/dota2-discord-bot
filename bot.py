@@ -10,19 +10,12 @@ from token_and_api_key import *
 from hero_dictionary import hero_dic
 from hero_dictionary import item_dic
 from hero_dictionary import game_mode_dic
-# TO DO : 1. match mode
-#         2. сделать, чтобы можно было смотреть любой матч(например, пятый с конца)
-#         3. средний ммр? какая-нибудь статистика?
-#         4. инвентарь с итемами
-#         5. проблема с итемами (нужно определять их через номера)
-#         6. поэтому дагоны пока не различаются и диффузалы и тревела +necro
-#         7. итемы медведя
-#         8. добавить regex парсер
-#         9. сделать допарсер
+
 logging.basicConfig(level=logging.INFO)
 client = discord.Client()
 conn = pymongo.MongoClient()
 db = conn['dota-db']
+
 
 def my_winrate_with_player_on(player_id1, player_id2, hero_id):
         global match_search_args
@@ -39,15 +32,17 @@ def my_winrate_with_player_on(player_id1, player_id2, hero_id):
         for i in range(len(hist)):
             for j in range(10):
                 if hist[i]['result']['players'][j]['account_id'] == player_id1:
-                    if hist[i]['result']['radiant_win'] and j < 5 or not hist[i]['result']['radiant_win'] and j > 4:
+                    if hist[i]['result']['radiant_win'] and j < 5 or (
+                            not hist[i]['result']['radiant_win'] and j > 4):
                         k += 1
         try:
-            return '{}% in {} matches'.format(round(100*k/len(hist), 2), len(hist))
+            return '{}% in {} matches'.format(
+                round(100*k/len(hist), 2), len(hist))
         except ZeroDivisionError:
             return 'No matches found'
 
 
-def winrate_with(player_id1, player_id2):  #  player_id3):#!!!!!!!!!!!!
+def winrate_with(player_id1, player_id2):
     global match_search_args
     custom_args = {'result.players': {
         '$elemMatch': {"account_id": player_id1, "level": {'$ne': 0}}
@@ -55,9 +50,7 @@ def winrate_with(player_id1, player_id2):  #  player_id3):#!!!!!!!!!!!!
         'result.players': {
         '$elemMatch': {"account_id": player_id2, "level": {'$ne': 0}}
         }
-        }       # 'result.players.account_id': player_id3
-                # 'result.players.account_id': player_id3
-
+        }
     custom_args.update(match_search_args)
     cursor = db['{}'.format(player_id1)].find(custom_args)
     hist = list(cursor)
@@ -65,19 +58,24 @@ def winrate_with(player_id1, player_id2):  #  player_id3):#!!!!!!!!!!!!
 
     for i in range(len(hist)):
         for j in range(10):
-            if hist[i]['result']['players'][j]['account_id'] == player_id1:
-                if hist[i]['result']['radiant_win'] and j < 5 or not hist[i]['result']['radiant_win'] and j > 4:
-                    k += 1
-
+            try:
+                if hist[i]['result']['players'][j]['account_id'] == player_id1:
+                    if hist[i]['result']['radiant_win'] and j < 5 or (
+                            not hist[i]['result']['radiant_win'] and j > 4):
+                        k += 1
+            except:
+                continue
     try:
         return '{}% in {} matches'.format(round(100*k/len(hist), 2), len(hist))
     except ZeroDivisionError:
         return 'No matches found'
 
+
 def winrate_hero(player_id, hero_id):
     global match_search_args
     custom_args = {
-            'result.players': {'$elemMatch': {"account_id": player_id, "hero_id": hero_id}},
+            'result.players':
+            {'$elemMatch': {"account_id": player_id, "hero_id": hero_id}},
             }
     custom_args.update(match_search_args)
     cursor = db['{}'.format(player_id)].find(custom_args)
@@ -86,7 +84,8 @@ def winrate_hero(player_id, hero_id):
     for i in range(len(hist)):
         for j in range(10):
             if hist[i]['result']['players'][j]['account_id'] == player_id:
-                if hist[i]['result']['radiant_win'] and j < 5 or not hist[i]['result']['radiant_win'] and j > 4:
+                if hist[i]['result']['radiant_win'] and j < 5 or (
+                        not hist[i]['result']['radiant_win'] and j > 4):
                     k += 1
 
     try:
@@ -106,9 +105,9 @@ def time_diff(start_time):
                 d.month-1, d.day-1)
         else:
             if d.day-1 != 0:
-                return "{}d {}h ago".format(d.day-1, d.hour)
+                return "{}d {}h ago".format(d.day-1, d.hour-1)
             else:
-                return "{}h {}m ago".format(d.hour, d.minute)
+                return "{}h {}m ago".format(d.hour-1, d.minute-1)
 
 
 def win_lose(player_id):  # in dire need of refactoring
@@ -129,11 +128,13 @@ def win_lose(player_id):  # in dire need of refactoring
     if (player_index > 4 and match['radiant_win']) or (
         player_index < 5 and not match['radiant_win']
     ):
-        return "Lost as {}".format(hero_dic[match['players'][player_index]['hero_id']])
+        return "Lost as {}".format(
+            hero_dic[match['players'][player_index]['hero_id']])
     elif (player_index > 4 and not match['radiant_win']) or (
           player_index < 5 and match['radiant_win']
     ):
-        return "Won as {}".format(hero_dic[match['players'][player_index]['hero_id']])
+        return "Won as {}".format(
+            hero_dic[match['players'][player_index]['hero_id']])
 
 
 def last_match(player_id, match_number):
@@ -241,6 +242,49 @@ def avg_stats(player_id, number_of_games):
     return """Your avg stats in last {} games: **k**:{} **d**:{} **a**:{}, **last hits**: {}, **denies**: {}, **gpm**: {}, **xpm**: {}, **hero damage**: {}, **tower_damage**: {}, **level**: {}""".format(number_of_games, *statList)
 
 
+def avg_stats_with_hero(player_id, hero_id):
+    global match_search_args
+    array2 = [0]*10
+    array_stat = ['kills',
+                  'deaths',
+                  'assists',
+                  'last_hits',
+                  'denies',
+                  'gold_per_min',
+                  'xp_per_min',
+                  'hero_damage',
+                  'tower_damage',
+                  'level'
+                  ]
+    custom_args = {
+            'result.players':
+            {'$elemMatch': {"account_id": player_id, "hero_id": hero_id}},
+            }
+    custom_args.update(match_search_args)
+    cursor = db['{}'.format(player_id)].find(custom_args)
+    hist = list(cursor)
+    k = 0
+
+    for m in range(len(hist)):
+        match = hist[m]['result']
+        for j in range(10):
+            if hist[m]['result']['players'][j]['account_id'] == player_id:
+                if hist[m]['result']['radiant_win'] and j < 5 or (
+                        not hist[m]['result']['radiant_win'] and j > 4):
+                    k += 1
+        for i in range(10):
+            if player_id == match['players'][i]['account_id']:
+                player_index = i
+        x = match['players'][player_index]
+        for l in range(10):
+            try:
+                array2[l] += x[array_stat[l]]
+            except:
+                continue
+    statList = [round(x / len(hist), 2) for x in array2]
+    return """Your avg stats with {} in {} games: WR: {}% **k**:{} **d**:{} **a**:{}, **last hits**: {}, **denies**: {}, **gpm**: {}, **xpm**: {}, **hero damage**: {}, **tower_damage**: {}, **level**: {}""".format(hero_dic[hero_id], len(hist), round(100*k/len(hist), 2), *statList)
+
+
 @client.event
 async def on_message(message):
     # do not want the bot to reply to itself
@@ -256,11 +300,13 @@ async def on_message(message):
     if message.content.startswith('!last'):
         player_id = player_dic[message.author.name]
         if message.content == '!last':
-            reply = last_match(player_id, 0)
+            reply = '{0.author.mention} {1}'.format(
+                message, last_match(player_id, 0))
         else:
             content = str(message.content).split()
             match_number = int(content[1])
-            reply = last_match(player_id, match_number)
+            reply = '{0.author.mention} {1}'.format(
+                message, last_match(player_id, match_number))
         await client.send_message(message.channel, reply)
         await client.send_file(
             message.channel, 'images/heroes/lineup/lineup.png')
@@ -272,11 +318,13 @@ async def on_message(message):
         if len(content) == 2:
             match_number = 0
             player_id = player_dic[content[1]]
-            reply = last_match(player_id, match_number)
+            reply = '{0.author.mention} {1}'.format(
+                message, last_match(player_id, match_number))
         elif len(content) == 3:
             player_id = player_dic[content[2]]
             match_number = int(content[1])
-            reply = last_match(player_id, match_number)
+            reply = '{0.author.mention} {1}'.format(
+                message, last_match(player_id, match_number))
 
         await client.send_message(message.channel, reply)
         await client.send_file(
@@ -288,7 +336,8 @@ async def on_message(message):
         content = str(message.content).split()
         n = int(content[1])
         player_id = player_dic[message.author.name]
-        stats = avg_stats(player_id, n)
+        stats = '{0.author.mention} {1}'.format(
+            message, avg_stats(player_id, n))
         await client.send_message(message.channel, stats)
 
     if message.content.startswith('!wr '):
@@ -299,8 +348,10 @@ async def on_message(message):
             hero_name = content[1]
 
         player_id = player_dic[message.author.name]
-        hero_id = list(hero_dic.keys())[list(hero_dic.values()).index(hero_name)]
-        reply = winrate_hero(player_id, hero_id)
+        hero_id = list(hero_dic.keys())[
+            list(hero_dic.values()).index(hero_name)]
+        reply = '{0.author.mention} {1}'.format(
+                message, winrate_hero(player_id, hero_id))
         await client.send_message(message.channel, reply)
 
     if message.content.startswith('!wr_with '):
@@ -308,7 +359,8 @@ async def on_message(message):
         player_id = player_dic[message.author.name]
         name = content[1]
         player_id2 = player_dic[name]
-        reply = winrate_with(player_id, player_id2)
+        reply = '{0.author.mention} {1}'.format(
+                message, winrate_with(player_id, player_id2))
         await client.send_message(message.channel, reply)
 
     if message.content.startswith('!wr_with_hero'):
@@ -320,14 +372,28 @@ async def on_message(message):
         player_id = player_dic[message.author.name]
         name = content[1]
         player_id2 = player_dic[name]
-        hero_id = list(hero_dic.keys())[list(hero_dic.values()).index(hero_name)]
-        reply = my_winrate_with_player_on(player_id, player_id2, hero_id)
+        hero_id = list(hero_dic.keys())[list(
+            hero_dic.values()).index(hero_name)]
+        reply = '{0.author.mention} {1}'.format(
+                message,
+                my_winrate_with_player_on(player_id, player_id2, hero_id))
         await client.send_message(message.channel, reply)
 
     # except ValueError:
     #    await client.send_message(
     #       message.channel, " :(")
-
+    if message.content.startswith('!avg_stats'):
+        content = str(message.content).split()
+        player_id = player_dic[message.author.name]
+        if len(content) == 3:
+            hero_name = ' '.join(content[1: 3])
+        elif len(content) == 2:
+            hero_name = content[1]
+        hero_id = list(hero_dic.keys())[
+            list(hero_dic.values()).index(hero_name)]
+        reply = '{0.author.mention} {1}'.format(
+            message, avg_stats_with_hero(player_id, hero_id))
+        await client.send_message(message.channel, reply)
     if message.content == '!help':
         await client.send_message(message.channel, help_msg)
 # ============= only memes below ==============================================
@@ -350,6 +416,10 @@ async def on_message(message):
         await client.send_file(
             message.channel, 'images/items/{} icon.png'.format(name))
 
+    if message.content.startswith('!nice'):
+        await client.send_file(message.channel, 'images/twitch/nice.gif')
+        await client.change_status(game=discord.Game(name='Nice'))
+        
 @client.event
 async def on_ready():
     print('Logged in as')
