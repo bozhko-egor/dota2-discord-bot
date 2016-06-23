@@ -4,6 +4,7 @@ import time
 import sys
 import cv2
 import pymongo
+import pickle
 import numpy as np
 from datetime import datetime, timedelta
 from token_and_api_key import *
@@ -11,6 +12,7 @@ from hero_dictionary import hero_dic
 from hero_dictionary import item_dic
 from hero_dictionary import game_mode_dic
 from random import randint
+from random import shuffle
 
 logging.basicConfig(level=logging.INFO)
 client = discord.Client()
@@ -378,13 +380,32 @@ def guessing_game():
     cursor.sort('result.start_time', -1)
     hist = list(cursor)
     match_number = randint(0, len(hist)-1)
+    match = hero_id = hist[match_number]['result']
+    array3 = []
+    game_type = "Solo."
     for i in range(10):
-        if player_id == hist[match_number]['result']['players'][i]['account_id']:
+        if player_id == match['players'][i]['account_id']:
             player_index = i
+
+        if match['players'][i]['account_id'] in list(player_dic.values()) and (
+                match['players'][i]['account_id'] != player_id):
+                game_type = "Party with: "
+                array3.append('{}'.format(
+                    dic_reverse[match['players'][i]['account_id']]))
+
+    shuffle(array3)
+    if (player_index > 4 and match['radiant_win']) or (
+        player_index < 5 and not match['radiant_win']
+    ):
+        game_status = "Lost. " + game_type + ", ".join(array3)
+    elif (player_index > 4 and not match['radiant_win']) or (
+          player_index < 5 and match['radiant_win']
+    ):
+        game_status = "Won. " + game_type + ", ".join(array3)
     hero_id = hist[match_number]['result']['players'][player_index]['hero_id']
     hero = hero_dic[hero_id]
     big_pic(match_number, player_id)
-    return [hero, dic_reverse[player_id]]
+    return [hero, dic_reverse[player_id], game_status]
 @client.event
 async def on_message(message):
     # do not want the bot to reply to itself
@@ -507,25 +528,46 @@ async def on_message(message):
                 message.channel, 'images/heroes/lineup/itemlist2.png')
 
     if message.content.startswith('$guess'):
-        reply = guessing_game()
-        await client.send_message(message.channel, 'Guess a hero {} played that game'.format(reply[1]))
-        await client.send_file(
-                message.channel, 'images/heroes/lineup/itemlist2.png')
+        content = str(message.content).split()
+        n = int(content[1])
+        if 0 < n < 16:
 
-        def guess_check(m):
-            return message.content
+            player_id = message.author.name
+            with open('dosh.pickle', 'rb') as f:
+                dosh = pickle.load(f)
+            if dosh[player_id] - n >= 0:
+                reply = guessing_game()
+                await client.send_message(message.channel, 'Guess a hero {} played that game. {}'.format(reply[1], reply[2]))
+                await client.send_file(
+                        message.channel, 'images/heroes/lineup/itemlist2.png')
 
-        guess = await client.wait_for_message(timeout=35.0, author=message.author, check=guess_check)
-        answer = reply[0]
-        if guess is None:
-            fmt = 'Sorry, you took too long. It was {}.'
-            await client.send_message(message.channel, fmt.format(answer))
-            return
-        if guess.content == answer:
-            await client.send_message(message.channel, 'Yay! You are right.')
+                def guess_check(m):
+                    return message.content
+
+                guess = await client.wait_for_message(timeout=30.0, author=message.author, check=guess_check)
+                answer = reply[0]
+                if guess is None:
+                    fmt = 'Sorry, you took too long. It was {}. You lost {}$'.format(answer, n)
+                    dosh[player_id] -= n
+                    with open('dosh.pickle', 'wb') as f:
+                            pickle.dump(dosh, f)
+                    await client.send_message(message.channel, fmt.format(answer))
+                    return
+                if guess.content.lower() == answer.lower():
+                    dosh[player_id] += n
+                    with open('dosh.pickle', 'wb') as f:
+                            pickle.dump(dosh, f)
+                    await client.send_message(message.channel, 'Yay! You are right. You won {}$'.format(n))
+
+                else:
+                    dosh[player_id] -= n
+                    with open('dosh.pickle', 'wb') as f:
+                            pickle.dump(dosh, f)
+                    await client.send_message(message.channel, 'Nope. It is actually {}. You lost {}$'.format(answer, n))
+            else:
+                await client.send_message(message.channel, "Sorry you don't have enough do$h to play this game")
         else:
-            await client.send_message(message.channel, 'Nope. It is actually {}.'.format(answer))
-
+            await client.send_message(message.channel, "Bets must be in [1, 15] range")
     if message.content == '!help':
         await client.send_message(message.channel, help_msg)
         # ============= only memes below ==============================================
@@ -552,8 +594,11 @@ async def on_message(message):
         await client.send_file(message.channel, 'images/twitch/nice.gif')
         await client.change_status(game=discord.Game(name='Nice'))
 
-    if message.content.startswith('!test'):
-        await client.send_message(message.channel, hash(discord.Server))
+    if message.content.startswith('!balance'):
+        with open('dosh.pickle', 'rb') as f:
+            dosh = pickle.load(f)
+        reply = dosh[message.author.name]
+        await client.send_message(message.channel, "Your current balance: {}$".format(reply))
 
 @client.event
 async def on_ready():

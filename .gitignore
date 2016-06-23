@@ -10,3 +10,4 @@ test.sqlite
 test*.py
 data.txt
 patchnotes*.txt
+dosh.pickle
