@@ -10,6 +10,7 @@ from token_and_api_key import *
 from hero_dictionary import hero_dic
 from hero_dictionary import item_dic
 from hero_dictionary import game_mode_dic
+from random import randint
 
 logging.basicConfig(level=logging.INFO)
 client = discord.Client()
@@ -368,6 +369,22 @@ def big_pic(match_number, player_id):
     cv2.imwrite('images/heroes/lineup/itemlist2.png', pic3)
 
 
+def guessing_game():
+    player_id = array_of_ids[randint(0, len(array_of_ids)-1)]
+    custom_args = {
+                'result.players.account_id': player_id}
+    custom_args.update(match_search_args)
+    cursor = db['{}'.format(player_id)].find(custom_args)
+    cursor.sort('result.start_time', -1)
+    hist = list(cursor)
+    match_number = randint(0, len(hist)-1)
+    for i in range(10):
+        if player_id == hist[match_number]['result']['players'][i]['account_id']:
+            player_index = i
+    hero_id = hist[match_number]['result']['players'][player_index]['hero_id']
+    hero = hero_dic[hero_id]
+    big_pic(match_number, player_id)
+    return [hero, dic_reverse[player_id]]
 @client.event
 async def on_message(message):
     # do not want the bot to reply to itself
@@ -487,11 +504,31 @@ async def on_message(message):
             match_number = int(content[1])
             big_pic(match_number, player_id)
         await client.send_file(
-            message.channel, 'images/heroes/lineup/itemlist2.png')
+                message.channel, 'images/heroes/lineup/itemlist2.png')
+
+    if message.content.startswith('$guess'):
+        reply = guessing_game()
+        await client.send_message(message.channel, 'Guess a hero {} played that game'.format(reply[1]))
+        await client.send_file(
+                message.channel, 'images/heroes/lineup/itemlist2.png')
+
+        def guess_check(m):
+            return message.content
+
+        guess = await client.wait_for_message(timeout=35.0, author=message.author, check=guess_check)
+        answer = reply[0]
+        if guess is None:
+            fmt = 'Sorry, you took too long. It was {}.'
+            await client.send_message(message.channel, fmt.format(answer))
+            return
+        if guess.content == answer:
+            await client.send_message(message.channel, 'Yay! You are right.')
+        else:
+            await client.send_message(message.channel, 'Nope. It is actually {}.'.format(answer))
 
     if message.content == '!help':
         await client.send_message(message.channel, help_msg)
-# ============= only memes below ==============================================
+        # ============= only memes below ==============================================
     if message.content.startswith('%'):
         name = str(message.content).strip().lower()[1:]
         await client.send_file(
