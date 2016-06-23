@@ -7,7 +7,7 @@ conn = pymongo.MongoClient()
 db = conn['dota-db']
 
 k = 0
-
+ids_to_parse = []
 
 hero_ids = [1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 10, 12, 13, 14, 15, 16, 17, 18, 19, 20,
             21, 22, 23, 25, 31, 26, 27, 28, 29, 30, 32, 33, 34, 35, 36, 37, 38, 39, 40,
@@ -16,7 +16,7 @@ hero_ids = [1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 10, 12, 13, 14, 15, 16, 17, 18, 19, 2
             77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94,
             95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 106, 107, 109, 110, 111,
             105, 112, 113]
-for player_id in array_of_ids:
+for player_id in ids_to_parse:
     for j in hero_ids:
         match_ids = []
         while True:
@@ -57,3 +57,5 @@ for player_id in array_of_ids:
             # cursor = db.games.find()
             k += 1
             print("{}({})".format(k, j))
+
+print('done!')

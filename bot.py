@@ -285,6 +285,89 @@ def avg_stats_with_hero(player_id, hero_id):
     return """Your avg stats with {} in {} games: WR: {}% **k**:{} **d**:{} **a**:{}, **last hits**: {}, **denies**: {}, **gpm**: {}, **xpm**: {}, **hero damage**: {}, **tower_damage**: {}, **level**: {}""".format(hero_dic[hero_id], len(hist), round(100*k/len(hist), 2), *statList)
 
 
+def big_pic(match_number, player_id):
+    custom_args = {
+                'result.players.account_id': player_id}
+    custom_args.update(match_search_args)
+    cursor = db['{}'.format(player_id)].find(custom_args)
+    cursor.sort('result.start_time', -1)
+    match = list(cursor)[match_number]['result']
+
+    array3 = []
+    for i in range(5):
+        item_dic1 = {}
+        array2 = []
+        m = 1
+        for j in range(6):
+            try:
+                item_dic1['img{}'.format(j)] = cv2.imread(
+                    'images/items/{} icon.png'.format(item_dic[
+                        match['players'][i]['item_{}'.format(j)]].lower()
+                    ), 1  # cv2 -flag
+                )
+                array2.append(item_dic1['img{}'.format(j)])
+
+            except KeyError:  # если айтем отсутствует в слоте
+                m += 1
+
+        for p in range(m):
+            array2.append((cv2.imread(
+                'images/items/empty icon.png', 1)))
+
+        array2.insert(0, cv2.imread('images/heroes/{} icon.png'.format(hero_dic[
+            match['players'][i]['hero_id']].lower()), 1))
+        array2.insert(1, cv2.imread('images/vertical.png'))
+        array2.insert(-1, cv2.imread('images/vertical.png'))
+        array2.insert(0, cv2.imread('images/vertical.png'))
+        try:
+            array3.append(np.hstack(array2))
+            array3.append(cv2.imread('images/346.png'))
+
+        except:
+            pass
+        #cv2.imwrite('images/heroes/lineup/itemlist{}.png'.format(i), whole_items)
+    array3.insert(0, (cv2.imread('images/346.png')))
+    pic1 = np.vstack(array3)
+    array3 = []
+    for i in range(5, 10):
+        item_dic1 = {}
+        array2 = []
+
+        m = 0
+        for j in range(6):
+            try:
+                item_dic1['img{}'.format(j)] = cv2.imread(
+                    'images/items/{} icon.png'.format(item_dic[
+                        match['players'][i]['item_{}'.format(j)]].lower()
+                    ), 1  # cv2 -flag
+                )
+                array2.append(item_dic1['img{}'.format(j)])
+
+            except KeyError:  # если айтем отсутствует в слоте
+                m += 1
+
+        for p in range(m):
+            array2.append((cv2.imread(
+                'images/items/empty icon.png', 1)))
+
+        array2.insert(0, cv2.imread('images/heroes/{} icon.png'.format(hero_dic[
+            match['players'][i]['hero_id']].lower()), 1))
+        array2.insert(1, cv2.imread('images/vertical.png'))
+        array2.append(cv2.imread('images/vertical.png'))
+        array2.insert(0, cv2.imread('images/vertical.png'))
+        try:
+            array3.append(np.hstack(array2))
+            array3.append(cv2.imread('images/302.png'))
+
+        except:
+            pass
+        #cv2.imwrite('images/heroes/lineup/itemlist{}.png'.format(i), whole_items)
+    array3.insert(0, cv2.imread('images/302.png'))
+    pic2 = np.vstack(array3)
+    pic3 = np.hstack([pic1, pic2])
+    cv2.imwrite('images/heroes/lineup/itemlist2.png', pic3)
+
+
 @client.event
 async def on_message(message):
     # do not want the bot to reply to itself
@@ -394,6 +477,18 @@ async def on_message(message):
         reply = '{0.author.mention} {1}'.format(
             message, avg_stats_with_hero(player_id, hero_id))
         await client.send_message(message.channel, reply)
+
+    if message.content.startswith('?last'):
+        player_id = player_dic[message.author.name]
+        if message.content == '?last':
+            big_pic(0, player_id)
+        else:
+            content = str(message.content).split()
+            match_number = int(content[1])
+            big_pic(match_number, player_id)
+        await client.send_file(
+            message.channel, 'images/heroes/lineup/itemlist2.png')
+
     if message.content == '!help':
         await client.send_message(message.channel, help_msg)
 # ============= only memes below ==============================================
@@ -419,7 +514,10 @@ async def on_message(message):
     if message.content.startswith('!nice'):
         await client.send_file(message.channel, 'images/twitch/nice.gif')
         await client.change_status(game=discord.Game(name='Nice'))
-        
+
+    if message.content.startswith('!test'):
+        await client.send_message(message.channel, hash(discord.Server))
+
 @client.event
 async def on_ready():
     print('Logged in as')
