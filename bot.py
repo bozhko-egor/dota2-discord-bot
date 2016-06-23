@@ -544,23 +544,31 @@ async def on_message(message):
                 def guess_check(m):
                     return message.content
 
-                guess = await client.wait_for_message(timeout=30.0, author=message.author, check=guess_check)
+                guess = await client.wait_for_message(timeout=30.0, check=guess_check)
+                if guess.author == client.user:
+                    guess = await client.wait_for_message(timeout=30.0, check=guess_check)
                 answer = reply[0]
                 if guess is None:
                     fmt = 'Sorry, you took too long. It was {}. You lost {}$'.format(answer, n)
                     dosh[player_id] -= n
+                    dosh['total $ lost'] -= n
+                    dosh['№ of attempts'] +=1
                     with open('dosh.pickle', 'wb') as f:
                             pickle.dump(dosh, f)
                     await client.send_message(message.channel, fmt.format(answer))
                     return
                 if guess.content.lower() == answer.lower():
-                    dosh[player_id] += n
+                    dosh[guess.author.name] += n
+                    dosh['total $ won'] += n
+                    dosh['№ of attempts'] +=1
                     with open('dosh.pickle', 'wb') as f:
                             pickle.dump(dosh, f)
                     await client.send_message(message.channel, 'Yay! You are right. You won {}$'.format(n))
 
                 else:
-                    dosh[player_id] -= n
+                    dosh[guess.author.name] -= n
+                    dosh['total $ lost'] -= n
+                    dosh['№ of attempts'] +=1
                     with open('dosh.pickle', 'wb') as f:
                             pickle.dump(dosh, f)
                     await client.send_message(message.channel, 'Nope. It is actually {}. You lost {}$'.format(answer, n))
@@ -572,10 +580,17 @@ async def on_message(message):
         await client.send_message(message.channel, help_msg)
         # ============= only memes below ==============================================
     if message.content.startswith('%'):
-        name = str(message.content).strip().lower()[1:]
-        await client.send_file(
-            message.channel, 'images/twitch/{}.png'.format(name))
-
+        with open('dosh.pickle', 'rb') as f:
+            dosh = pickle.load(f)
+        if dosh[message.author.name] >= 5:
+            name = str(message.content).strip().lower()[1:]
+            await client.send_file(
+                message.channel, 'images/twitch/{}.png'.format(name))
+            dosh[message.author.name] -= 3
+            with open('dosh.pickle', 'wb') as f:
+                    pickle.dump(dosh, f)
+        else:
+            await client.send_message(message.channel, "You don't have enough dosh to post memes")
     if message.content.startswith('!new_patch'):
         await client.send_file(message.channel, 'images/new_patch.gif')
         await client.change_status(game=discord.Game(name='DOTA2'))
@@ -599,6 +614,11 @@ async def on_message(message):
             dosh = pickle.load(f)
         reply = dosh[message.author.name]
         await client.send_message(message.channel, "Your current balance: {}$".format(reply))
+    if message.content.startswith('!total'):
+        with open('dosh.pickle', 'rb') as f:
+            dosh = pickle.load(f)
+
+        await client.send_message(message.channel, "Total dosh lost:{total $ lost}$. Total dosh won: {total $ won}$. № of attempts: {№ of attempts}".format(**dosh))
 
 @client.event
 async def on_ready():

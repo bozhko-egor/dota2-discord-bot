@@ -2,6 +2,7 @@ import json
 from urllib.request import urlopen
 from token_and_api_key import *
 import pymongo
+import pickle
 
 conn = pymongo.MongoClient()
 db = conn['dota-db']
@@ -40,6 +41,18 @@ for player_id in array_of_ids:
                 else:
                     break
             data2 = json.loads(html2.decode('utf-8'))
+            with open('dosh.pickle', 'rb') as f:
+                dosh = pickle.load(f)
+            for j in range(10):
+                if data2['result']['matches']['players'][j]['account_id'] == player_id:
+                    if data2['result']['radiant_win'] and j < 5 or (
+                            not hist[i]['result']['radiant_win'] and j > 4):
+
+                            dosh[dic_reverse[player_id]] += 20
+                    else:
+                        dosh[dic_reverse[player_id]] -= 20
+            with open('dosh.pickle', 'wb') as f:
+                pickle.dump(dosh, f)
             db['{}'.format(player_id)].insert_one(data2)
             p += 1
             print(p)
