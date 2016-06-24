@@ -406,6 +406,8 @@ def guessing_game():
     hero = hero_dic[hero_id]
     big_pic(match_number, player_id)
     return [hero, dic_reverse[player_id], game_status]
+
+
 @client.event
 async def on_message(message):
     # do not want the bot to reply to itself
@@ -428,9 +430,8 @@ async def on_message(message):
             match_number = int(content[1])
             reply = '{0.author.mention} {1}'.format(
                 message, last_match(player_id, match_number))
-        await client.send_message(message.channel, reply)
         await client.send_file(
-            message.channel, 'images/heroes/lineup/lineup.png')
+            message.channel, 'images/heroes/lineup/lineup.png', content=reply)
         await client.send_file(
             message.channel, 'images/heroes/lineup/itemlist.png')
 
@@ -439,17 +440,14 @@ async def on_message(message):
         if len(content) == 2:
             match_number = 0
             player_id = player_dic[content[1]]
-            reply = '{0.author.mention} {1}'.format(
-                message, last_match(player_id, match_number))
+            reply = last_match(player_id, match_number)
         elif len(content) == 3:
             player_id = player_dic[content[2]]
             match_number = int(content[1])
-            reply = '{0.author.mention} {1}'.format(
-                message, last_match(player_id, match_number))
+            reply = last_match(player_id, match_number)
 
-        await client.send_message(message.channel, reply)
         await client.send_file(
-            message.channel, 'images/heroes/lineup/lineup.png')
+            message.channel, 'images/heroes/lineup/lineup.png', content=reply)
         await client.send_file(
             message.channel, 'images/heroes/lineup/itemlist.png')
 
@@ -457,8 +455,7 @@ async def on_message(message):
         content = str(message.content).split()
         n = int(content[1])
         player_id = player_dic[message.author.name]
-        stats = '{0.author.mention} {1}'.format(
-            message, avg_stats(player_id, n))
+        stats = avg_stats(player_id, n)
         await client.send_message(message.channel, stats)
 
     if message.content.startswith('!wr '):
@@ -471,8 +468,7 @@ async def on_message(message):
         player_id = player_dic[message.author.name]
         hero_id = list(hero_dic.keys())[
             list(hero_dic.values()).index(hero_name)]
-        reply = '{0.author.mention} {1}'.format(
-                message, winrate_hero(player_id, hero_id))
+        reply = winrate_hero(player_id, hero_id)
         await client.send_message(message.channel, reply)
 
     if message.content.startswith('!wr_with '):
@@ -480,8 +476,7 @@ async def on_message(message):
         player_id = player_dic[message.author.name]
         name = content[1]
         player_id2 = player_dic[name]
-        reply = '{0.author.mention} {1}'.format(
-                message, winrate_with(player_id, player_id2))
+        reply = winrate_with(player_id, player_id2)
         await client.send_message(message.channel, reply)
 
     if message.content.startswith('!wr_with_hero'):
@@ -495,9 +490,7 @@ async def on_message(message):
         player_id2 = player_dic[name]
         hero_id = list(hero_dic.keys())[list(
             hero_dic.values()).index(hero_name)]
-        reply = '{0.author.mention} {1}'.format(
-                message,
-                my_winrate_with_player_on(player_id, player_id2, hero_id))
+        reply = my_winrate_with_player_on(player_id, player_id2, hero_id)
         await client.send_message(message.channel, reply)
 
     # except ValueError:
@@ -519,13 +512,15 @@ async def on_message(message):
     if message.content.startswith('?last'):
         player_id = player_dic[message.author.name]
         if message.content == '?last':
+            reply = last_match(player_id, 0)
             big_pic(0, player_id)
         else:
             content = str(message.content).split()
             match_number = int(content[1])
+            reply = last_match(player_id, match_number)
             big_pic(match_number, player_id)
         await client.send_file(
-                message.channel, 'images/heroes/lineup/itemlist2.png')
+                message.channel, 'images/heroes/lineup/itemlist2.png', content=reply)
 
     if message.content.startswith('$guess'):
         content = str(message.content).split()
@@ -537,14 +532,13 @@ async def on_message(message):
                 dosh = pickle.load(f)
             if dosh[player_id] - n >= 0:
                 reply = guessing_game()
-                await client.send_message(message.channel, 'Guess a hero {} played that game. {}'.format(reply[1], reply[2]))
                 await client.send_file(
-                        message.channel, 'images/heroes/lineup/itemlist2.png')
+                        message.channel, 'images/heroes/lineup/itemlist2.png', content = 'Guess a hero {} played that game. {}'.format(reply[1], reply[2]))
 
                 def guess_check(m):
                     return message.content
 
-                guess = await client.wait_for_message(timeout=30.0, check=guess_check)
+                guess = await client.wait_for_message(timeout=30.0, check=guess_check, channel = message.channel)
                 if guess.author == client.user:
                     guess = await client.wait_for_message(timeout=30.0, check=guess_check)
                 answer = reply[0]

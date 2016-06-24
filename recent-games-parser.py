@@ -44,9 +44,9 @@ for player_id in array_of_ids:
             with open('dosh.pickle', 'rb') as f:
                 dosh = pickle.load(f)
             for j in range(10):
-                if data2['result']['matches']['players'][j]['account_id'] == player_id:
+                if data2['result']['players'][j]['account_id'] == player_id:
                     if data2['result']['radiant_win'] and j < 5 or (
-                            not hist[i]['result']['radiant_win'] and j > 4):
+                            not data2['result']['radiant_win'] and j > 4):
 
                             dosh[dic_reverse[player_id]] += 20
                     else:
