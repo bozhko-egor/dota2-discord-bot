@@ -48,9 +48,9 @@ for player_id in array_of_ids:
                     if data2['result']['radiant_win'] and j < 5 or (
                             not data2['result']['radiant_win'] and j > 4):
 
-                            dosh[dic_reverse[player_id]] += 20
+                            dosh[dic_reverse[player_id]] += 25
                     else:
-                        dosh[dic_reverse[player_id]] -= 20
+                        dosh[dic_reverse[player_id]] -= 25
             with open('dosh.pickle', 'wb') as f:
                 pickle.dump(dosh, f)
             db['{}'.format(player_id)].insert_one(data2)

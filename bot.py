@@ -407,6 +407,9 @@ def guessing_game():
     big_pic(match_number, player_id)
     return [hero, dic_reverse[player_id], game_status]
 
+if not discord.opus.is_loaded():
+
+    discord.opus.load_opus('/usr/local/lib/libopusfile.so')
 
 @client.event
 async def on_message(message):
@@ -576,7 +579,7 @@ async def on_message(message):
     if message.content.startswith('%'):
         with open('dosh.pickle', 'rb') as f:
             dosh = pickle.load(f)
-        if dosh[message.author.name] >= 5:
+        if dosh[message.author.name] >= 3:
             name = str(message.content).strip().lower()[1:]
             await client.send_file(
                 message.channel, 'images/twitch/{}.png'.format(name))
@@ -614,6 +617,54 @@ async def on_message(message):
 
         await client.send_message(message.channel, "Total dosh lost:{total $ lost}$. Total dosh won: {total $ won}$. № of attempts: {№ of attempts}".format(**dosh))
 
+    if message.content.startswith('#'):
+        player_id = message.author
+        with open('dosh.pickle', 'rb') as f:
+            dosh = pickle.load(f)
+        if dosh[message.author.name] >= 5:
+            name = str(message.content).strip().lower()[1:]
+            voice = await  client.join_voice_channel(player_id.voice_channel)
+
+            player = voice.create_ffmpeg_player('audio/{}.mp3'.format(name))
+            player.start()
+            time.sleep(3)
+            await voice.disconnect()
+            dosh[message.author.name] -= 5
+            with open('dosh.pickle', 'wb') as f:
+                    pickle.dump(dosh, f)
+        else:
+            await client.send_message(message.channel, "You don't have enough dosh to post memes")
+
+    if message.content.startswith('$roulette'):
+        content = str(message.content).split()
+        n = int(content[1])
+        player_id = message.author.name
+        with open('dosh.pickle', 'rb') as f:
+            dosh = pickle.load(f)
+        if dosh[player_id] - n >= 0:
+            roll = randint(0, 100)
+            if 0 <= roll <= 66:
+                await client.send_message(message.channel, "You lost {}$".format(n))
+                dosh[message.author.name] -= n
+                with open('dosh.pickle', 'wb') as f:
+                        pickle.dump(dosh, f)
+            elif 67 <= roll <= 96:
+                await client.send_message(message.channel, "You won {}$".format(2*n))
+                dosh[message.author.name] += 2*n
+                with open('dosh.pickle', 'wb') as f:
+                        pickle.dump(dosh, f)
+            elif  97 <= roll <= 99:
+                await client.send_message(message.channel, "You won {}$".format(4*n))
+                dosh[message.author.name] += 4*n
+                with open('dosh.pickle', 'wb') as f:
+                        pickle.dump(dosh, f)
+            elif roll == 100:
+                await client.send_message(message.channel, "You won {}$".format(10*n))
+                dosh[message.author.name] += 10*n
+                with open('dosh.pickle', 'wb') as f:
+                        pickle.dump(dosh, f)
+        else:
+            await client.send_message(message.channel, "You don't have enough dosh.")
 @client.event
 async def on_ready():
     print('Logged in as')
