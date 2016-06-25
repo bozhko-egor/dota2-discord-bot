@@ -410,5 +410,6 @@ game_mode_dic = {
     12: 'Least Played',
     13: 'New Player Pool',
     14: 'Compendium Matchmaking',
-    16: 'Captain’s Draft'
+    16: 'Captain’s Draft',
+    22: 'Ranked All Pick'
     }

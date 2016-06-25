@@ -32,11 +32,11 @@ def my_winrate_with_player_on(player_id1, player_id2, hero_id):
         cursor = db['{}'.format(player_id1)].find(custom_args)
         hist = list(cursor)
         k = 0
-        for i in range(len(hist)):
+        for i, game in enumerate(hist):
             for j in range(10):
-                if hist[i]['result']['players'][j]['account_id'] == player_id1:
-                    if hist[i]['result']['radiant_win'] and j < 5 or (
-                            not hist[i]['result']['radiant_win'] and j > 4):
+                if game['result']['players'][j]['account_id'] == player_id1:
+                    if game['result']['radiant_win'] and j < 5 or (
+                            not game['result']['radiant_win'] and j > 4):
                         k += 1
         try:
             return '{}% in {} matches'.format(
@@ -59,12 +59,12 @@ def winrate_with(player_id1, player_id2):
     hist = list(cursor)
     k = 0
 
-    for i in range(len(hist)):
+    for i, game in enumerate(hist):
         for j in range(10):
             try:
-                if hist[i]['result']['players'][j]['account_id'] == player_id1:
-                    if hist[i]['result']['radiant_win'] and j < 5 or (
-                            not hist[i]['result']['radiant_win'] and j > 4):
+                if game['result']['players'][j]['account_id'] == player_id1:
+                    if game['result']['radiant_win'] and j < 5 or (
+                            not game['result']['radiant_win'] and j > 4):
                         k += 1
             except:
                 continue
@@ -84,11 +84,11 @@ def winrate_hero(player_id, hero_id):
     cursor = db['{}'.format(player_id)].find(custom_args)
     hist = list(cursor)
     k = 0
-    for i in range(len(hist)):
+    for i, game in enumerate(hist):
         for j in range(10):
-            if hist[i]['result']['players'][j]['account_id'] == player_id:
-                if hist[i]['result']['radiant_win'] and j < 5 or (
-                        not hist[i]['result']['radiant_win'] and j > 4):
+            if game['result']['players'][j]['account_id'] == player_id:
+                if game['result']['radiant_win'] and j < 5 or (
+                        not game['result']['radiant_win'] and j > 4):
                     k += 1
 
     try:
@@ -203,15 +203,14 @@ def last_match(player_id, match_number):
     # dotabuff = "http://www.dotabuff.com/matches/{}".format(last_match_id)
 
     reply = """({game_mode}) {result} KDA: {kda}, Duration: {m}m{s}s,
-        played on {date} ({time_passed}),
-    {game_status}""".format(**stats)
-
+        played on {date} ({time_passed}), {game_status}""".format(**stats)
+    reply = reply.replace('\n', ' ')
     return reply
 
 
 def avg_stats(player_id, number_of_games):
     global match_search_args
-    array2 = [0]*10
+    array2 = [0]*8
     array_stat = ['kills',
                   'deaths',
                   'assists',
@@ -219,8 +218,6 @@ def avg_stats(player_id, number_of_games):
                   'denies',
                   'gold_per_min',
                   'xp_per_min',
-                  'hero_damage',
-                  'tower_damage',
                   'level'
                   ]
     custom_args = {
@@ -236,18 +233,22 @@ def avg_stats(player_id, number_of_games):
             if player_id == match['players'][i]['account_id']:
                 player_index = i
         x = match['players'][player_index]
-        for k in range(10):
+        for k in range(8):
             try:
                 array2[k] += x[array_stat[k]]
             except:
                 continue
     statList = [round(x / number_of_games, 2) for x in array2]
-    return """Your avg stats in last {} games: **k**:{} **d**:{} **a**:{}, **last hits**: {}, **denies**: {}, **gpm**: {}, **xpm**: {}, **hero damage**: {}, **tower_damage**: {}, **level**: {}""".format(number_of_games, *statList)
+    reply = """Your avg stats in last {} games: **k**:{} **d**:{} **a**:{},
+**last hits**: {}, **denies**: {}, **gpm**: {}, **xpm**: {},
+**level**: {}""".format(number_of_games, *statList)
+    reply = reply.replace('\n', ' ')
+    return reply
 
 
 def avg_stats_with_hero(player_id, hero_id):
     global match_search_args
-    array2 = [0]*10
+    array2 = [0]*8
     array_stat = ['kills',
                   'deaths',
                   'assists',
@@ -255,8 +256,6 @@ def avg_stats_with_hero(player_id, hero_id):
                   'denies',
                   'gold_per_min',
                   'xp_per_min',
-                  'hero_damage',
-                  'tower_damage',
                   'level'
                   ]
     custom_args = {
@@ -268,24 +267,30 @@ def avg_stats_with_hero(player_id, hero_id):
     hist = list(cursor)
     k = 0
 
-    for m in range(len(hist)):
-        match = hist[m]['result']
+    for m, game in enumerate(hist):
+        match = game['result']
         for j in range(10):
-            if hist[m]['result']['players'][j]['account_id'] == player_id:
-                if hist[m]['result']['radiant_win'] and j < 5 or (
-                        not hist[m]['result']['radiant_win'] and j > 4):
+            if match['players'][j]['account_id'] == player_id:
+                if match['radiant_win'] and j < 5 or (
+                        not match['radiant_win'] and j > 4):
                     k += 1
         for i in range(10):
             if player_id == match['players'][i]['account_id']:
                 player_index = i
         x = match['players'][player_index]
-        for l in range(10):
+        for l in range(8):
             try:
                 array2[l] += x[array_stat[l]]
             except:
                 continue
     statList = [round(x / len(hist), 2) for x in array2]
-    return """Your avg stats with {} in {} games: WR: {}% **k**:{} **d**:{} **a**:{}, **last hits**: {}, **denies**: {}, **gpm**: {}, **xpm**: {}, **hero damage**: {}, **tower_damage**: {}, **level**: {}""".format(hero_dic[hero_id], len(hist), round(100*k/len(hist), 2), *statList)
+    reply = """Your avg stats with {} in {} games: WR: {}%,
+**k**:{} **d**:{} **a**:{}, **last hits**: {}, **denies**: {},
+**gpm**: {}, **xpm**: {},
+**level**: {}""".format(
+          hero_dic[hero_id], len(hist), round(100*k/len(hist), 2), *statList)
+    reply = reply.replace('\n', ' ')
+    return reply
 
 
 def big_pic(match_number, player_id):
@@ -317,8 +322,9 @@ def big_pic(match_number, player_id):
             array2.append((cv2.imread(
                 'images/items/empty icon.png', 1)))
 
-        array2.insert(0, cv2.imread('images/heroes/{} icon.png'.format(hero_dic[
-            match['players'][i]['hero_id']].lower()), 1))
+        array2.insert(0, cv2.imread(
+            'images/heroes/{} icon.png'.format(hero_dic[
+                match['players'][i]['hero_id']].lower()), 1))
         array2.insert(1, cv2.imread('images/vertical.png'))
         array2.insert(-1, cv2.imread('images/vertical.png'))
         array2.insert(0, cv2.imread('images/vertical.png'))
@@ -328,7 +334,7 @@ def big_pic(match_number, player_id):
 
         except:
             pass
-        #cv2.imwrite('images/heroes/lineup/itemlist{}.png'.format(i), whole_items)
+
     array3.insert(0, (cv2.imread('images/346.png')))
     pic1 = np.vstack(array3)
     array3 = []
@@ -353,8 +359,9 @@ def big_pic(match_number, player_id):
             array2.append((cv2.imread(
                 'images/items/empty icon.png', 1)))
 
-        array2.insert(0, cv2.imread('images/heroes/{} icon.png'.format(hero_dic[
-            match['players'][i]['hero_id']].lower()), 1))
+        array2.insert(0, cv2.imread(
+            'images/heroes/{} icon.png'.format(hero_dic[
+                match['players'][i]['hero_id']].lower()), 1))
         array2.insert(1, cv2.imread('images/vertical.png'))
         array2.append(cv2.imread('images/vertical.png'))
         array2.insert(0, cv2.imread('images/vertical.png'))
@@ -364,7 +371,7 @@ def big_pic(match_number, player_id):
 
         except:
             pass
-        #cv2.imwrite('images/heroes/lineup/itemlist{}.png'.format(i), whole_items)
+
     array3.insert(0, cv2.imread('images/302.png'))
     pic2 = np.vstack(array3)
     pic3 = np.hstack([pic1, pic2])
@@ -523,7 +530,10 @@ async def on_message(message):
             reply = last_match(player_id, match_number)
             big_pic(match_number, player_id)
         await client.send_file(
-                message.channel, 'images/heroes/lineup/itemlist2.png', content=reply)
+                message.channel,
+                'images/heroes/lineup/itemlist2.png',
+                content=reply
+                )
 
     if message.content.startswith('$guess'):
         content = str(message.content).split()
@@ -536,46 +546,68 @@ async def on_message(message):
             if dosh[player_id] - n >= 0:
                 reply = guessing_game()
                 await client.send_file(
-                        message.channel, 'images/heroes/lineup/itemlist2.png', content = 'Guess a hero {} played that game. {}'.format(reply[1], reply[2]))
+                        message.channel,
+                        'images/heroes/lineup/itemlist2.png',
+                        content='Guess a hero {} played that game. {}'.format(
+                            reply[1], reply[2])
+                        )
 
                 def guess_check(m):
                     return message.content
 
-                guess = await client.wait_for_message(timeout=30.0, check=guess_check, channel = message.channel)
+                guess = await client.wait_for_message(
+                    timeout=30.0,
+                    check=guess_check,
+                    channel=message.channel
+                    )
                 if guess.author == client.user:
-                    guess = await client.wait_for_message(timeout=30.0, check=guess_check)
+                    guess = await client.wait_for_message(
+                        timeout=30.0,
+                        check=guess_check
+                        )
                 answer = reply[0]
                 if guess is None:
                     fmt = 'Sorry, you took too long. It was {}. You lost {}$'.format(answer, n)
                     dosh[player_id] -= n
                     dosh['total $ lost'] -= n
-                    dosh['№ of attempts'] +=1
+                    dosh['№ of attempts'] += 1
                     with open('dosh.pickle', 'wb') as f:
                             pickle.dump(dosh, f)
-                    await client.send_message(message.channel, fmt.format(answer))
+                    await client.send_message(
+                        message.channel,
+                        fmt.format(answer)
+                        )
                     return
                 if guess.content.lower() == answer.lower():
                     dosh[guess.author.name] += n
                     dosh['total $ won'] += n
-                    dosh['№ of attempts'] +=1
+                    dosh['№ of attempts'] += 1
                     with open('dosh.pickle', 'wb') as f:
                             pickle.dump(dosh, f)
-                    await client.send_message(message.channel, 'Yay! You are right. You won {}$'.format(n))
+                    await client.send_message(
+                        message.channel,
+                        'Yay! You are right. You won {}$'.format(n)
+                        )
 
                 else:
                     dosh[guess.author.name] -= n
                     dosh['total $ lost'] -= n
-                    dosh['№ of attempts'] +=1
+                    dosh['№ of attempts'] += 1
                     with open('dosh.pickle', 'wb') as f:
                             pickle.dump(dosh, f)
-                    await client.send_message(message.channel, 'Nope. It is actually {}. You lost {}$'.format(answer, n))
+                    await client.send_message(
+                        message.channel,
+                        'Nope. It is actually {}. You lost {}$'.format(answer, n))
             else:
-                await client.send_message(message.channel, "Sorry you don't have enough do$h to play this game")
+                await client.send_message(
+                    message.channel,
+                    "Sorry you don't have enough do$h to play this game"
+                    )
         else:
             await client.send_message(message.channel, "Bets must be in [1, 15] range")
     if message.content == '!help':
         await client.send_message(message.channel, help_msg)
-        # ============= only memes below ==============================================
+        # ============= only memes below ======================================
     if message.content.startswith('%'):
         with open('dosh.pickle', 'rb') as f:
             dosh = pickle.load(f)
@@ -587,7 +619,10 @@ async def on_message(message):
             with open('dosh.pickle', 'wb') as f:
                     pickle.dump(dosh, f)
         else:
-            await client.send_message(message.channel, "You don't have enough dosh to post memes")
+            await client.send_message(
+                message.channel,
+                "You don't have enough dosh to post memes"
+                )
     if message.content.startswith('!new_patch'):
         await client.send_file(message.channel, 'images/new_patch.gif')
         await client.change_status(game=discord.Game(name='DOTA2'))
@@ -610,7 +645,10 @@ async def on_message(message):
         with open('dosh.pickle', 'rb') as f:
             dosh = pickle.load(f)
         reply = dosh[message.author.name]
-        await client.send_message(message.channel, "Your current balance: {}$".format(reply))
+        await client.send_message(
+            message.channel,
+            "Your current balance: {}$".format(reply)
+            )
     if message.content.startswith('!total'):
         with open('dosh.pickle', 'rb') as f:
             dosh = pickle.load(f)
@@ -624,10 +662,13 @@ async def on_message(message):
         if dosh[message.author.name] >= 5:
             name = str(message.content).strip().lower()[1:]
             voice = await  client.join_voice_channel(player_id.voice_channel)
+            if message.content.startswith('#hs'):
+                player = voice.create_ffmpeg_player('audio/{}.ogg'.format(name))
+            else:
+                player = voice.create_ffmpeg_player('audio/{}.mp3'.format(name))
 
-            player = voice.create_ffmpeg_player('audio/{}.mp3'.format(name))
             player.start()
-            time.sleep(3)
+            time.sleep(5)
             await voice.disconnect()
             dosh[message.author.name] -= 5
             with open('dosh.pickle', 'wb') as f:
@@ -641,30 +682,34 @@ async def on_message(message):
         player_id = message.author.name
         with open('dosh.pickle', 'rb') as f:
             dosh = pickle.load(f)
-        if dosh[player_id] - n >= 0:
-            roll = randint(0, 100)
-            if 0 <= roll <= 66:
-                await client.send_message(message.channel, "You lost {}$".format(n))
-                dosh[message.author.name] -= n
-                with open('dosh.pickle', 'wb') as f:
-                        pickle.dump(dosh, f)
-            elif 67 <= roll <= 96:
-                await client.send_message(message.channel, "You won {}$".format(2*n))
-                dosh[message.author.name] += 2*n
-                with open('dosh.pickle', 'wb') as f:
-                        pickle.dump(dosh, f)
-            elif  97 <= roll <= 99:
-                await client.send_message(message.channel, "You won {}$".format(4*n))
-                dosh[message.author.name] += 4*n
-                with open('dosh.pickle', 'wb') as f:
-                        pickle.dump(dosh, f)
-            elif roll == 100:
-                await client.send_message(message.channel, "You won {}$".format(10*n))
-                dosh[message.author.name] += 10*n
-                with open('dosh.pickle', 'wb') as f:
-                        pickle.dump(dosh, f)
+        if 0 < n <= 50:
+            if dosh[player_id] - n >= 0:
+                roll = randint(0, 100)
+                if 0 <= roll <= 64:
+                    await client.send_message(message.channel, "You lost {}$".format(n))
+                    dosh[message.author.name] -= n
+                    with open('dosh.pickle', 'wb') as f:
+                            pickle.dump(dosh, f)
+                elif 64 <= roll <= 94:
+                    await client.send_message(message.channel, "You won {}$".format(2*n))
+                    dosh[message.author.name] += 2*n
+                    with open('dosh.pickle', 'wb') as f:
+                            pickle.dump(dosh, f)
+                elif 95 <= roll <= 99:
+                    await client.send_message(message.channel, "You won {}$".format(4*n))
+                    dosh[message.author.name] += 4*n
+                    with open('dosh.pickle', 'wb') as f:
+                            pickle.dump(dosh, f)
+                elif roll == 100:
+                    await client.send_message(message.channel, "You won {}$".format(15*n))
+                    dosh[message.author.name] += 10*n
+                    with open('dosh.pickle', 'wb') as f:
+                            pickle.dump(dosh, f)
+
+            else:
+                await client.send_message(message.channel, "You don't have enough dosh.")
         else:
-            await client.send_message(message.channel, "You don't have enough dosh.")
+            await client.send_message(message.channel, "Bets must be in (0, 50] range")
 @client.event
 async def on_ready():
     print('Logged in as')
