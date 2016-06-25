@@ -11,3 +11,4 @@ test*.py
 data.txt
 patchnotes*.txt
 dosh.pickle
+/images/heroes/lineup/*

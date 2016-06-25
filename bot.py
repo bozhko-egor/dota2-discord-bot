@@ -13,6 +13,7 @@ from hero_dictionary import item_dic
 from hero_dictionary import game_mode_dic
 from random import randint
 from random import shuffle
+from recent_games_parser import get_recent_matches
 
 logging.basicConfig(level=logging.INFO)
 client = discord.Client()
@@ -710,6 +711,16 @@ async def on_message(message):
                 await client.send_message(message.channel, "You don't have enough dosh.")
         else:
             await client.send_message(message.channel, "Bets must be in (0, 50] range")
+
+    if message.content.startswith('!update'):
+        if message.author.id in bot_admin:
+            reply = get_recent_matches()
+            await client.send_message(
+                message.channel, reply)
+        else:
+            await client.send_message(
+                message.channel, "You need permission to perform this action")
+
 @client.event
 async def on_ready():
     print('Logged in as')
