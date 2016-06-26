@@ -57,4 +57,4 @@ def get_recent_matches():
             print('no new matches to parse')
     print('{} games were parsed'.format(p))
     print('done!')
-    return 'Done! {} games were parsed'.format(p)
+    return 'Done! Parsed a total of {} games'.format(p)
