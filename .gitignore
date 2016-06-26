@@ -1,5 +1,6 @@
 token_and_api_key.py
 /__pycache__/*
+/dota2bot/__pycache__/*
 rename.py
 /images/twitch/wow.png
 Procfile

@@ -18,7 +18,7 @@ def get_recent_matches():
         try:
             html = urlopen("https://api.steampowered.com/IDOTA2Match_570/GetMatchHistory/V001/?account_id={}&key={}".format(player_id, api_key)).read()
         except:
-            return "Dota-api not responding"
+            return "Dota2 Api is not responding"
 
         data = json.loads(html.decode('utf-8'))
         k = 0

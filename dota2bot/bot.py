@@ -686,23 +686,23 @@ async def on_message(message):
         if 0 < n <= 50:
             if dosh[player_id] - n >= 0:
                 roll = randint(0, 100)
-                if 0 <= roll <= 64:
+                if 0 <= roll <= 66:
                     await client.send_message(message.channel, "You lost {}$".format(n))
                     dosh[message.author.name] -= n
                     with open('dosh.pickle', 'wb') as f:
                             pickle.dump(dosh, f)
-                elif 64 <= roll <= 94:
+                elif 67 <= roll <= 94:
                     await client.send_message(message.channel, "You won {}$".format(2*n))
                     dosh[message.author.name] += 2*n
                     with open('dosh.pickle', 'wb') as f:
                             pickle.dump(dosh, f)
-                elif 95 <= roll <= 99:
+                elif 96 <= roll <= 99:
                     await client.send_message(message.channel, "You won {}$".format(4*n))
                     dosh[message.author.name] += 4*n
                     with open('dosh.pickle', 'wb') as f:
                             pickle.dump(dosh, f)
                 elif roll == 100:
-                    await client.send_message(message.channel, "You won {}$".format(15*n))
+                    await client.send_message(message.channel, "You won {}$".format(10*n))
                     dosh[message.author.name] += 10*n
                     with open('dosh.pickle', 'wb') as f:
                             pickle.dump(dosh, f)
