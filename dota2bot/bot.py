@@ -8,15 +8,11 @@ import pymongo
 import pickle
 from datetime import datetime, timedelta
 from token_and_api_key import *
-from hero_dictionary import hero_dic
-
-
-
-
 from recent_games_parser import get_recent_matches
 
 logging.basicConfig(level=logging.INFO)
 client = discord.Client()
+hero_dic=db['hero_dic'].find_one()
 
 def time_diff(start_time):
     time_passed = timedelta(seconds=int(time.time() - start_time))
@@ -45,12 +41,6 @@ async def on_message(message):
     # do not want the bot to reply to itself
     if message.author == client.user:
         return
-
-    # для теста
-    if message.content.startswith('!hello'):
-        msg = 'Hello {0.author.mention}'.format(message)
-        await client.send_message(message.channel, msg)
-        #  все пофиксить надо :(
 
     if message.content.startswith('!last'):
         player_id = player_dic[message.author.name]

@@ -1,0 +1,1108 @@
+{
+    "items": [
+        {
+            "id": 1,
+            "name": "Blink Dagger"
+        },
+        {
+            "id": 2,
+            "name": "Blades of Attack"
+        },
+        {
+            "id": 3,
+            "name": "Broadsword"
+        },
+        {
+            "id": 4,
+            "name": "Chainmail"
+        },
+        {
+            "id": 5,
+            "name": "Claymore"
+        },
+        {
+            "id": 6,
+            "name": "Helm of Iron Will"
+        },
+        {
+            "id": 7,
+            "name": "Javelin"
+        },
+        {
+            "id": 8,
+            "name": "Mithril Hammer"
+        },
+        {
+            "id": 9,
+            "name": "Platemail"
+        },
+        {
+            "id": 10,
+            "name": "Quarterstaff"
+        },
+        {
+            "id": 11,
+            "name": "Quelling Blade"
+        },
+        {
+            "id": 12,
+            "name": "Ring of Protection"
+        },
+        {
+            "id": 13,
+            "name": "Gauntlets of Strength"
+        },
+        {
+            "id": 14,
+            "name": "Slippers of Agility"
+        },
+        {
+            "id": 15,
+            "name": "Mantle of Intelligence"
+        },
+        {
+            "id": 16,
+            "name": "Iron Branch"
+        },
+        {
+            "id": 17,
+            "name": "Belt of Strength"
+        },
+        {
+            "id": 18,
+            "name": "Band of Elvenskin"
+        },
+        {
+            "id": 19,
+            "name": "Robe of the Magi"
+        },
+        {
+            "id": 20,
+            "name": "Circlet"
+        },
+        {
+            "id": 21,
+            "name": "Ogre Club"
+        },
+        {
+            "id": 22,
+            "name": "Blade of Alacrity"
+        },
+        {
+            "id": 23,
+            "name": "Staff of Wizardry"
+        },
+        {
+            "id": 24,
+            "name": "Ultimate Orb"
+        },
+        {
+            "id": 25,
+            "name": "Gloves of Haste"
+        },
+        {
+            "id": 26,
+            "name": "Morbid Mask"
+        },
+        {
+            "id": 27,
+            "name": "Ring of Regen"
+        },
+        {
+            "id": 28,
+            "name": "Sage's Mask"
+        },
+        {
+            "id": 29,
+            "name": "Boots of Speed"
+        },
+        {
+            "id": 30,
+            "name": "Gem of True Sight"
+        },
+        {
+            "id": 31,
+            "name": "Cloak"
+        },
+        {
+            "id": 32,
+            "name": "Talisman of Evasion"
+        },
+        {
+            "id": 33,
+            "name": "Cheese"
+        },
+        {
+            "id": 34,
+            "name": "Magic Stick"
+        },
+        {
+            "id": 35,
+            "name": "Recipe"
+        },
+        {
+            "id": 36,
+            "name": "Magic Wand"
+        },
+        {
+            "id": 37,
+            "name": "Ghost Scepter"
+        },
+        {
+            "id": 38,
+            "name": "Clarity"
+        },
+        {
+            "id": 39,
+            "name": "Healing Salve"
+        },
+        {
+            "id": 40,
+            "name": "Dust of Appearance"
+        },
+        {
+            "id": 41,
+            "name": "Bottle"
+        },
+        {
+            "id": 42,
+            "name": "Observer Ward"
+        },
+        {
+            "id": 43,
+            "name": "Sentry Ward"
+        },
+        {
+            "id": 44,
+            "name": "Tango"
+        },
+        {
+            "id": 45,
+            "name": "Animal Courier"
+        },
+        {
+            "id": 46,
+            "name": "Town Portal Scroll"
+        },
+        {
+            "id": 47,
+            "name": "Recipe"
+        },
+        {
+            "id": 48,
+            "name": "Boots of Travel"
+        },
+        {
+            "id": 49,
+            "name": "Recipe"
+        },
+        {
+            "id": 50,
+            "name": "Phase Boots"
+        },
+        {
+            "id": 51,
+            "name": "Demon Edge"
+        },
+        {
+            "id": 52,
+            "name": "Eaglesong"
+        },
+        {
+            "id": 53,
+            "name": "Reaver"
+        },
+        {
+            "id": 54,
+            "name": "Sacred Relic"
+        },
+        {
+            "id": 55,
+            "name": "Hyperstone"
+        },
+        {
+            "id": 56,
+            "name": "Ring of Health"
+        },
+        {
+            "id": 57,
+            "name": "Void Stone"
+        },
+        {
+            "id": 58,
+            "name": "Mystic Staff"
+        },
+        {
+            "id": 59,
+            "name": "Energy Booster"
+        },
+        {
+            "id": 60,
+            "name": "Point Booster"
+        },
+        {
+            "id": 61,
+            "name": "Vitality Booster"
+        },
+        {
+            "id": 62,
+            "name": "Recipe"
+        },
+        {
+            "id": 63,
+            "name": "Power Treads"
+        },
+        {
+            "id": 64,
+            "name": "Recipe"
+        },
+        {
+            "id": 65,
+            "name": "Hand of Midas"
+        },
+        {
+            "id": 66,
+            "name": "Recipe"
+        },
+        {
+            "id": 67,
+            "name": "Oblivion Staff"
+        },
+        {
+            "id": 68,
+            "name": "Recipe"
+        },
+        {
+            "id": 69,
+            "name": "Perseverance"
+        },
+        {
+            "id": 70,
+            "name": "Recipe"
+        },
+        {
+            "id": 71,
+            "name": "Poor Man's Shield"
+        },
+        {
+            "id": 72,
+            "name": "Recipe"
+        },
+        {
+            "id": 73,
+            "name": "Bracer"
+        },
+        {
+            "id": 74,
+            "name": "Recipe"
+        },
+        {
+            "id": 75,
+            "name": "Wraith Band"
+        },
+        {
+            "id": 76,
+            "name": "Recipe"
+        },
+        {
+            "id": 77,
+            "name": "Null Talisman"
+        },
+        {
+            "id": 78,
+            "name": "Recipe"
+        },
+        {
+            "id": 79,
+            "name": "Mekansm"
+        },
+        {
+            "id": 80,
+            "name": "Recipe"
+        },
+        {
+            "id": 81,
+            "name": "Vladmir's Offering"
+        },
+        {
+            "id": 84,
+            "name": "Flying Courier"
+        },
+        {
+            "id": 85,
+            "name": "Recipe"
+        },
+        {
+            "id": 86,
+            "name": "Buckler"
+        },
+        {
+            "id": 87,
+            "name": "Recipe"
+        },
+        {
+            "id": 88,
+            "name": "Ring of Basilius"
+        },
+        {
+            "id": 89,
+            "name": "Recipe"
+        },
+        {
+            "id": 90,
+            "name": "Pipe of Insight"
+        },
+        {
+            "id": 91,
+            "name": "Recipe"
+        },
+        {
+            "id": 92,
+            "name": "Urn of Shadows"
+        },
+        {
+            "id": 93,
+            "name": "Recipe"
+        },
+        {
+            "id": 94,
+            "name": "Headdress"
+        },
+        {
+            "id": 95,
+            "name": "Recipe"
+        },
+        {
+            "id": 96,
+            "name": "Scythe of Vyse"
+        },
+        {
+            "id": 97,
+            "name": "Recipe"
+        },
+        {
+            "id": 98,
+            "name": "Orchid Malevolence"
+        },
+        {
+            "id": 99,
+            "name": "Recipe"
+        },
+        {
+            "id": 100,
+            "name": "Eul's Scepter of Divinity"
+        },
+        {
+            "id": 101,
+            "name": "Recipe"
+        },
+        {
+            "id": 102,
+            "name": "Force Staff"
+        },
+        {
+            "id": 103,
+            "name": "Recipe"
+        },
+        {
+            "id": 104,
+            "name": "Dagon"
+        },
+        {
+            "id": 105,
+            "name": "Recipe"
+        },
+        {
+            "id": 106,
+            "name": "Necronomicon 1"
+        },
+        {
+            "id": 107,
+            "name": "Recipe"
+        },
+        {
+            "id": 108,
+            "name": "Aghanim's Scepter"
+        },
+        {
+            "id": 109,
+            "name": "Recipe"
+        },
+        {
+            "id": 110,
+            "name": "Refresher Orb"
+        },
+        {
+            "id": 111,
+            "name": "Recipe"
+        },
+        {
+            "id": 112,
+            "name": "Assault Cuirass"
+        },
+        {
+            "id": 113,
+            "name": "Recipe"
+        },
+        {
+            "id": 114,
+            "name": "Heart of Tarrasque"
+        },
+        {
+            "id": 115,
+            "name": "Recipe"
+        },
+        {
+            "id": 116,
+            "name": "Black King Bar"
+        },
+        {
+            "id": 117,
+            "name": "Aegis of the Immortal"
+        },
+        {
+            "id": 118,
+            "name": "Recipe"
+        },
+        {
+            "id": 119,
+            "name": "Shiva's Guard"
+        },
+        {
+            "id": 120,
+            "name": "Recipe"
+        },
+        {
+            "id": 121,
+            "name": "Bloodstone"
+        },
+        {
+            "id": 122,
+            "name": "Recipe"
+        },
+        {
+            "id": 123,
+            "name": "Linken's Sphere"
+        },
+        {
+            "id": 124,
+            "name": "Recipe"
+        },
+        {
+            "id": 125,
+            "name": "Vanguard"
+        },
+        {
+            "id": 126,
+            "name": "Recipe"
+        },
+        {
+            "id": 127,
+            "name": "Blade Mail"
+        },
+        {
+            "id": 128,
+            "name": "Recipe"
+        },
+        {
+            "id": 129,
+            "name": "Soul Booster"
+        },
+        {
+            "id": 130,
+            "name": "Recipe"
+        },
+        {
+            "id": 131,
+            "name": "Hood of Defiance"
+        },
+        {
+            "id": 132,
+            "name": "Recipe"
+        },
+        {
+            "id": 133,
+            "name": "Divine Rapier"
+        },
+        {
+            "id": 134,
+            "name": "Recipe"
+        },
+        {
+            "id": 135,
+            "name": "Monkey King Bar"
+        },
+        {
+            "id": 136,
+            "name": "Recipe"
+        },
+        {
+            "id": 137,
+            "name": "Radiance"
+        },
+        {
+            "id": 138,
+            "name": "Recipe"
+        },
+        {
+            "id": 139,
+            "name": "Butterfly"
+        },
+        {
+            "id": 140,
+            "name": "Recipe"
+        },
+        {
+            "id": 141,
+            "name": "Daedalus"
+        },
+        {
+            "id": 142,
+            "name": "Recipe"
+        },
+        {
+            "id": 143,
+            "name": "Skull Basher"
+        },
+        {
+            "id": 144,
+            "name": "Recipe"
+        },
+        {
+            "id": 145,
+            "name": "Battle Fury"
+        },
+        {
+            "id": 146,
+            "name": "Recipe"
+        },
+        {
+            "id": 147,
+            "name": "Manta Style"
+        },
+        {
+            "id": 148,
+            "name": "Recipe"
+        },
+        {
+            "id": 149,
+            "name": "Crystalys"
+        },
+        {
+            "id": 150,
+            "name": "Recipe"
+        },
+        {
+            "id": 151,
+            "name": "Armlet of Mordiggian"
+        },
+        {
+            "id": 152,
+            "name": "Shadow Blade"
+        },
+        {
+            "id": 153,
+            "name": "Recipe"
+        },
+        {
+            "id": 154,
+            "name": "Sange and Yasha"
+        },
+        {
+            "id": 155,
+            "name": "Recipe"
+        },
+        {
+            "id": 156,
+            "name": "Satanic"
+        },
+        {
+            "id": 157,
+            "name": "Recipe"
+        },
+        {
+            "id": 158,
+            "name": "Mjollnir"
+        },
+        {
+            "id": 159,
+            "name": "Recipe"
+        },
+        {
+            "id": 160,
+            "name": "Eye of Skadi"
+        },
+        {
+            "id": 161,
+            "name": "Recipe"
+        },
+        {
+            "id": 162,
+            "name": "Sange"
+        },
+        {
+            "id": 163,
+            "name": "Recipe"
+        },
+        {
+            "id": 164,
+            "name": "Helm of the Dominator"
+        },
+        {
+            "id": 165,
+            "name": "Recipe"
+        },
+        {
+            "id": 166,
+            "name": "Maelstrom"
+        },
+        {
+            "id": 167,
+            "name": "Recipe"
+        },
+        {
+            "id": 168,
+            "name": "Desolator"
+        },
+        {
+            "id": 169,
+            "name": "Recipe"
+        },
+        {
+            "id": 170,
+            "name": "Yasha"
+        },
+        {
+            "id": 171,
+            "name": "Recipe"
+        },
+        {
+            "id": 172,
+            "name": "Mask of Madness"
+        },
+        {
+            "id": 173,
+            "name": "Recipe"
+        },
+        {
+            "id": 174,
+            "name": "Diffusal Blade"
+        },
+        {
+            "id": 175,
+            "name": "Recipe"
+        },
+        {
+            "id": 176,
+            "name": "Ethereal Blade"
+        },
+        {
+            "id": 177,
+            "name": "Recipe"
+        },
+        {
+            "id": 178,
+            "name": "Soul Ring"
+        },
+        {
+            "id": 179,
+            "name": "Recipe"
+        },
+        {
+            "id": 180,
+            "name": "Arcane Boots"
+        },
+        {
+            "id": 181,
+            "name": "Orb of Venom"
+        },
+        {
+            "id": 182,
+            "name": "Stout Shield"
+        },
+        {
+            "id": 183,
+            "name": "Recipe"
+        },
+        {
+            "id": 184,
+            "name": "Recipe"
+        },
+        {
+            "id": 185,
+            "name": "Drum of Endurance"
+        },
+        {
+            "id": 186,
+            "name": "Recipe"
+        },
+        {
+            "id": 187,
+            "name": "Medallion of Courage"
+        },
+        {
+            "id": 188,
+            "name": "Smoke of Deceit"
+        },
+        {
+            "id": 189,
+            "name": "Recipe"
+        },
+        {
+            "id": 190,
+            "name": "Veil of Discord"
+        },
+        {
+            "id": 191,
+            "name": "Recipe"
+        },
+        {
+            "id": 192,
+            "name": "Recipe"
+        },
+        {
+            "id": 193,
+            "name": "Necronomicon 2"
+        },
+        {
+            "id": 194,
+            "name": "Necronomicon 3"
+        },
+        {
+            "id": 195,
+            "name": "Recipe"
+        },
+        {
+            "id": 196,
+            "name": "Diffusal Blade"
+        },
+        {
+            "id": 197,
+            "name": "Recipe"
+        },
+        {
+            "id": 198,
+            "name": "Recipe"
+        },
+        {
+            "id": 199,
+            "name": "Recipe"
+        },
+        {
+            "id": 200,
+            "name": "Recipe"
+        },
+        {
+            "id": 201,
+            "name": "Dagon 2"
+        },
+        {
+            "id": 202,
+            "name": "Dagon 3"
+        },
+        {
+            "id": 203,
+            "name": "Dagon 4"
+        },
+        {
+            "id": 204,
+            "name": "Dagon 5"
+        },
+        {
+            "id": 205,
+            "name": "Recipe"
+        },
+        {
+            "id": 206,
+            "name": "Rod of Atos"
+        },
+        {
+            "id": 207,
+            "name": "Recipe"
+        },
+        {
+            "id": 208,
+            "name": "Abyssal Blade"
+        },
+        {
+            "id": 209,
+            "name": "Recipe"
+        },
+        {
+            "id": 210,
+            "name": "Heaven's Halberd"
+        },
+        {
+            "id": 211,
+            "name": "Recipe"
+        },
+        {
+            "id": 212,
+            "name": "Ring of Aquila"
+        },
+        {
+            "id": 213,
+            "name": "Recipe"
+        },
+        {
+            "id": 214,
+            "name": "Tranquil Boots"
+        },
+        {
+            "id": 215,
+            "name": "Shadow Amulet"
+        },
+        {
+            "id": 216,
+            "name": "Enchanted Mango"
+        },
+        {
+            "id": 217,
+            "name": "Recipe"
+        },
+        {
+            "id": 218,
+            "name": "Observer and Sentry Wards"
+        },
+        {
+            "id": 219,
+            "name": "Recipe"
+        },
+        {
+            "id": 220,
+            "name": "Boots of Travel 2"
+        },
+        {
+            "id": 221,
+            "name": "Recipe"
+        },
+        {
+            "id": 226,
+            "name": "Lotus Orb"
+        },
+        {
+            "id": 227,
+            "name": "Recipe"
+        },
+        {
+            "id": 228,
+            "name": "Recipe"
+        },
+        {
+            "id": 229,
+            "name": "Solar Crest"
+        },
+        {
+            "id": 230,
+            "name": "Recipe"
+        },
+        {
+            "id": 231,
+            "name": "Guardian Greaves"
+        },
+        {
+            "id": 232,
+            "name": "Aether Lens"
+        },
+        {
+            "id": 233,
+            "name": "Recipe"
+        },
+        {
+            "id": 234,
+            "name": "Recipe"
+        },
+        {
+            "id": 235,
+            "name": "Octarine Core"
+        },
+        {
+            "id": 236,
+            "name": "Dragon Lance"
+        },
+        {
+            "id": 237,
+            "name": "Faerie Fire"
+        },
+        {
+            "id": 238,
+            "name": "Recipe"
+        },
+        {
+            "id": 239,
+            "name": "Iron Talon"
+        },
+        {
+            "id": 240,
+            "name": "Blight Stone"
+        },
+        {
+            "id": 241,
+            "name": "Tango (Shared)"
+        },
+        {
+            "id": 242,
+            "name": "Crimson Guard"
+        },
+        {
+            "id": 243,
+            "name": "Recipe"
+        },
+        {
+            "id": 244,
+            "name": "Wind Lace"
+        },
+        {
+            "id": 245,
+            "name": "Recipe"
+        },
+        {
+            "id": 246,
+            "name": "Recipe"
+        },
+        {
+            "id": 247,
+            "name": "Moon Shard"
+        },
+        {
+            "id": 248,
+            "name": "Recipe"
+        },
+        {
+            "id": 249,
+            "name": "Silver Edge"
+        },
+        {
+            "id": 250,
+            "name": "Bloodthorn"
+        },
+        {
+            "id": 251,
+            "name": "Recipe"
+        },
+        {
+            "id": 252,
+            "name": "Echo Sabre"
+        },
+        {
+            "id": 253,
+            "name": "Recipe"
+        },
+        {
+            "id": 254,
+            "name": "Glimmer Cape"
+        },
+        {
+            "id": 257,
+            "name": "Tome of Knowledge"
+        },
+        {
+            "id": 262,
+            "name": "Recipe"
+        },
+        {
+            "id": 263,
+            "name": "Hurricane Pike"
+        },
+        {
+            "id": 264,
+            "name": "Banana"
+        },
+        {
+            "id": 265,
+            "name": "Infused Raindrop"
+        },
+        {
+            "id": 1000,
+            "name": "Greevil Taffy"
+        },
+        {
+            "id": 1001,
+            "name": "DOTA_Tooltip_Ability_item_mystery_hook"
+        },
+        {
+            "id": 1002,
+            "name": "DOTA_Tooltip_Ability_item_mystery_arrow"
+        },
+        {
+            "id": 1003,
+            "name": "DOTA_Tooltip_Ability_item_mystery_missile"
+        },
+        {
+            "id": 1004,
+            "name": "DOTA_Tooltip_Ability_item_mystery_toss"
+        },
+        {
+            "id": 1005,
+            "name": "DOTA_Tooltip_Ability_item_mystery_vacuum"
+        },
+        {
+            "id": 1006,
+            "name": "DOTA_Tooltip_Ability_item_halloween_rapier"
+        },
+        {
+            "id": 1007,
+            "name": "Greevil Whistle"
+        },
+        {
+            "id": 1008,
+            "name": "Greevil Whistle"
+        },
+        {
+            "id": 1009,
+            "name": "A Gift!"
+        },
+        {
+            "id": 1010,
+            "name": "Xmas Stocking"
+        },
+        {
+            "id": 1011,
+            "name": "Speed Skates"
+        },
+        {
+            "id": 1012,
+            "name": "Fruit-bit Cake"
+        },
+        {
+            "id": 1013,
+            "name": "Wizard Cookie"
+        },
+        {
+            "id": 1014,
+            "name": "Cocoa with Marshmallows"
+        },
+        {
+            "id": 1015,
+            "name": "Clove Studded Ham"
+        },
+        {
+            "id": 1016,
+            "name": "Kringle"
+        },
+        {
+            "id": 1017,
+            "name": "Snow Mushroom"
+        },
+        {
+            "id": 1018,
+            "name": "Greevil Treat"
+        },
+        {
+            "id": 1019,
+            "name": "Greevil Chow"
+        },
+        {
+            "id": 1020,
+            "name": "Greevil Blink Bone"
+        },
+        {
+            "id": 1021,
+            "name": "River Vial: Chrome"
+        },
+        {
+            "id": 1022,
+            "name": "River Vial: Dry"
+        }
+    ]
+}
