@@ -21,12 +21,12 @@ def get_recent_matches():
             return "Dota2 Api is not responding"
 
         data = json.loads(html.decode('utf-8'))
-        k = 0
+
         while True:
             if hist[0]['result']['match_id'] != data['result']['matches'][k]['match_id']:
                 match_ids.append(data['result']['matches'][k]['match_id'])
                 print("{}".format(k))
-                k += 1
+
             else:
                 break
         if len(match_ids) != 0:
