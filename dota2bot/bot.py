@@ -1,33 +1,16 @@
 import discord
 import logging
-import time
 import sys
 from stat_func import *
 from misc import *
 import pymongo
 import pickle
-from datetime import datetime, timedelta
 from token_and_api_key import *
 from recent_games_parser import get_recent_matches
 
 logging.basicConfig(level=logging.INFO)
 client = discord.Client()
-hero_dic=db['hero_dic'].find_one()
-
-def time_diff(start_time):
-    time_passed = timedelta(seconds=int(time.time() - start_time))
-    d = datetime(1, 1, 1, 1, 1) + time_passed
-    if d.year-1 != 0:
-        return "{}y {}mo ago".format(d.year-1, d.month-1)
-    else:
-        if d.month-1 != 0:
-            return "{}mo {}d ago".format(
-                d.month-1, d.day-1)
-        else:
-            if d.day-1 != 0:
-                return "{}d {}h ago".format(d.day-1, d.hour-1)
-            else:
-                return "{}h {}m ago".format(d.hour-1, d.minute-1)
+hero_dic = db['hero_dic'].find_one()
 
 
 
@@ -232,7 +215,7 @@ async def on_message(message):
                 "You don't have enough dosh to post memes"
                 )
     if message.content.startswith('!new_patch'):
-        await client.send_file(message.channel, 'images/new_patch.gif')
+        await client.send_file(message.channel, 'images/twitch/new_patch.gif')
         await client.change_status(game=discord.Game(name='DOTA2'))
 
     if message.content.startswith('!hero'):

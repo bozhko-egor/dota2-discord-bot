@@ -4,7 +4,9 @@ import numpy as np
 from hero_dictionary import game_mode_dic
 from hero_dictionary import hero_dic
 from hero_dictionary import item_dic
-
+from token_and_api_key import *
+import time
+from datetime import datetime, timedelta
 conn = pymongo.MongoClient()
 db = conn['dota-db']
 
@@ -15,6 +17,22 @@ match_search_args = {
             'result.players.leaver_status': {'$nin': [5, 6]},
             'result.lobby_type': {'$in': [0, 5, 6, 7]}
             }
+
+
+def time_diff(start_time):
+    time_passed = timedelta(seconds=int(time.time() - start_time))
+    d = datetime(1, 1, 1, 1, 1) + time_passed
+    if d.year-1 != 0:
+        return "{}y {}mo ago".format(d.year-1, d.month-1)
+    else:
+        if d.month-1 != 0:
+            return "{}mo {}d ago".format(
+                d.month-1, d.day-1)
+        else:
+            if d.day-1 != 0:
+                return "{}d {}h ago".format(d.day-1, d.hour-1)
+            else:
+                return "{}h {}m ago".format(d.hour-1, d.minute-1)
 
 
 def my_winrate_with_player_on(player_id1, player_id2, hero_id):

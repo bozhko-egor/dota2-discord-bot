@@ -4,7 +4,6 @@ token_and_api_key.py
 rename.py
 /images/twitch/wow.png
 Procfile
-requirements.txt
 runtime.txt
 sqlite.py
 test.sqlite
@@ -12,4 +11,6 @@ test*.py
 data.txt
 patchnotes*.txt
 dosh.pickle
-/images/heroes/lineup/*
+/images/heroes/lineup/itemlist1.png
+/images/heroes/lineup/itemlist2.png
+/images/heroes/lineup/lineup.png

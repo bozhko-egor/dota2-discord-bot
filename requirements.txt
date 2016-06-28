@@ -1,0 +1,7 @@
+aiohttp==0.21.6
+websockets==3.1
+PyNaCl==1.0.1
+discord.py==0.10.0a0
+pymongo==3.2.2
+numpy==1.11.0
+opencv==3.0
