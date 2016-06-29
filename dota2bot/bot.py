@@ -3,14 +3,18 @@ import logging
 import sys
 from stat_func import *
 from misc import *
+import time
 import pymongo
 import pickle
 from token_and_api_key import *
 from recent_games_parser import get_recent_matches
+from hero_dictionary import hero_dic
+from hero_dictionary import item_dic
+from hero_graph import hero_per_month
 
 logging.basicConfig(level=logging.INFO)
 client = discord.Client()
-hero_dic = db['hero_dic'].find_one()
+
 
 
 
@@ -259,7 +263,9 @@ async def on_message(message):
                 player = voice.create_ffmpeg_player('audio/{}.mp3'.format(name))
 
             player.start()
+
             time.sleep(5)
+            player.stop()
             await voice.disconnect()
             dosh[message.author.name] -= 5
             with open('dosh.pickle', 'wb') as f:
@@ -291,6 +297,19 @@ async def on_message(message):
             await client.send_message(
                 message.channel, "You need permission to perform this action")
 
+    if message.content.startswith('!graph_hero'):
+        content = str(message.content).split()
+        if len(content) == 3:
+            hero_name = ' '.join(content[1: 3])
+        elif len(content) == 2:
+            hero_name = content[1]
+
+        player_id = player_dic[message.author.name]
+        hero_id = list(hero_dic.keys())[
+            list(hero_dic.values()).index(hero_name)]
+        reply = hero_per_month(player_id, hero_id)
+        await client.send_file(
+                message.channel, 'images/graphs/hero.png', content=reply)
 @client.event
 async def on_ready():
     print('Logged in as')
