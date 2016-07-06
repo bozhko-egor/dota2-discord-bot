@@ -373,3 +373,45 @@ def big_pic(match_number, player_id):
     pic2 = np.vstack(array3)
     pic3 = np.hstack([pic1, pic2])
     cv2.imwrite('images/heroes/lineup/itemlist2.png', pic3)
+
+
+# not used
+def winrate_solo(player_id):
+
+
+    custom_args = {
+                'result.players.account_id': player_id}
+    custom_args.update(match_search_args)
+    cursor = db['{}'.format(player_id)].find(custom_args)
+    cursor.sort('result.start_time', -1)
+    hist = list(cursor)
+
+    array2 = [0]*5
+    array3 = [0]*5
+    for game in hist:
+        k = 0
+        m = 0
+        for j in range(10):
+            try:
+                if game['result']['players'][j]['account_id'] in array_of_ids:
+                    k += 1
+
+                if game['result']['players'][j]['account_id'] == player_id:
+                    if game['result']['radiant_win'] and j < 5 or (
+                            not game['result']['radiant_win'] and j > 4):
+
+                            m += 1
+            except:
+                pass
+        array2[k-1] += 1
+        if m != 0:
+            array3[k-1] += 1
+    array = [0]*5
+    print(array2)
+    print(array3)
+    for i in range(5):
+        try:
+            array[i] = round(array3[i]/array2[i], 2)
+        except ZeroDivisionError:
+            array[i] = 0
+    return array

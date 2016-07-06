@@ -1,21 +1,20 @@
-import json
 from token_and_api_key import *
 import pymongo
 import numpy
-from operator import itemgetter
+
 import matplotlib.pyplot as pyplot
 
 # in dire need of refactoring
 conn = pymongo.MongoClient()
 db = conn['dota-db']
-player_id=56232406
+player_id = 56232406
 custom_args = {'result.players.account_id': player_id}
 cursor = db['{}'.format(player_id)].find(custom_args)
 cursor.sort('result.start_time', -1)
 hist = list(cursor)
 match = hist[0]['result']
 
-level_dic={
+level_dic = {
     1: 0,
     2:	200,
     3:	300,
@@ -43,46 +42,46 @@ level_dic={
     25:	2500
     }
 
-exp_diff=numpy.zeros((250, 2))
+exp_diff = numpy.zeros((250, 2))
 
-k=-1
+k = -1
 for i, player in enumerate(match['players']):
     for j in player["ability_upgrades"]:
-        k+=1
-        if i <5:
+        k += 1
+        if i < 5:
             exp_diff[k][0] = level_dic[j['level']]
-            exp_diff[k][1]=j['time']
+            exp_diff[k][1] = j['time']
         else:
             exp_diff[k][0] = -level_dic[j['level']]
-            exp_diff[k][1]=j['time']
+            exp_diff[k][1] = j['time']
 
 a = sorted(exp_diff, key=lambda x: x[1])
-b=[]
+b = []
 for i in a:
-    if i[0]!=0:
+    if i[0] != 0:
         b.append(i)
 for i, number in enumerate(b):
-    if i>0:
+    if i > 0:
         b[i][0] += b[i-1][0]
-time=[]
-exp=[]
+time = []
+exp = []
 for i, number in enumerate(b):
     time.append(b[i][1])
     exp.append(b[i][0])
-time1 = [ (x-200)// 60 for x in time]
-time2=[]
-exp2=[]
+time1 = [(x-200) // 60 for x in time]
+time2 = []
+exp2 = []
 for i, obj in enumerate(time1):
-    if time1[i:].count(obj)==1:
+    if time1[i:].count(obj) == 1:
         time2.append(time1[i])
         exp2.append(exp[i])
 
-x=time2
-y=exp2
+x = time2
+y = exp2
 
-h=[0,60]
-t=[0,0]
-pyplot.plot(x,y)
+h = [0, 60]
+t = [0, 0]
+pyplot.plot(x, y)
 pyplot.plot(h, t, label='$T_{7}(x)$')
 pyplot.savefig('example01.png')
 print(time2)

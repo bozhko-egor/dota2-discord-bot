@@ -25,7 +25,8 @@ if not discord.opus.is_loaded():
 
 @client.event
 async def on_message(message):
-    # do not want the bot to reply to itself
+
+        # do not want the bot to reply to itself
     if message.author == client.user:
         return
 
@@ -137,7 +138,7 @@ async def on_message(message):
     if message.content.startswith('$guess'):
         content = str(message.content).split()
         n = int(content[1])
-        if 0 < n < 16:
+        if 0 < n <= 15:
 
             player_id = message.author.name
             with open('dosh.pickle', 'rb') as f:
@@ -279,14 +280,14 @@ async def on_message(message):
         player_id = message.author.name
         with open('dosh.pickle', 'rb') as f:
             dosh = pickle.load(f)
-        if 0 < n <= 50:
+        if 0 < n <= 30:
             if dosh[player_id] - n >= 0:
                 reply = roulette(n, dosh, player_id)
                 await client.send_message(message.channel, reply)
             else:
                 await client.send_message(message.channel, "You don't have enough dosh.")
         else:
-            await client.send_message(message.channel, "Bets must be in (0, 50] range")
+            await client.send_message(message.channel, "Bets must be in (0, 30] range")
 
     if message.content.startswith('!update'):
         if message.author.id in bot_admin:
@@ -310,6 +311,14 @@ async def on_message(message):
         reply = hero_per_month(player_id, hero_id)
         await client.send_file(
                 message.channel, 'images/graphs/hero.png', content=reply)
+    if message.content.startswith('!channel'):
+
+        await client.send_message(message.channel, str(message.channel))
+
+    if message.content.startswith('!uptime'):
+
+        await client.send_message(message.channel, str(message.channel))
+
 @client.event
 async def on_ready():
     print('Logged in as')
