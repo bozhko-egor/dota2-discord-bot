@@ -21,18 +21,22 @@ match_search_args = {
 
 def time_diff(start_time):
     time_passed = timedelta(seconds=int(time.time() - start_time))
-    d = datetime(1, 1, 1, 1, 1) + time_passed
+    d = datetime(1, 1, 1, 1, 1, 1) + time_passed
     if d.year-1 != 0:
-        return "{}y {}mo ago".format(d.year-1, d.month-1)
+        return "{}y {}mo".format(d.year-1, d.month-1)
     else:
         if d.month-1 != 0:
-            return "{}mo {}d ago".format(
+            return "{}mo {}d".format(
                 d.month-1, d.day-1)
         else:
             if d.day-1 != 0:
-                return "{}d {}h ago".format(d.day-1, d.hour-1)
+                return "{}d {}h".format(d.day-1, d.hour-1)
             else:
-                return "{}h {}m ago".format(d.hour-1, d.minute-1)
+                if d.hour-1 != 0:
+                    return "{}h {}m".format(d.hour-1, d.minute-1)
+                else:
+                    return "{}m {}s".format(d.minute-1, d.second-1)
+
 
 
 def my_winrate_with_player_on(player_id1, player_id2, hero_id):
@@ -200,7 +204,7 @@ def last_match(player_id, match_number):
     # dotabuff = "http://www.dotabuff.com/matches/{}".format(last_match_id)
 
     reply = """({game_mode}) {result} KDA: {kda}, Duration: {m}m{s}s,
-        played on {date} ({time_passed}), {game_status}""".format(**stats)
+        played on {date} ({time_passed} ago), {game_status}""".format(**stats)
     reply = reply.replace('\n', ' ')
     return reply
 

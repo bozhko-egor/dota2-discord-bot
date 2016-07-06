@@ -14,7 +14,7 @@ from hero_graph import hero_per_month
 
 logging.basicConfig(level=logging.INFO)
 client = discord.Client()
-
+launch_time = int(time.time())
 
 
 
@@ -296,7 +296,7 @@ async def on_message(message):
                 message.channel, reply)
         else:
             await client.send_message(
-                message.channel, "You need permission to perform this action")
+              message.channel, "You need permission to perform this action")
 
     if message.content.startswith('!graph_hero'):
         content = str(message.content).split()
@@ -315,9 +315,10 @@ async def on_message(message):
 
         await client.send_message(message.channel, str(message.channel))
 
-    if message.content.startswith('!uptime'):
+    if message.content == '!uptime':
+        uptime = time_diff(launch_time)
+        await client.send_message(message.channel, uptime)
 
-        await client.send_message(message.channel, str(message.channel))
 
 @client.event
 async def on_ready():
