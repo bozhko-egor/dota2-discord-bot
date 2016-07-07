@@ -1,11 +1,12 @@
 import pymongo
-
+import math
 import matplotlib.pyplot as plt
-from matplotlib import pylab
 from hero_dictionary import hero_dic
-
+import matplotlib.dates as mdates
 conn = pymongo.MongoClient()
 db = conn['dota-db']
+
+
 def hero_per_month(player_id, hero_id):
     match_search_args = {
                 'result.game_mode': {'$in': [0, 1, 2, 3, 4, 5, 12, 14, 16, 22]},
@@ -47,19 +48,33 @@ def hero_per_month(player_id, hero_id):
             q = 0
             m += 1
 
-    plt.figure()
     plt.xkcd()
+    plt.gca().cla()
 
     plt.title('number of games played as {} per month'.format(hero_dic[hero_id]))
 
-    x = month
     y = quantity
-    frame = pylab.gca()
 
-    frame.axes.get_xaxis().set_ticks([])
+    secs = mdates.epoch2num(month)
 
-    plt.plot(x, y)
+    ax = plt.gca()
+
+    years = mdates.YearLocator()   # every year
+    yearsFmt = mdates.DateFormatter('%Y')
+
+    ax.xaxis.set_major_locator(years)
+    ax.xaxis.set_major_formatter(yearsFmt)
+    ax.spines['right'].set_visible(False)
+    ax.spines['top'].set_visible(False)
+    ax.yaxis.set_ticks_position('left')
+    ax.xaxis.set_ticks_position('bottom')
+    tick = 5 if max(y) > 20 else 1
+    #yint = range(min(y), math.ceil(max(y))+2, tick)  # set only int ticks
+    #plt.yticks(yint)
+    plt.plot(secs, y, color='blue')
 
     plt.savefig('images/graphs/hero.png')
 
     return "{} games".format(kk)
+
+hero_per_month(56232406, 6)

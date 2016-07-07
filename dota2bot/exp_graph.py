@@ -1,14 +1,13 @@
 from token_and_api_key import *
 import pymongo
-import numpy
-
-import matplotlib.pyplot as pyplot
+import numpy as np
+import matplotlib.pyplot as plt
 
 # in dire need of refactoring
 conn = pymongo.MongoClient()
 db = conn['dota-db']
 player_id = 56232406
-custom_args = {'result.players.account_id': player_id}
+custom_args = {'result.match_id': 2356515163}
 cursor = db['{}'.format(player_id)].find(custom_args)
 cursor.sort('result.start_time', -1)
 hist = list(cursor)
@@ -42,7 +41,7 @@ level_dic = {
     25:	2500
     }
 
-exp_diff = numpy.zeros((250, 2))
+exp_diff = np.zeros((250, 2))
 
 k = -1
 for i, player in enumerate(match['players']):
@@ -75,13 +74,24 @@ for i, obj in enumerate(time1):
     if time1[i:].count(obj) == 1:
         time2.append(time1[i])
         exp2.append(exp[i])
-
+time2.insert(0, 0)
+exp2.insert(0, 0)
 x = time2
-y = exp2
 
-h = [0, 60]
-t = [0, 0]
-pyplot.plot(x, y)
-pyplot.plot(h, t, label='$T_{7}(x)$')
-pyplot.savefig('example01.png')
-print(time2)
+# neg_exp = [0 if i >= 0 else i for i in exp2]
+# pos_exp = [0 if i <= 0 else i for i in exp2]
+
+print(pos_exp, neg_exp, time)
+plt.xkcd()
+
+# style.use('seaborn-poster')
+
+plt.title('Exp difference')
+
+
+plt.plot(x, exp2, color='blue')
+
+plt.axhline(0, color='black')
+plt.savefig('example01.png')
+
+print(max(exp2), min(exp2))
