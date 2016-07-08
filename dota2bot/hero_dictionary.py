@@ -1,4 +1,5 @@
 hero_dic = {
+    0: '?',
     1: 'Anti-Mage',
     2: 'Axe',
     3: 'Bane',

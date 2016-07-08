@@ -419,3 +419,70 @@ def winrate_solo(player_id):
         except ZeroDivisionError:
             array[i] = 0
     return array
+
+
+def records(player_id):
+    custom_args = {
+                'result.players.account_id': player_id}
+    custom_args.update(match_search_args)
+    cursor = db['{}'.format(player_id)].find(custom_args)
+    cursor.sort('result.start_time', -1)
+    hist = list(cursor)
+    array2 = [[0 for x in range(3)] for y in range(11)]
+    array_stat = ['kills',
+                  'deaths',
+                  'assists',
+                  'last_hits',
+                  'denies',
+                  'gold_per_min',
+                  'xp_per_min',
+                  'hero_damage',
+                  'tower_damage',
+                  'hero_healing',
+                  'duration' # 10
+                  ]
+
+    for game in hist:
+        match = game['result']
+
+        for i in range(10):
+            try:
+                if player_id == match['players'][i]['account_id']:
+                    player_index = i
+            except:
+                pass
+        x = match['players'][player_index]
+        for i in range(10):
+            try:
+                if x[array_stat[i]] > array2[i][0]:
+                    array2[i][0] = x[array_stat[i]]
+                    array2[i][1] = x['hero_id']
+                    array2[i][2] = match['start_time']
+            except:
+                pass
+        if match['duration'] > array2[10][0]:
+            array2[10][0] = match['duration']
+            array2[10][1] = match['players'][player_index]['hero_id']
+            array2[10][2] = match['start_time']
+    m, s = divmod(array2[10][0], 60)
+    array2[10][0] = '{}m{}s'.format(m, s)
+    return """{0}
+            **All-Time Records**:
+
+            **Kills**:              **{1}** as **{12}** ({23} ago)
+            **Deaths**:             **{2}** as **{13}** ({24} ago)
+            **Assists**:            **{3}** as **{14}** ({25} ago)
+            **Lasthits**:           **{4}** as **{15}** ({26} ago)
+            **Denies**:             **{5}** as **{16}** ({27} ago)
+            **GPM**:                **{6}** as **{17}** ({28} ago)
+            **XPM**:                **{7}** as **{18}** ({29} ago)
+            **Hero Damage**:        **{8}** as **{19}** ({30} ago)
+            **Tower Damage**:       **{9}** as **{20}** ({31} ago)
+            **Hero Healing**:       **{10}** as **{21}** ({32} ago)
+            **Longest Match**:      **{11}** as **{22}** ({33} ago)
+            """.format(
+                dic_reverse[player_id],
+                *[i[0] for i in array2],
+                *[hero_dic[i[1]] for i in array2],
+                *[time_diff(i[2]) for i in array2]
+            )

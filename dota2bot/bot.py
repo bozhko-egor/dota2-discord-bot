@@ -319,6 +319,31 @@ async def on_message(message):
         uptime = time_diff(launch_time)
         await client.send_message(message.channel, uptime)
 
+    if message.content == '!records':
+        player_id = player_dic[message.author.name]
+        reply = records(player_id)
+        await client.send_message(message.channel, reply)
+
+    if message.content.startswith('!tip'):
+        content = str(message.content).split()
+        player_id = message.author.name
+        player_id2 = content[1]
+        n = int(content[2])
+        with open('dosh.pickle', 'rb') as f:
+            dosh = pickle.load(f)
+        if n > 0:
+            if dosh[player_id] > n:
+                dosh[player_id] -= n
+                dosh[player_id2] += n
+                with open('dosh.pickle', 'wb') as f:
+                        pickle.dump(dosh, f)
+                await client.send_message(message.channel, 'done! {}$ transferred to {}'.format(n, player_id2))
+            else:
+                client.send_message(message.channel, "you don't have enough dosh for this operation")
+
+        else:
+            await client.send_message(message.channel, "?")
+
 
 @client.event
 async def on_ready():
