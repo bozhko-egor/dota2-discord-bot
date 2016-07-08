@@ -325,7 +325,10 @@ async def on_message(message):
             reply = records(player_id)
         else:
             content = str(message.content).split()
-            hero_name = content[1]
+            if len(content) == 3:
+                hero_name = ' '.join(content[1: 3])
+            elif len(content) == 2:
+                hero_name = content[1]
             hero_id = list(hero_dic.keys())[
                 list(hero_dic.values()).index(hero_name)]
             reply = records(player_id, hero_id)
