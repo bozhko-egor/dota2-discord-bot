@@ -421,9 +421,16 @@ def winrate_solo(player_id):
     return array
 
 
-def records(player_id):
-    custom_args = {
-                'result.players.account_id': player_id}
+def records(player_id, *hero_id):
+    if not hero_id:
+        custom_args = {
+                    'result.players.account_id': player_id}
+    else:
+        custom_args = {
+                'result.players':
+                {'$elemMatch': {"account_id": player_id, "hero_id": hero_id[0]}},
+                }
+
     custom_args.update(match_search_args)
     cursor = db['{}'.format(player_id)].find(custom_args)
     cursor.sort('result.start_time', -1)
@@ -466,23 +473,34 @@ def records(player_id):
             array2[10][2] = match['start_time']
     m, s = divmod(array2[10][0], 60)
     array2[10][0] = '{}m{}s'.format(m, s)
-    return """{0}
-            **All-Time Records**:
+    reply = """{0}
+            **All-Time Records{34}**:
 
-            **Kills**:              **{1}** as **{12}** ({23} ago)
-            **Deaths**:             **{2}** as **{13}** ({24} ago)
-            **Assists**:            **{3}** as **{14}** ({25} ago)
-            **Lasthits**:           **{4}** as **{15}** ({26} ago)
-            **Denies**:             **{5}** as **{16}** ({27} ago)
-            **GPM**:                **{6}** as **{17}** ({28} ago)
-            **XPM**:                **{7}** as **{18}** ({29} ago)
-            **Hero Damage**:        **{8}** as **{19}** ({30} ago)
-            **Tower Damage**:       **{9}** as **{20}** ({31} ago)
-            **Hero Healing**:       **{10}** as **{21}** ({32} ago)
-            **Longest Match**:      **{11}** as **{22}** ({33} ago)
-            """.format(
-                dic_reverse[player_id],
-                *[i[0] for i in array2],
-                *[hero_dic[i[1]] for i in array2],
-                *[time_diff(i[2]) for i in array2]
-            )
+**Kills**:          **{1}** {12} {23}
+**Deaths**:         **{2}** {13} {24}
+**Assists**:        **{3}** {14} {25}
+**Lasthits**:       **{4}** {15} {26}
+**Denies**:         **{5}** {16} {27}
+**GPM**:            **{6}** {17} {28}
+**XPM**:            **{7}** {18} {29}
+**Hero Damage**:    **{8}** {19} {30}
+**Tower Damage**:   **{9}** {20} {31}
+**Hero Healing**:   **{10}** {21} {32}
+**Longest Match**:  **{11}** {22} {33}
+            """
+    if not hero_id:
+        return reply.format(
+                    dic_reverse[player_id],
+                    *[i[0] for i in array2],
+                    *[' as **{}**'.format(hero_dic[i[1]]) for i in array2],
+                    *['{} ago'.format(time_diff(i[2])) if i[2] != 0 else "" for i in array2],
+                    ''
+                )
+    else:
+        return reply.format(
+                    dic_reverse[player_id],
+                    *[i[0] for i in array2],
+                    *['' for i in array2],
+                    *['({} ago)'.format(time_diff(i[2])) if i[2] != 0 else "" for i in array2],
+                    ' as {}'.format(hero_dic[hero_id[0]])
+                )

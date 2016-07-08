@@ -69,12 +69,10 @@ def hero_per_month(player_id, hero_id):
     ax.yaxis.set_ticks_position('left')
     ax.xaxis.set_ticks_position('bottom')
     tick = 5 if max(y) > 20 else 1
-    #yint = range(min(y), math.ceil(max(y))+2, tick)  # set only int ticks
-    #plt.yticks(yint)
+    yint = range(min(y), math.ceil(max(y))+2, tick)  # set only int ticks
+    plt.yticks(yint)
     plt.plot(secs, y, color='blue')
 
     plt.savefig('images/graphs/hero.png')
 
     return "{} games".format(kk)
-
-hero_per_month(56232406, 6)

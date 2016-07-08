@@ -319,9 +319,16 @@ async def on_message(message):
         uptime = time_diff(launch_time)
         await client.send_message(message.channel, uptime)
 
-    if message.content == '!records':
+    if message.content.startswith('!records'):
         player_id = player_dic[message.author.name]
-        reply = records(player_id)
+        if message.content == '!records':
+            reply = records(player_id)
+        else:
+            content = str(message.content).split()
+            hero_name = content[1]
+            hero_id = list(hero_dic.keys())[
+                list(hero_dic.values()).index(hero_name)]
+            reply = records(player_id, hero_id)
         await client.send_message(message.channel, reply)
 
     if message.content.startswith('!tip'):
