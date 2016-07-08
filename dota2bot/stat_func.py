@@ -492,7 +492,7 @@ def records(player_id, *hero_id):
         return reply.format(
                     dic_reverse[player_id],
                     *[i[0] for i in array2],
-                    *[' as **{}**'.format(hero_dic[i[1]]) for i in array2],
+                    *[' as **{}**'.format(hero_dic[i[1]]) if i[1] != 0 else "" for i in array2],
                     *['{} ago'.format(time_diff(i[2])) if i[2] != 0 else "" for i in array2],
                     ''
                 )
