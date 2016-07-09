@@ -84,9 +84,10 @@ async def on_message(message):
     if message.content.startswith('!wr_with '):
         content = str(message.content).split()
         player_id = player_dic[message.author.name]
-        name = content[1]
-        player_id2 = player_dic[name]
-        reply = winrate_with(player_id, player_id2)
+        names = content[1:]
+        for i, name in enumerate(names):
+            names[i] = player_dic[name]
+        reply = winrate_with(player_id, names)
         await client.send_message(message.channel, reply)
 
     if message.content.startswith('!wr_with_hero'):

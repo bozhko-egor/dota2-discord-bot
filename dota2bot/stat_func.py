@@ -64,15 +64,18 @@ def my_winrate_with_player_on(player_id1, player_id2, hero_id):
             return 'No matches found'
 
 
-def winrate_with(player_id1, player_id2):
+def winrate_with(player_id1, names):
     global match_search_args
-    custom_args = {'result.players': {
-        '$elemMatch': {"account_id": player_id1, "level": {'$ne': 0}}
-        },
-        'result.players': {
-        '$elemMatch': {"account_id": player_id2, "level": {'$ne': 0}}
-        }
-        }
+    ids = [
+        {'result.players.account_id': player_id1}
+        ]
+    custom_args = {'$and': ids}
+    if len(names) == 0 or len(names) > 4:
+        return "Please enter valid number of names"
+    else:
+        for player_id in names:
+            ids.append({'result.players.account_id': player_id})
+    custom_args = {'$and': ids}
     custom_args.update(match_search_args)
     cursor = db['{}'.format(player_id1)].find(custom_args)
     hist = list(cursor)
