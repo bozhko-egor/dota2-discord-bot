@@ -306,10 +306,11 @@ def big_pic(match_number, player_id):
     match = list(cursor)[match_number]['result']
 
     array3 = []
+    # radiant team
     for i in range(5):
         item_dic1 = {}
         array2 = []
-        m = 1
+        m = 0
         for j in range(6):
             try:
                 item_dic1['img{}'.format(j)] = cv2.imread(
@@ -321,26 +322,48 @@ def big_pic(match_number, player_id):
 
             except KeyError:  # если айтем отсутствует в слоте
                 m += 1
-
+        # append all empty slots in the end of inventory
         for p in range(m):
             array2.append((cv2.imread(
                 'images/items/empty icon.png', 1)))
-
-        array2.insert(0, cv2.imread(
-            'images/heroes/{} icon.png'.format(hero_dic[
-                match['players'][i]['hero_id']].lower()), 1))
+        # hero pic
+        array2.insert(0, cv2.imread('images/heroes/{} icon.png'.format(hero_dic[
+            match['players'][i]['hero_id']].lower()), 1))
         array2.insert(1, cv2.imread('images/vertical.png'))
-        array2.insert(-1, cv2.imread('images/vertical.png'))
+
+        kda = ['kills', 'deaths', 'assists']
+        kda_values = [0]*3
+        for number, stat in enumerate(kda):
+            if len(str(match['players'][i][stat])) == 2:
+                kda_values[number] = str(match['players'][i][stat])
+            else:
+                kda_values[number] = '*' + str(match['players'][i][stat])
+        kda_values.insert(1, '-')
+        kda_values.insert(3, '-')
+        kda_values = ''.join(kda_values)
+        symbols = list(kda_values)
+        kda_array = []
+        for q, element in enumerate(symbols):
+            array2.insert(2+q, cv2.imread('images/numbers/{}.png'.format(element)))
+        array2.insert(10, cv2.imread('images/vertical.png'))
+        array2.append(cv2.imread('images/vertical.png'))
         array2.insert(0, cv2.imread('images/vertical.png'))
+
+
+
         try:
             array3.append(np.hstack(array2))
-            array3.append(cv2.imread('images/346.png'))
+            array3.append(cv2.imread('images/448.png'))
 
         except:
             pass
 
-    array3.insert(0, (cv2.imread('images/346.png')))
+        #cv2.imwrite('images/heroes/lineup/itemlist{}.png'.format(i), whole_items)
+    array3.insert(0, (cv2.imread('images/448.png')))
+    array3.append(cv2.imread('images/448_big.png'))
     pic1 = np.vstack(array3)
+
+    # dire team
     array3 = []
     for i in range(5, 10):
         item_dic1 = {}
@@ -363,22 +386,37 @@ def big_pic(match_number, player_id):
             array2.append((cv2.imread(
                 'images/items/empty icon.png', 1)))
 
-        array2.insert(0, cv2.imread(
-            'images/heroes/{} icon.png'.format(hero_dic[
-                match['players'][i]['hero_id']].lower()), 1))
+        array2.insert(0, cv2.imread('images/heroes/{} icon.png'.format(hero_dic[
+            match['players'][i]['hero_id']].lower()), 1))
         array2.insert(1, cv2.imread('images/vertical.png'))
+        kda = ['kills', 'deaths', 'assists']
+        kda_values = [0]*3
+        for number, stat in enumerate(kda):
+            if len(str(match['players'][i][stat])) == 2:
+                kda_values[number] = str(match['players'][i][stat])
+            else:
+                kda_values[number] = '*' + str(match['players'][i][stat])
+        kda_values.insert(1, '-')
+        kda_values.insert(3, '-')
+        kda_values = ''.join(kda_values)
+        symbols = list(kda_values)
+        kda_array = []
+        for q, element in enumerate(symbols):
+            array2.insert(2+q, cv2.imread('images/numbers/{}.png'.format(element)))
+        array2.insert(10, cv2.imread('images/vertical.png'))
         array2.append(cv2.imread('images/vertical.png'))
         array2.insert(0, cv2.imread('images/vertical.png'))
+
         try:
             array3.append(np.hstack(array2))
-            array3.append(cv2.imread('images/302.png'))
+            array3.append(cv2.imread('images/448.png'))
 
         except:
             pass
-
-    array3.insert(0, cv2.imread('images/302.png'))
+        #cv2.imwrite('images/heroes/lineup/itemlist{}.png'.format(i), whole_items)
+    array3.insert(0, cv2.imread('images/448.png'))
     pic2 = np.vstack(array3)
-    pic3 = np.hstack([pic1, pic2])
+    pic3 = np.vstack([pic1, pic2])
     cv2.imwrite('images/heroes/lineup/itemlist2.png', pic3)
 
 
