@@ -5,9 +5,10 @@ from stat_func import *
 from misc import *
 import time
 import pymongo
+import asyncio
 import pickle
 from token_and_api_key import *
-from recent_games_parser import get_recent_matches
+import recent_games_parser
 from hero_dictionary import hero_dic
 from hero_dictionary import item_dic
 from hero_graph import hero_per_month
@@ -290,15 +291,6 @@ async def on_message(message):
         else:
             await client.send_message(message.channel, "Bets must be in (0, 30] range")
 
-    if message.content.startswith('!update'):
-        if message.author.id in bot_admin:
-            reply = get_recent_matches()
-            await client.send_message(
-                message.channel, reply)
-        else:
-            await client.send_message(
-              message.channel, "You need permission to perform this action")
-
     if message.content.startswith('!graph_hero'):
         content = str(message.content).split()
         if len(content) == 3:
@@ -356,6 +348,18 @@ async def on_message(message):
             await client.send_message(message.channel, "?")
 
 
+async def auto_parsing():
+    channel = discord.Object(id=log_chat_id)
+    await client.wait_until_ready()
+    while not client.is_closed:
+        for player_id in array_of_ids:
+            reply = recent_games_parser.get_recent_matches(player_id)
+            await client.send_message(channel, reply)
+        # pending = asyncio.Task.all_tasks()
+        # client.loop.run_until_complete(asyncio.gather(*pending))
+        await asyncio.sleep(60*60)
+
+
 @client.event
 async def on_ready():
     print('Logged in as')
@@ -363,4 +367,6 @@ async def on_ready():
     print(client.user.id)
     print('------')
 
+
+client.loop.create_task(auto_parsing())
 client.run(token)
