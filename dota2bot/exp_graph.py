@@ -9,7 +9,7 @@ db = conn['dota2-db']
 player_id = 56232406
 custom_args = {'match_id': 2356515163}
 cursor = db['matches_all'].find(custom_args)
-cursor.sort('result.start_time', -1)
+cursor.sort('start_time', -1)
 hist = list(cursor)
 match = hist[0]
 

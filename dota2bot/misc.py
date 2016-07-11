@@ -5,7 +5,6 @@ from random import randint
 from random import shuffle
 from stat_func import match_search_args
 from hero_dictionary import hero_dic
-from hero_dictionary import item_dic
 import pickle
 
 conn = pymongo.MongoClient()
@@ -21,7 +20,7 @@ def guessing_game():
     cursor.sort('start_time', -1)
     hist = list(cursor)
     match_number = randint(0, len(hist)-1)
-    match = hero_id = hist[match_number]
+    match = hist[match_number]
     array3 = []
     game_type = "Solo."
     for i in range(10):

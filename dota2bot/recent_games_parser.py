@@ -21,7 +21,7 @@ def get_recent_matches(player_id):
         except:
             continue
             n_of_tries += 1
-        if n_of_tries > 50:
+        if n_of_tries > 5:
             return("Dota 2 api is down")
             break
         else:
@@ -43,7 +43,7 @@ def get_recent_matches(player_id):
                 except:
                     continue
                     n_of_tries += 1
-                    if n_of_tries > 50:
+                    if n_of_tries > 5:
                         return("Dota 2 api is down")
                         break
                 else:
@@ -52,8 +52,7 @@ def get_recent_matches(player_id):
             p += 1
     else:
         print('No new matches to parse')
-    reply = "{} - {} games".format(dic_reverse[player_id], p) if p > 0 else None
-    return reply
+    return p
 
 #if __name__ == '__main__':
 #    get_recent_matches()

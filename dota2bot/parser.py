@@ -18,3 +18,11 @@ class Parser:
         html = urlopen(get_match_url.format(match_id, api_key)).read()
         data = json.loads(html.decode('utf-8'))
         return data['result']
+
+    #def get_winrate:
+
+    #def get playernumber:
+
+    #def get league listing
+
+    #def get upcomnimg matches:

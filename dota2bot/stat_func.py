@@ -7,6 +7,7 @@ from hero_dictionary import item_dic
 from token_and_api_key import *
 import time
 from datetime import datetime, timedelta
+
 conn = pymongo.MongoClient()
 db = conn['dota2-db']
 

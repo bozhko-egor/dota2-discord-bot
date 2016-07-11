@@ -7,7 +7,7 @@ conn = pymongo.MongoClient()
 db = conn['dota2-db']
 
 k = 0
-ids_to_parse = [139351413]
+ids_to_parse = [54175368, 33333138, 33996915, 56232406]
 
 hero_ids = hero_dic.keys()
 for player_id in ids_to_parse:
@@ -28,7 +28,11 @@ for player_id in ids_to_parse:
             new_id = match_ids[-1]-1
             while True:
                 try:
-                    data = Parser.get_match_history(player_id, start_at_match_id=new_id, hero_id=j)
+                    data = Parser.get_match_history(
+                                player_id,
+                                start_at_match_id=new_id,
+                                hero_id=j
+                                )
                 except:
                     continue
                 else:
