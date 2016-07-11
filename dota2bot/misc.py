@@ -9,19 +9,19 @@ from hero_dictionary import item_dic
 import pickle
 
 conn = pymongo.MongoClient()
-db = conn['dota-db']
+db = conn['dota2-db']
 
 def guessing_game():
     global match_search_args
     player_id = array_of_ids[randint(0, len(array_of_ids)-1)]
     custom_args = {
-                'result.players.account_id': player_id}
+                'players.account_id': player_id}
     custom_args.update(match_search_args)
-    cursor = db['{}'.format(player_id)].find(custom_args)
-    cursor.sort('result.start_time', -1)
+    cursor = db['matches_all'].find(custom_args)
+    cursor.sort('start_time', -1)
     hist = list(cursor)
     match_number = randint(0, len(hist)-1)
-    match = hero_id = hist[match_number]['result']
+    match = hero_id = hist[match_number]
     array3 = []
     game_type = "Solo."
     for i in range(10):
@@ -43,7 +43,7 @@ def guessing_game():
           player_index < 5 and match['radiant_win']
     ):
         game_status = "Won. " + game_type + ", ".join(array3)
-    hero_id = hist[match_number]['result']['players'][player_index]['hero_id']
+    hero_id = hist[match_number]['players'][player_index]['hero_id']
     hero = hero_dic[hero_id]
     big_pic(match_number, player_id)
     return [hero, dic_reverse[player_id], game_status]

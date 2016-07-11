@@ -5,13 +5,13 @@ import matplotlib.pyplot as plt
 
 # in dire need of refactoring
 conn = pymongo.MongoClient()
-db = conn['dota-db']
+db = conn['dota2-db']
 player_id = 56232406
-custom_args = {'result.match_id': 2356515163}
-cursor = db['{}'.format(player_id)].find(custom_args)
+custom_args = {'match_id': 2356515163}
+cursor = db['matches_all'].find(custom_args)
 cursor.sort('result.start_time', -1)
 hist = list(cursor)
-match = hist[0]['result']
+match = hist[0]
 
 level_dic = {
     1: 0,

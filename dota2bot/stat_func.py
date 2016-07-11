@@ -8,14 +8,14 @@ from token_and_api_key import *
 import time
 from datetime import datetime, timedelta
 conn = pymongo.MongoClient()
-db = conn['dota-db']
+db = conn['dota2-db']
 
 match_search_args = {
-            'result.game_mode': {'$in': [0, 1, 2, 3, 4, 5, 12, 14, 16, 22]},
-            'result.duration': {'$gt': 720},
-            'result.players.level': {'$nin': [1, 2, 3]},
-            'result.players.leaver_status': {'$nin': [5, 6]},
-            'result.lobby_type': {'$in': [0, 5, 6, 7]}
+            'game_mode': {'$in': [0, 1, 2, 3, 4, 5, 12, 14, 16, 22]},
+            'duration': {'$gt': 720},
+            'players.level': {'$nin': [1, 2, 3]},
+            'players.leaver_status': {'$nin': [5, 6]},
+            'lobby_type': {'$in': [0, 5, 6, 7]}
             }
 
 
@@ -42,20 +42,20 @@ def time_diff(start_time):
 def my_winrate_with_player_on(player_id1, player_id2, hero_id):
         global match_search_args
         custom_args = {
-            'result.players': {
+            'players': {
                 '$elemMatch': {"account_id": player_id2, "hero_id": hero_id}
             },
-            'result.players.account_id': player_id1
+            'players.account_id': player_id1
             }
         custom_args.update(match_search_args)
-        cursor = db['{}'.format(player_id1)].find(custom_args)
+        cursor = db['matches_all'].find(custom_args)
         hist = list(cursor)
         k = 0
         for i, game in enumerate(hist):
             for j in range(10):
-                if game['result']['players'][j]['account_id'] == player_id1:
-                    if game['result']['radiant_win'] and j < 5 or (
-                            not game['result']['radiant_win'] and j > 4):
+                if game['players'][j]['account_id'] == player_id1:
+                    if game['radiant_win'] and j < 5 or (
+                            not game['radiant_win'] and j > 4):
                         k += 1
         try:
             return '{}% in {} matches'.format(
@@ -67,26 +67,26 @@ def my_winrate_with_player_on(player_id1, player_id2, hero_id):
 def winrate_with(player_id1, names):
     global match_search_args
     ids = [
-        {'result.players.account_id': player_id1}
+        {'players.account_id': player_id1}
         ]
     custom_args = {'$and': ids}
     if len(names) == 0 or len(names) > 4:
         return "Please enter valid number of names"
     else:
         for player_id in names:
-            ids.append({'result.players.account_id': player_id})
+            ids.append({'players.account_id': player_id})
     custom_args = {'$and': ids}
     custom_args.update(match_search_args)
-    cursor = db['{}'.format(player_id1)].find(custom_args)
+    cursor = db['matches_all'].find(custom_args)
     hist = list(cursor)
     k = 0
 
     for i, game in enumerate(hist):
         for j in range(10):
             try:
-                if game['result']['players'][j]['account_id'] == player_id1:
-                    if game['result']['radiant_win'] and j < 5 or (
-                            not game['result']['radiant_win'] and j > 4):
+                if game['players'][j]['account_id'] == player_id1:
+                    if game['radiant_win'] and j < 5 or (
+                            not game['radiant_win'] and j > 4):
                         k += 1
             except:
                 continue
@@ -99,18 +99,18 @@ def winrate_with(player_id1, names):
 def winrate_hero(player_id, hero_id):
     global match_search_args
     custom_args = {
-            'result.players':
+            'players':
             {'$elemMatch': {"account_id": player_id, "hero_id": hero_id}},
             }
     custom_args.update(match_search_args)
-    cursor = db['{}'.format(player_id)].find(custom_args)
+    cursor = db['matches_all'].find(custom_args)
     hist = list(cursor)
     k = 0
     for i, game in enumerate(hist):
         for j in range(10):
-            if game['result']['players'][j]['account_id'] == player_id:
-                if game['result']['radiant_win'] and j < 5 or (
-                        not game['result']['radiant_win'] and j > 4):
+            if game['players'][j]['account_id'] == player_id:
+                if game['radiant_win'] and j < 5 or (
+                        not game['radiant_win'] and j > 4):
                     k += 1
 
     try:
@@ -147,11 +147,11 @@ def win_lose(player_id):  # in dire need of refactoring
 def last_match(player_id, match_number):
     global match, match_search_args, hero_dic, item_dic, game_mode_dic
     custom_args = {
-                'result.players.account_id': player_id}
+                'players.account_id': player_id}
     custom_args.update(match_search_args)
-    cursor = db['{}'.format(player_id)].find(custom_args)
-    cursor.sort('result.start_time', -1)
-    match = list(cursor)[match_number]['result']
+    cursor = db['matches_all'].find(custom_args)
+    cursor.sort('start_time', -1)
+    match = list(cursor)[match_number]
 
     stats = {}
     stats['result'] = win_lose(player_id)
@@ -225,13 +225,13 @@ def avg_stats(player_id, number_of_games):
                   'level'
                   ]
     custom_args = {
-                'result.players.account_id': player_id}
+                'players.account_id': player_id}
     custom_args.update(match_search_args)
-    cursor = db['{}'.format(player_id)].find(custom_args)
-    cursor.sort('result.start_time', -1)
+    cursor = db['matches_all'].find(custom_args)
+    cursor.sort('start_time', -1)
     hist = list(cursor)
     for j in range(number_of_games):
-        match = hist[j]['result']
+        match = hist[j]
 
         for i in range(10):
             if player_id == match['players'][i]['account_id']:
@@ -263,16 +263,16 @@ def avg_stats_with_hero(player_id, hero_id):
                   'level'
                   ]
     custom_args = {
-            'result.players':
+            'players':
             {'$elemMatch': {"account_id": player_id, "hero_id": hero_id}},
             }
     custom_args.update(match_search_args)
-    cursor = db['{}'.format(player_id)].find(custom_args)
+    cursor = db['matches_all'].find(custom_args)
     hist = list(cursor)
     k = 0
 
     for m, game in enumerate(hist):
-        match = game['result']
+        match = game
         for j in range(10):
             if match['players'][j]['account_id'] == player_id:
                 if match['radiant_win'] and j < 5 or (
@@ -299,11 +299,11 @@ def avg_stats_with_hero(player_id, hero_id):
 
 def big_pic(match_number, player_id):
     custom_args = {
-                'result.players.account_id': player_id}
+                'players.account_id': player_id}
     custom_args.update(match_search_args)
-    cursor = db['{}'.format(player_id)].find(custom_args)
-    cursor.sort('result.start_time', -1)
-    match = list(cursor)[match_number]['result']
+    cursor = db['matches_all'].find(custom_args)
+    cursor.sort('start_time', -1)
+    match = list(cursor)[match_number]
 
     array3 = []
     # radiant team
@@ -425,10 +425,10 @@ def winrate_solo(player_id):
 
 
     custom_args = {
-                'result.players.account_id': player_id}
+                'players.account_id': player_id}
     custom_args.update(match_search_args)
-    cursor = db['{}'.format(player_id)].find(custom_args)
-    cursor.sort('result.start_time', -1)
+    cursor = db['matches_all'].find(custom_args)
+    cursor.sort('start_time', -1)
     hist = list(cursor)
 
     array2 = [0]*5
@@ -438,12 +438,12 @@ def winrate_solo(player_id):
         m = 0
         for j in range(10):
             try:
-                if game['result']['players'][j]['account_id'] in array_of_ids:
+                if game['players'][j]['account_id'] in array_of_ids:
                     k += 1
 
-                if game['result']['players'][j]['account_id'] == player_id:
-                    if game['result']['radiant_win'] and j < 5 or (
-                            not game['result']['radiant_win'] and j > 4):
+                if game['players'][j]['account_id'] == player_id:
+                    if game['radiant_win'] and j < 5 or (
+                            not game['radiant_win'] and j > 4):
 
                             m += 1
             except:
@@ -465,16 +465,16 @@ def winrate_solo(player_id):
 def records(player_id, *hero_id):
     if not hero_id:
         custom_args = {
-                    'result.players.account_id': player_id}
+                    'players.account_id': player_id}
     else:
         custom_args = {
-                'result.players':
+                'players':
                 {'$elemMatch': {"account_id": player_id, "hero_id": hero_id[0]}},
                 }
 
     custom_args.update(match_search_args)
-    cursor = db['{}'.format(player_id)].find(custom_args)
-    cursor.sort('result.start_time', -1)
+    cursor = db['matches_all'].find(custom_args)
+    cursor.sort('start_time', -1)
     hist = list(cursor)
     array2 = [[0 for x in range(3)] for y in range(11)]
     array_stat = ['kills',
@@ -491,7 +491,7 @@ def records(player_id, *hero_id):
                   ]
 
     for game in hist:
-        match = game['result']
+        match = game
 
         for i in range(10):
             try:

@@ -4,25 +4,25 @@ import matplotlib.pyplot as plt
 from hero_dictionary import hero_dic
 import matplotlib.dates as mdates
 conn = pymongo.MongoClient()
-db = conn['dota-db']
+db = conn['dota2-db']
 
 
 def hero_per_month(player_id, hero_id):
     match_search_args = {
-                'result.game_mode': {'$in': [0, 1, 2, 3, 4, 5, 12, 14, 16, 22]},
-                'result.duration': {'$gt': 720},
-                'result.players.level': {'$nin': [1, 2, 3]},
-                'result.players.leaver_status': {'$nin': [5, 6]},
-                'result.lobby_type': {'$in': [0, 5, 6, 7]}
+                'game_mode': {'$in': [0, 1, 2, 3, 4, 5, 12, 14, 16, 22]},
+                'duration': {'$gt': 720},
+                'players.level': {'$nin': [1, 2, 3]},
+                'players.leaver_status': {'$nin': [5, 6]},
+                'lobby_type': {'$in': [0, 5, 6, 7]}
                 }
 
     custom_args = {
-                'result.players.account_id': player_id}
+                'players.account_id': player_id}
     custom_args.update(match_search_args)
-    cursor = db['{}'.format(player_id)].find(custom_args)
-    cursor.sort('result.start_time', 1)
+    cursor = db['matches_all'].find(custom_args)
+    cursor.sort('start_time', 1)
     hist = list(cursor)
-    time = hist[0]['result']['start_time']
+    time = hist[0]['start_time']
 
     quantity = []
     kk = 0
@@ -31,12 +31,12 @@ def hero_per_month(player_id, hero_id):
     month = []
     for i in hist:
 
-        if i['result']['start_time'] < time:
+        if i['start_time'] < time:
             for j in range(10):
                 try:
-                    if i['result']['players'][j]['account_id'] == player_id:
+                    if i['players'][j]['account_id'] == player_id:
 
-                        if i['result']['players'][j]['hero_id'] == hero_id:
+                        if i['players'][j]['hero_id'] == hero_id:
                             q += 1
                             kk += 1
                 except:
