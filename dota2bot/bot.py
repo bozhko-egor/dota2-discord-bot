@@ -355,9 +355,8 @@ async def auto_parsing():
     while not client.is_closed:
         for player_id in array_of_ids:
             reply = recent_games_parser.get_recent_matches(player_id)
-            if reply:
-                count += 1
-        await client.send_message(channel, '{} new games'.format(count))
+
+            await client.send_message(channel, '{} new games'.format(count))
         # pending = asyncio.Task.all_tasks()
         # client.loop.run_until_complete(asyncio.gather(*pending))
         await asyncio.sleep(60*60)
