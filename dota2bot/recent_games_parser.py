@@ -14,42 +14,28 @@ def get_recent_matches(player_id):
     cursor.sort('start_time', -1)
     hist = list(cursor)
     match_ids = []
-    n_of_tries = 0
-    while True:
-        try:
-            data = Parser.get_match_history(player_id)
-        except:
-            continue
-            n_of_tries += 1
-        if n_of_tries > 5:
-            return("Dota 2 api is down")
-            break
-        else:
-            break
 
-    k = 0
-    while True:
-        if hist[0]['match_id'] != data['matches'][k]['match_id']:
-            match_ids.append(data['matches'][k]['match_id'])
-            print("{}".format(k))
-            k += 1
-        else:
-            break
+    data = Parser.get_match_history(player_id)
+
+    if data:
+        k = 0
+        while True:
+            if hist[0]['match_id'] != data['matches'][k]['match_id']:
+                match_ids.append(data['matches'][k]['match_id'])
+                print("{}".format(k))
+                k += 1
+            else:
+                break
+    else:
+        return "Dota 2 api is down"
     if len(match_ids) != 0:
         for i in match_ids:
-            while True:
-                try:
-                    data2 = get_match_details(i)
-                except:
-                    continue
-                    n_of_tries += 1
-                    if n_of_tries > 5:
-                        return("Dota 2 api is down")
-                        break
-                else:
-                    break
-            db['matches_all'].insert_one(data2)
-            p += 1
+            data2 = Parser.get_match_details(i)
+            if data2:
+                db['matches_all'].insert_one(data2)
+                p += 1
+            else:
+                return "Dota 2 api is down"
     else:
         print('No new matches to parse')
     return p
