@@ -12,7 +12,7 @@ import recent_games_parser
 from hero_dictionary import hero_dic
 from hero_dictionary import item_dic
 from hero_graph import hero_per_month
-
+from tournament_info import get_schedule
 logging.basicConfig(level=logging.INFO)
 client = discord.Client()
 launch_time = int(time.time())
@@ -347,6 +347,9 @@ async def on_message(message):
         else:
             await client.send_message(message.channel, "?")
 
+    if message.content.startswith('!pro_games'):
+        reply = get_schedule()
+        await client.send_message(message.channel, reply)
 
 async def auto_parsing():
     channel = discord.Object(id=log_chat_id)

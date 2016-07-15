@@ -14,7 +14,7 @@ hist = list(cursor)
 match = hist[0]
 
 level_dic = {
-    1: 0,
+    1:  0,
     2:	200,
     3:	300,
     4:	400,
