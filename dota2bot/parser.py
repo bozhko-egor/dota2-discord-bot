@@ -2,7 +2,7 @@ import json
 from urllib.request import urlopen
 from token_and_api_key import api_key
 from urls import *
-
+import urllib
 
 class Parser:
     # 100 results per api call
@@ -10,12 +10,18 @@ class Parser:
         url = get_history_url
         for name, value in kwargs.items():
             url += "&{0}={1}".format(name, value)
-        html = urlopen(url.format(account_id, api_key)).read()
+        try:
+            html = urlopen(url.format(account_id, api_key)).read()
+        except urllib.error.HTTPError:
+            return
         data = json.loads(html.decode('utf-8'))
         return data['result']
 
     def get_match_details(match_id):
-        html = urlopen(get_match_url.format(match_id, api_key)).read()
+        try:
+            html = urlopen(get_match_url.format(match_id, api_key)).read()
+        except urllib.HTTPError:
+            return
         data = json.loads(html.decode('utf-8'))
         return data['result']
 

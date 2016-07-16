@@ -350,8 +350,6 @@ def big_pic(match_number, player_id):
         array2.append(cv2.imread('images/vertical.png'))
         array2.insert(0, cv2.imread('images/vertical.png'))
 
-
-
         try:
             array3.append(np.hstack(array2))
             array3.append(cv2.imread('images/448.png'))
@@ -502,7 +500,7 @@ def records(player_id, *hero_id):
                 pass
         x = match['players'][player_index]
         for i in range(10):
-            try:
+            try:    # old matches sometimes dont have all stats
                 if x[array_stat[i]] > array2[i][0]:
                     array2[i][0] = x[array_stat[i]]
                     array2[i][1] = x['hero_id']
