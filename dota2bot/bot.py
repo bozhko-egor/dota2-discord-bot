@@ -24,6 +24,7 @@ if not discord.opus.is_loaded():
 
     discord.opus.load_opus('/usr/local/lib/libopusfile.so')
 
+
 @client.event
 async def on_message(message):
 
@@ -351,6 +352,10 @@ async def on_message(message):
         reply = get_schedule()
         await client.send_message(message.channel, reply)
 
+    await client.process_commands(message)
+
+
+@client.event
 async def auto_parsing():
     channel = discord.Object(id=log_chat_id)
     await client.wait_until_ready()
