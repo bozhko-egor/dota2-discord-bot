@@ -327,6 +327,7 @@ def big_pic(player_id, match_number):
         for p in range(m):
             array2.append((cv2.imread(
                 'images/items/empty icon.png', 1)))
+        array2.insert(0, cv2.imread('images/vertical.png'))
         # hero pic
         array2.insert(0, cv2.imread('images/heroes/{} icon.png'.format(hero_dic[
             match['players'][i]['hero_id']].lower()), 1))
@@ -338,7 +339,7 @@ def big_pic(player_id, match_number):
             if len(str(match['players'][i][stat])) == 2:
                 kda_values[number] = str(match['players'][i][stat])
             else:
-                kda_values[number] = '*' + str(match['players'][i][stat])
+                kda_values[number] = '&{}&'.format(str(match['players'][i][stat]))
         kda_values.insert(1, '-')
         kda_values.insert(3, '-')
         kda_values = ''.join(kda_values)
@@ -346,7 +347,7 @@ def big_pic(player_id, match_number):
         kda_array = []
         for q, element in enumerate(symbols):
             array2.insert(2+q, cv2.imread('images/numbers/{}.png'.format(element)))
-        array2.insert(10, cv2.imread('images/vertical.png'))
+        #array2.insert(10, cv2.imread('images/vertical.png'))
         array2.append(cv2.imread('images/vertical.png'))
         array2.insert(0, cv2.imread('images/vertical.png'))
 
@@ -384,7 +385,7 @@ def big_pic(player_id, match_number):
         for p in range(m):
             array2.append((cv2.imread(
                 'images/items/empty icon.png', 1)))
-
+        array2.insert(0, cv2.imread('images/vertical.png'))
         array2.insert(0, cv2.imread('images/heroes/{} icon.png'.format(hero_dic[
             match['players'][i]['hero_id']].lower()), 1))
         array2.insert(1, cv2.imread('images/vertical.png'))
@@ -394,7 +395,7 @@ def big_pic(player_id, match_number):
             if len(str(match['players'][i][stat])) == 2:
                 kda_values[number] = str(match['players'][i][stat])
             else:
-                kda_values[number] = '*' + str(match['players'][i][stat])
+                kda_values[number] = '&{}&'.format(str(match['players'][i][stat]))
         kda_values.insert(1, '-')
         kda_values.insert(3, '-')
         kda_values = ''.join(kda_values)
@@ -402,7 +403,7 @@ def big_pic(player_id, match_number):
         kda_array = []
         for q, element in enumerate(symbols):
             array2.insert(2+q, cv2.imread('images/numbers/{}.png'.format(element)))
-        array2.insert(10, cv2.imread('images/vertical.png'))
+        #array2.insert(10, cv2.imread('images/vertical.png'))
         array2.append(cv2.imread('images/vertical.png'))
         array2.insert(0, cv2.imread('images/vertical.png'))
 
