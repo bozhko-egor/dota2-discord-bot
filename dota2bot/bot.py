@@ -126,7 +126,7 @@ async def on_message(message):
         player_id = player_dic[message.author.name]
         if message.content == '?last':
             reply = last_match(player_id, 0)
-            big_pic(0, player_id)
+            big_pic(player_id, 0)
         else:
             content = str(message.content).split()
             match_number = int(content[1])
@@ -277,20 +277,6 @@ async def on_message(message):
         else:
             await client.send_message(message.channel, "You don't have enough dosh to post memes")
 
-    if message.content.startswith('$roulette'):
-        content = str(message.content).split()
-        n = int(content[1])
-        player_id = message.author.name
-        with open('dosh.pickle', 'rb') as f:
-            dosh = pickle.load(f)
-        if 0 < n <= 30:
-            if dosh[player_id] - n >= 0:
-                reply = roulette(n, dosh, player_id)
-                await client.send_message(message.channel, reply)
-            else:
-                await client.send_message(message.channel, "You don't have enough dosh.")
-        else:
-            await client.send_message(message.channel, "Bets must be in (0, 30] range")
 
     if message.content.startswith('!graph_hero'):
         content = str(message.content).split()

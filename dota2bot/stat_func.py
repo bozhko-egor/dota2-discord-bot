@@ -208,7 +208,7 @@ def last_match(player_id, match_number):
     # dotabuff = "http://www.dotabuff.com/matches/{}".format(last_match_id)
 
     reply = """({game_mode}) {result} KDA: {kda}, Duration: {m}m{s}s,
-        played on {date} ({time_passed} ago), {game_status}""".format(**stats)
+    played on {date} ({time_passed} ago), {game_status}""".format(**stats)
     reply = reply.replace('\n', ' ')
     return reply
 
@@ -298,7 +298,7 @@ def avg_stats_with_hero(player_id, hero_id):
     return reply
 
 
-def big_pic(match_number, player_id):
+def big_pic(player_id, match_number):
     custom_args = {
                 'players.account_id': player_id}
     custom_args.update(match_search_args)
@@ -461,7 +461,7 @@ def winrate_solo(player_id):
     return array
 
 
-def records(player_id, *hero_id):
+def all_time_records(player_id, *hero_id):
     if not hero_id:
         custom_args = {
                     'players.account_id': player_id}
