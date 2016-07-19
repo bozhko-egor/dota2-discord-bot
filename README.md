@@ -1,6 +1,6 @@
 # dota2-discord-bot
 small script that uses both discord and dota2 api to get stats
-dota-bot v. 0.1
+dota2-bot v. 0.1
     List of commands:
 
     !last - your last match details
@@ -10,9 +10,8 @@ dota-bot v. 0.1
     !stats<n> - your avg stats in last n games
     !hero <hero name> - <hero>'s pic
     !item <item name> - item pic
-    %<twitch emote> - twitch emote(for full list use !memelist)
 
- 
+
 
 
 

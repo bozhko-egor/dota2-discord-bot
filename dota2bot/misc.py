@@ -46,27 +46,3 @@ def guessing_game():
     hero = hero_dic[hero_id]
     big_pic(match_number, player_id)
     return [hero, dic_reverse[player_id], game_status]
-
-def roulette(n, dosh, player_id):
-    roll = randint(0, 100)
-    if 0 <= roll <= 66:
-        reply = "You lost {}$".format(n)
-        dosh[player_id] -= n
-        with open('dosh.pickle', 'wb') as f:
-                pickle.dump(dosh, f)
-    elif 67 <= roll <= 94:
-        reply = "You won {}$".format(2*n)
-        dosh[player_id] += n
-        with open('dosh.pickle', 'wb') as f:
-                pickle.dump(dosh, f)
-    elif 96 <= roll <= 99:
-        reply = "You won {}$".format(4*n)
-        dosh[player_id] += 3*n
-        with open('dosh.pickle', 'wb') as f:
-                pickle.dump(dosh, f)
-    elif roll == 100:
-        reply = "You won {}$".format(10*n)
-        dosh[player_id] += 9*n
-        with open('dosh.pickle', 'wb') as f:
-                pickle.dump(dosh, f)
-    return reply

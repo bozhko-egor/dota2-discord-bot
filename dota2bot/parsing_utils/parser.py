@@ -1,8 +1,9 @@
 import json
 from urllib.request import urlopen
 from token_and_api_key import api_key
-from urls import *
+from .urls import *
 import urllib
+
 
 class Parser:
     # 100 results per api call

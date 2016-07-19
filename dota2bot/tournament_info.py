@@ -1,5 +1,4 @@
-
-from parser import Parser
+from parsing_utils.parser import Parser
 
 
 def get_schedule(*league_ids):

@@ -1,6 +1,6 @@
 from token_and_api_key import *
 import pymongo
-from parser import Parser
+from .parser import Parser
 
 conn = pymongo.MongoClient()
 db = conn['dota2-db']

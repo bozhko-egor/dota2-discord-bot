@@ -126,7 +126,7 @@ async def on_message(message):
         player_id = player_dic[message.author.name]
         if message.content == '?last':
             reply = last_match(player_id, 0)
-            big_pic(player_id, 0)
+            big_pic(player_id)
         else:
             content = str(message.content).split()
             match_number = int(content[1])
@@ -240,14 +240,7 @@ async def on_message(message):
         await client.send_file(message.channel, 'images/twitch/nice.gif')
         await client.change_status(game=discord.Game(name='Nice'))
 
-    if message.content.startswith('!balance'):
-        with open('dosh.pickle', 'rb') as f:
-            dosh = pickle.load(f)
-        reply = dosh[message.author.name]
-        await client.send_message(
-            message.channel,
-            "Your current balance: {}$".format(reply)
-            )
+    
     if message.content.startswith('!total'):
         with open('dosh.pickle', 'rb') as f:
             dosh = pickle.load(f)
@@ -277,6 +270,20 @@ async def on_message(message):
         else:
             await client.send_message(message.channel, "You don't have enough dosh to post memes")
 
+    if message.content.startswith('$roulette'):
+        content = str(message.content).split()
+        n = int(content[1])
+        player_id = message.author.name
+        with open('dosh.pickle', 'rb') as f:
+            dosh = pickle.load(f)
+        if 0 < n <= 30:
+            if dosh[player_id] - n >= 0:
+                reply = roulette(n, dosh, player_id)
+                await client.send_message(message.channel, reply)
+            else:
+                await client.send_message(message.channel, "You don't have enough dosh.")
+        else:
+            await client.send_message(message.channel, "Bets must be in (0, 30] range")
 
     if message.content.startswith('!graph_hero'):
         content = str(message.content).split()
