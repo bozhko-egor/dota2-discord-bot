@@ -4,12 +4,15 @@ import sys
 import asyncio
 from token_and_api_key import *
 from parsing_utils import recent_games_parser
-
+import time
 
 initial_extensions = (
-    'cogs.check',
     'cogs.stats',
-    'cogs.pro'
+    'cogs.pro',
+    'cogs.meta',
+    'cogs.pics',
+    'cogs.voice',
+    'cogs.game'
     )
 help_attrs = dict(hidden=True)
 description = '''DESCRIPTION'''
@@ -28,6 +31,7 @@ async def on_message(message):
 
     if message.author.bot:
         return
+
     await bot.process_commands(message)
 
 
@@ -52,7 +56,8 @@ async def on_ready():
     print(bot.user.name)
     print(bot.user.id)
     print('------')
-
+    if not hasattr(bot, 'uptime'):
+        bot.uptime = int(time.time())
 
 if __name__ == '__main__':
     for extension in initial_extensions:
@@ -60,6 +65,6 @@ if __name__ == '__main__':
             bot.load_extension(extension)
         except Exception as e:
             print('Failed to load extension {}\n{}: {}'.format(extension, type(e).__name__, e))
-
+    launch_time = int(time.time())
     #bot.loop.create_task(auto_parsing())
     bot.run(token)

@@ -5,7 +5,7 @@ from random import randint
 from random import shuffle
 from stat_func import match_search_args
 from hero_dictionary import hero_dic
-import pickle
+
 
 conn = pymongo.MongoClient()
 db = conn['dota2-db']
@@ -44,5 +44,5 @@ def guessing_game():
         game_status = "Won. " + game_type + ", ".join(array3)
     hero_id = hist[match_number]['players'][player_index]['hero_id']
     hero = hero_dic[hero_id]
-    big_pic(match_number, player_id)
+    big_pic(player_id, match_number)
     return [hero, dic_reverse[player_id], game_status]

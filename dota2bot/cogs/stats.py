@@ -20,8 +20,8 @@ class Stats:
             ctx.message.channel, 'images/heroes/lineup/itemlist.png')
 
     @commands.command(pass_context=True)
-    async def p_last(self, ctx, *, characters: str):
-        player_id = player_dic[characters.split()[1]]
+    async def p_last(self, ctx, *, player_name: str):
+        player_id = player_dic[player_name.split()[1]]
         number = int(characters.split()[0])
         reply = last_match(player_id, number)
 
