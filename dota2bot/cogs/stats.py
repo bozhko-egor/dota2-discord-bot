@@ -5,14 +5,14 @@ from stat_func import *
 from hero_graph import hero_per_month
 
 class Stats:
-    '''Match-related stats'''
+    """Dota-related stats"""
     def __init__(self, bot):
         self.bot = bot
 
     @commands.command(pass_context=True)
     async def last(self, ctx, *, number: int):
         player_id = player_dic[ctx.message.author.name]
-        reply = last_match(player_id, characters)  # !last 0 == last match
+        reply = last_match(player_id, number)  # !last 0 == last match
 
         await self.bot.send_file(
             ctx.message.channel, 'images/heroes/lineup/lineup.png', content=reply)
@@ -22,7 +22,7 @@ class Stats:
     @commands.command(pass_context=True)
     async def p_last(self, ctx, *, player_name: str):
         player_id = player_dic[player_name.split()[1]]
-        number = int(characters.split()[0])
+        number = int(player_name.split()[0])
         reply = last_match(player_id, number)
 
         await self.bot.send_file(
@@ -47,7 +47,6 @@ class Stats:
         reply = winrate_hero(player_id, hero_id)
         await self.bot.say(reply)
 
-
     @commands.command(pass_context=True)
     async def wr_with(self, ctx, *, msg):
         names = msg.split()
@@ -56,7 +55,6 @@ class Stats:
             names[i] = player_dic[name]
         reply = winrate_with(player_id, names)
         await self.bot.say(reply)
-
 
     @commands.command(pass_context=True)
     async def wr_with_hero(self, ctx, *, msg):
@@ -69,7 +67,6 @@ class Stats:
         reply = my_winrate_with_player_on(player_id, player_id2, hero_id)
         await self.bot.say(reply)
 
-
     @commands.command(pass_context=True)
     async def avg(self, ctx, *, hero_name):
         player_id = player_dic[ctx.message.author.name]
@@ -78,13 +75,13 @@ class Stats:
         reply = avg_stats_with_hero(player_id, hero_id)
         await self.bot.say(reply)
 
-
     @commands.command(pass_context=True)
     async def game_stat(self, ctx, match_number: int):
         player_id = player_dic[ctx.message.author.name]
         reply = last_match(player_id, match_number)
         big_pic(player_id, match_number)
-        await self.bot.send_file(ctx.message.channel,
+        await self.bot.send_file(
+            ctx.message.channel,
             'images/heroes/lineup/itemlist2.png',
             content=reply
             )
@@ -99,7 +96,6 @@ class Stats:
                     ctx.message.channel,
                     'images/graphs/hero.png',
                     content=reply)
-
 
     @commands.command(pass_context=True)
     async def records(self, ctx, *hero_name):

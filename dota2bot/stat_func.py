@@ -342,14 +342,18 @@ def big_pic(player_id, match_number):
                 kda_values[number] = '&{}&'.format(str(match['players'][i][stat]))
         kda_values.insert(1, '-')
         kda_values.insert(3, '-')
+        kda_values.insert(0, '%')
+        kda_values.append('%')
         kda_values = ''.join(kda_values)
         symbols = list(kda_values)
-        kda_array = []
+
         for q, element in enumerate(symbols):
             array2.insert(2+q, cv2.imread('images/numbers/{}.png'.format(element)))
         #array2.insert(10, cv2.imread('images/vertical.png'))
         array2.append(cv2.imread('images/vertical.png'))
         array2.insert(0, cv2.imread('images/vertical.png'))
+
+
 
         try:
             array3.append(np.hstack(array2))
@@ -398,12 +402,14 @@ def big_pic(player_id, match_number):
                 kda_values[number] = '&{}&'.format(str(match['players'][i][stat]))
         kda_values.insert(1, '-')
         kda_values.insert(3, '-')
+        kda_values.insert(0, '%')
+        kda_values.append('%')
         kda_values = ''.join(kda_values)
         symbols = list(kda_values)
-        kda_array = []
+
         for q, element in enumerate(symbols):
             array2.insert(2+q, cv2.imread('images/numbers/{}.png'.format(element)))
-        #array2.insert(10, cv2.imread('images/vertical.png'))
+        # array2.insert(10, cv2.imread('images/vertical.png'))
         array2.append(cv2.imread('images/vertical.png'))
         array2.insert(0, cv2.imread('images/vertical.png'))
 
@@ -418,7 +424,6 @@ def big_pic(player_id, match_number):
     pic2 = np.vstack(array3)
     pic3 = np.vstack([pic1, pic2])
     cv2.imwrite('images/heroes/lineup/itemlist2.png', pic3)
-
 
 # not used
 def winrate_solo(player_id):
