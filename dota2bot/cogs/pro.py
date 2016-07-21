@@ -12,6 +12,7 @@ class PRO:
 
     @commands.command()
     async def pro_games(self):
+        """List of live or upcoming Dota2 pro games"""
         await self.bot.say(get_schedule())
 
 

@@ -10,6 +10,7 @@ class Meta:
 
     @commands.command()
     async def uptime(self):
+        """Bot's current uptime"""
         reply = stat_func.time_diff(self.bot.uptime)
         await self.bot.say(reply)
 

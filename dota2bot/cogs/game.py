@@ -9,6 +9,7 @@ class Game:
 
     @commands.command(pass_context=True)
     async def guess(self, ctx):
+        """You need to guees hero you or your friend played that game"""
         reply = guessing_game()
         await self.bot.send_file(
                 ctx.message.channel,

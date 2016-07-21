@@ -15,7 +15,7 @@ initial_extensions = (
     'cogs.game'
     )
 help_attrs = dict(hidden=True)
-description = '''DESCRIPTION'''
+description = '''Hey! I'm a bot that provides some Dota2 related utilities.'''
 bot = commands.Bot(
     command_prefix='!',
     description=description,

@@ -9,6 +9,7 @@ class Pics:
 
     @commands.command(pass_context=True)
     async def hero(self, ctx, *, hero_name):
+        """<hero_name>'s icon"""
         if hero_name.lower() in [x.lower() for x in hero_dic.values()]:
             await self.bot.send_file(
                 ctx.message.channel,
@@ -20,6 +21,7 @@ class Pics:
 
     @commands.command(pass_context=True)
     async def item(self, ctx, *, item_name):
+        """Picture of <item_name>"""
         if item_name.lower() in [x.lower() for x in item_dic.values()]:
             await self.bot.send_file(
                 ctx.message.channel,
