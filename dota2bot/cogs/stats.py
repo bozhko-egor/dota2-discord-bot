@@ -16,9 +16,9 @@ class Stats:
         reply = last_match(player_id, number)  # !last 0 == last match
 
         await self.bot.send_file(
-            ctx.message.channel, 'images/heroes/lineup/lineup.png', content=reply)
+            ctx.message.channel, 'images/lineup/lineup.png', content=reply)
         await self.bot.send_file(
-            ctx.message.channel, 'images/heroes/lineup/itemlist.png')
+            ctx.message.channel, 'images/lineup/itemlist.png')
 
     @commands.command(pass_context=True)
     async def p_last(self, ctx, *, player_name: str):
@@ -28,9 +28,9 @@ class Stats:
         reply = last_match(player_id, number)
 
         await self.bot.send_file(
-            ctx.message.channel, 'images/heroes/lineup/lineup.png', content=reply)
+            ctx.message.channel, 'images/lineup/lineup.png', content=reply)
         await self.bot.send_file(
-            ctx.message.channel, 'images/heroes/lineup/itemlist.png')
+            ctx.message.channel, 'images/lineup/itemlist.png')
 
     @commands.command(pass_context=True)
     async def stats(self, ctx, games: int):
@@ -90,7 +90,7 @@ class Stats:
         big_pic(player_id, match_number)
         await self.bot.send_file(
             ctx.message.channel,
-            'images/heroes/lineup/itemlist2.png',
+            'images/lineup/itemlist2.png',
             content=reply
             )
 

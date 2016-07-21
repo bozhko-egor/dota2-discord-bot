@@ -11,9 +11,6 @@ def get_schedule(*league_ids):
             live.append(game)
         else:
             upcoming.append(game)
-    # dt1 = datetime.datetime.fromtimestamp(int(time.time()))
-    # dt2 = dt1 = datetime.datetime.fromtimestamp(int(games['starttime_unix']))
-    # rd = dateutil.relativedelta.relativedelta(dt2, dt1)
 
     if live:
         reply = "**Live games:** \n"

@@ -173,7 +173,7 @@ def last_match(player_id, match_number):
         array1.append(img_dic['img{}'.format(j)])
 
     whole_image = np.hstack(array1)
-    cv2.imwrite('images/heroes/lineup/lineup.png', whole_image)
+    cv2.imwrite('images/lineup/lineup.png', whole_image)
     # ================================= item images
     item_dic1 = {}
     array2 = []
@@ -191,7 +191,7 @@ def last_match(player_id, match_number):
                 'images/items/empty icon.png', -1)
 
     whole_items = np.hstack(array2)
-    cv2.imwrite('images/heroes/lineup/itemlist.png', whole_items)
+    cv2.imwrite('images/lineup/itemlist.png', whole_items)
 
     stats['game_status'] = game_status
     stats['kda'] = "{kills}/{deaths}/{assists}".format(
@@ -362,7 +362,6 @@ def big_pic(player_id, match_number):
         except:
             pass
 
-        #cv2.imwrite('images/heroes/lineup/itemlist{}.png'.format(i), whole_items)
     array3.insert(0, (cv2.imread('images/448.png')))
     array3.append(cv2.imread('images/448_big.png'))
     pic1 = np.vstack(array3)
@@ -419,11 +418,11 @@ def big_pic(player_id, match_number):
 
         except:
             pass
-        #cv2.imwrite('images/heroes/lineup/itemlist{}.png'.format(i), whole_items)
+
     array3.insert(0, cv2.imread('images/448.png'))
     pic2 = np.vstack(array3)
     pic3 = np.vstack([pic1, pic2])
-    cv2.imwrite('images/heroes/lineup/itemlist2.png', pic3)
+    cv2.imwrite('images/lineup/itemlist2.png', pic3)
 
 # not used
 def winrate_solo(player_id):

@@ -92,6 +92,6 @@ plt.title('Exp difference')
 plt.plot(x, exp2, color='blue')
 
 plt.axhline(0, color='black')
-plt.savefig('example01.png')
+plt.savefig('images/graphs/example01.png')
 
 print(max(exp2), min(exp2))

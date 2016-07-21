@@ -13,7 +13,7 @@ class Game:
         reply = guessing_game()
         await self.bot.send_file(
                 ctx.message.channel,
-                'images/heroes/lineup/itemlist2.png',
+                'images/lineup/itemlist2.png',
                 content='Guess a hero {} played that game. {}'.format(
                     reply[1], reply[2])
                 )
