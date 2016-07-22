@@ -1,7 +1,7 @@
 from discord.ext import commands
 import discord
 from .utils import stat_func, checks
-
+import os
 
 class Meta:
     def __init__(self, bot):
@@ -37,6 +37,7 @@ class Meta:
         result = ['**About Me:**']
         result.append('- Author: Егор#5310 (Discord ID: 134716781750124544)')
         result.append('- Library: discord.py (Python)')
+        result.append('- Source code : https://github.com/bozhko-egor/dota2-discord-bot')
         result.append('- Latest Change: {}'.format(revision))
         result.append('- Uptime: {}'.format(stat_func.time_diff(self.bot.uptime)))
         await self.bot.say('\n'.join(result))
