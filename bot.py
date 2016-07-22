@@ -1,9 +1,8 @@
 import discord
 from discord.ext import commands
-import sys
-import asyncio
-from token_and_api_key import *
+from token_and_api_key import token
 from parsing_utils import recent_games_parser
+from cogs.utils.DotaDatabase import DotaDatabase
 import time
 
 initial_extensions = (
@@ -35,8 +34,6 @@ async def on_message(message):
     await bot.process_commands(message)
 
 
-
-
 @bot.event
 async def auto_parsing():
     channel = discord.Object(id=log_chat_id)
@@ -66,5 +63,7 @@ if __name__ == '__main__':
         except Exception as e:
             print('Failed to load extension {}\n{}: {}'.format(extension, type(e).__name__, e))
     launch_time = int(time.time())
+    db = DotaDatabase('dota2-db')
+    db.connect()
     #bot.loop.create_task(auto_parsing())
     bot.run(token)
