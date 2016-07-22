@@ -1,18 +1,17 @@
 from token_and_api_key import *
-import pymongo
 from .parser import Parser
+from cogs.utils.DotaDatabase import DotaDatabase
 
-conn = pymongo.MongoClient()
-db = conn['dota2-db']
-
+db = DotaDatabase('dota2-db')
+db.connect()
 
 def get_recent_matches(player_id):
     p = 0
 
-    custom_args = {'players.account_id': player_id}
-    cursor = db['matches_all'].find(custom_args)
-    cursor.sort('start_time', -1)
-    hist = list(cursor)
+    args = {'players.account_id': player_id}
+
+    hist = db.get_match_list(args)
+
     match_ids = []
 
     data = Parser.get_match_history(player_id)
@@ -32,7 +31,7 @@ def get_recent_matches(player_id):
         for i in match_ids:
             data2 = Parser.get_match_details(i)
             if data2:
-                db['matches_all'].insert_one(data2)
+                db.add_match_stat(data2)
                 p += 1
             else:
                 return "Dota 2 api is down"

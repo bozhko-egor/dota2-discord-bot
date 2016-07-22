@@ -1,10 +1,10 @@
 from parser import Parser
 from token_and_api_key import *
-import pymongo
 from hero_dictionary import hero_dic
+from cogs.utils.DotaDatabase import DotaDatabase
 
-conn = pymongo.MongoClient()
-db = conn['dota2-db']
+db = DotaDatabase('dota2-db')
+db.connect()
 
 k = 0
 ids_to_parse = []
@@ -39,7 +39,7 @@ for player_id in ids_to_parse:
                     break
 
         for i in match_ids:
-            cursor = list(db['matches_all'].find({'match_id': i}))
+            cursor = db.get_match_stat(i)
             if not len(cursor):
                 while True:
                     try:
@@ -49,7 +49,7 @@ for player_id in ids_to_parse:
                     else:
                         break
 
-                db['matches_all'].insert_one(data2)
+                db.add_match_stat(data2)
                 k += 1
                 print("{}({})".format(k, j))
             else:

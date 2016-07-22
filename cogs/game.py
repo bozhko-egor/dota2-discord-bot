@@ -10,10 +10,15 @@ class Game:
     def __init__(self, bot):
         self.bot = bot
 
+    #@commands.command(pass_context=True)
+    #async def wololo(self, ctx):
+    #    await self.bot.say(ctx.message.server.id)
+
     @commands.command(pass_context=True)
     async def guess(self, ctx):
+        server = ctx.message.server.id
         """You need to guees hero you or your friend played that game"""
-        reply = guessing_game()
+        reply = guessing_game(server)
         await self.bot.send_file(
                 ctx.message.channel,
                 'images/lineup/itemlist2.png',

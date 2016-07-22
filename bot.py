@@ -1,10 +1,10 @@
 import discord
 from discord.ext import commands
-from token_and_api_key import token
+from token_and_api_key import token, client_id, log_chat_id
 from parsing_utils import recent_games_parser
-from cogs.utils.DotaDatabase import DotaDatabase
 import time
-
+from cogs.utils.DotaDatabase import DotaDatabase
+import asyncio
 initial_extensions = (
     'cogs.stats',
     'cogs.pro',
@@ -39,8 +39,9 @@ async def auto_parsing():
     channel = discord.Object(id=log_chat_id)
     await bot.wait_until_ready()
     while not bot.is_closed:
-        for player_id in array_of_ids:
-            reply = recent_games_parser.get_recent_matches(player_id)
+        for server in db.get_server_list():
+            for player_id in db.get_all_ids_on_server(server):
+                reply = recent_games_parser.get_recent_matches(player_id)
 
             await bot.send_message(channel, reply)
 
@@ -65,5 +66,6 @@ if __name__ == '__main__':
     launch_time = int(time.time())
     db = DotaDatabase('dota2-db')
     db.connect()
-    #bot.loop.create_task(auto_parsing())
+    bot.client_id = client_id
+    bot.loop.create_task(auto_parsing())
     bot.run(token)

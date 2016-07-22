@@ -33,6 +33,16 @@ class DotaDatabase:
         for entry in cursor:
             dic.update(entry[str(server)])
         return list(dic.values())
+
+    def get_server_list(self):
+        # there definetly should be a better way
+        servers = list(self.db['steamids'].find())
+        server_list = []
+        for entry in servers:
+            for key in entry.keys():
+                if key != '_id' and key not in server_list:
+                    server_list.append(key)
+        return server_list
     #def get_leaderboard(self, db, game, server):
 
     def add_id(self, discord_id, server, account_id):
@@ -70,7 +80,9 @@ class DotaDatabase:
         cursor.sort('start_time', sort)
         return list(cursor)
 
+
 if __name__ == '__main__':
 
     db = DotaDatabase('dota2-db')
     db.connect()
+    print(db.get_server_list())

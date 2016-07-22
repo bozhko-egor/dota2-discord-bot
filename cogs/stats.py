@@ -89,7 +89,7 @@ class Stats:
     async def game_stat(self, ctx, match_number: int):
         """End-game screen with kda and items for all players. !game_stat 0 - your last match"""
         player_id = player_dic[ctx.message.author.name]
-        reply = last_match(player_id, match_number)
+        reply = sf.last_match(player_id, match_number)
         sf.big_pic(player_id, match_number)
         await self.bot.send_file(
             ctx.message.channel,

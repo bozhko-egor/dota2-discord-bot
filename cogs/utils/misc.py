@@ -9,8 +9,9 @@ db = DotaDatabase('dota2-db')
 db.connect()
 
 
-def guessing_game():
-    player_id = array_of_ids[randint(0, len(array_of_ids)-1)]
+def guessing_game(server):
+    ids = db.get_all_ids_on_server(server)
+    player_id = ids[randint(0, len(ids)-1)]
     args = {
                 'players.account_id': player_id}
     hist = db.get_match_list(args)
