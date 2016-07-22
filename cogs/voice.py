@@ -9,7 +9,6 @@ class Voice:
     def __init__(self, bot):
         self.bot = bot
 
-
     @commands.command(pass_context=True)
     async def voice(self, ctx, *, voice_line):
         """Plays voice line into your current voice channel. No spam pls."""
@@ -18,7 +17,7 @@ class Voice:
                 voice = await self.bot.join_voice_channel(user.voice_channel)
                 player = voice.create_ffmpeg_player('audio/{}.mp3'.format(voice_line))
                 player.start()
-                time.sleep(4) #  need to change that
+                time.sleep(4)   # need to change that
                 player.stop()
                 await voice.disconnect()
         else:

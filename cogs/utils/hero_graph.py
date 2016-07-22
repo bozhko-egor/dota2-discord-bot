@@ -1,27 +1,17 @@
-import pymongo
 import math
 import matplotlib.pyplot as plt
 from .hero_dictionary import hero_dic
 import matplotlib.dates as mdates
-conn = pymongo.MongoClient()
-db = conn['dota2-db']
+from cogs.utils.DotaDatabase import DotaDatabase
+
+db = DotaDatabase('dota2-db')
+db.connect()
 
 
 def hero_per_month(player_id, hero_id):
-    match_search_args = {
-                'game_mode': {'$in': [0, 1, 2, 3, 4, 5, 12, 14, 16, 22]},
-                'duration': {'$gt': 720},
-                'players.level': {'$nin': [1, 2, 3]},
-                'players.leaver_status': {'$nin': [5, 6]},
-                'lobby_type': {'$in': [0, 5, 6, 7]}
-                }
-
-    custom_args = {
+    args = {
                 'players.account_id': player_id}
-    custom_args.update(match_search_args)
-    cursor = db['matches_all'].find(custom_args)
-    cursor.sort('start_time', 1)
-    hist = list(cursor)
+    hist = db.get_match_list(args, sort=1)
     time = hist[0]['start_time']
 
     quantity = []

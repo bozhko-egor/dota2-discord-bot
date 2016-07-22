@@ -1,16 +1,14 @@
 from token_and_api_key import *
-import pymongo
 import numpy as np
 import matplotlib.pyplot as plt
+from cogs.utils.DotaDatabase import DotaDatabase
 
-# in dire need of refactoring
-conn = pymongo.MongoClient()
-db = conn['dota2-db']
+db = DotaDatabase('dota2-db')
+db.connect()
 player_id = 56232406
-custom_args = {'match_id': 2356515163}
-cursor = db['matches_all'].find(custom_args)
-cursor.sort('start_time', -1)
-hist = list(cursor)
+args = {'match_id': 2356515163}
+
+hist = db.get_match_list(args)
 match = hist[0]
 
 level_dic = {

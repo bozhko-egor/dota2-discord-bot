@@ -4,6 +4,7 @@ from .utils.misc import guessing_game
 from random import randint
 import json
 
+
 class Game:
 
     def __init__(self, bot):

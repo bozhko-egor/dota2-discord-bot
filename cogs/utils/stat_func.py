@@ -1,4 +1,3 @@
-import pymongo
 import cv2
 import numpy as np
 from .hero_dictionary import game_mode_dic
@@ -7,17 +6,10 @@ from .hero_dictionary import item_dic
 from token_and_api_key import *
 import time
 from datetime import datetime, timedelta
+from cogs.utils.DotaDatabase import DotaDatabase
 
-conn = pymongo.MongoClient()
-db = conn['dota2-db']
-
-match_search_args = {
-            'game_mode': {'$in': [0, 1, 2, 3, 4, 5, 12, 14, 16, 22]},
-            'duration': {'$gt': 720},
-            'players.level': {'$nin': [1, 2, 3]},
-            'players.leaver_status': {'$nin': [5, 6]},
-            'lobby_type': {'$in': [0, 5, 6, 7]}
-            }
+db = DotaDatabase('dota2-db')
+db.connect()
 
 
 def time_diff(start_time):
@@ -39,18 +31,14 @@ def time_diff(start_time):
                     return "{}m {}s".format(d.minute-1, d.second-1)
 
 
-
 def my_winrate_with_player_on(player_id1, player_id2, hero_id):
-        global match_search_args
-        custom_args = {
-            'players': {
-                '$elemMatch': {"account_id": player_id2, "hero_id": hero_id}
-            },
-            'players.account_id': player_id1
-            }
-        custom_args.update(match_search_args)
-        cursor = db['matches_all'].find(custom_args)
-        hist = list(cursor)
+        args = {
+                'players': {
+                    '$elemMatch': {"account_id": player_id2, "hero_id": hero_id}
+                },
+                'players.account_id': player_id1
+                }
+        hist = db.get_match_list(args)
         k = 0
         for i, game in enumerate(hist):
             for j in range(10):
@@ -66,20 +54,17 @@ def my_winrate_with_player_on(player_id1, player_id2, hero_id):
 
 
 def winrate_with(player_id1, names):
-    global match_search_args
     ids = [
         {'players.account_id': player_id1}
         ]
-    custom_args = {'$and': ids}
+    args = {'$and': ids}
     if len(names) == 0 or len(names) > 4:
         return "Please enter valid number of names"
     else:
         for player_id in names:
-            ids.append({'players.account_id': player_id})
-    custom_args = {'$and': ids}
-    custom_args.update(match_search_args)
-    cursor = db['matches_all'].find(custom_args)
-    hist = list(cursor)
+            args['$and'].append({'players.account_id': player_id})
+
+    hist = db.get_match_list(args)
     k = 0
 
     for i, game in enumerate(hist):
@@ -98,14 +83,11 @@ def winrate_with(player_id1, names):
 
 
 def winrate_hero(player_id, hero_id):
-    global match_search_args
-    custom_args = {
+    args = {
             'players':
             {'$elemMatch': {"account_id": player_id, "hero_id": hero_id}},
             }
-    custom_args.update(match_search_args)
-    cursor = db['matches_all'].find(custom_args)
-    hist = list(cursor)
+    hist = db.get_match_list(args)
     k = 0
     for i, game in enumerate(hist):
         for j in range(10):
@@ -118,8 +100,10 @@ def winrate_hero(player_id, hero_id):
         return '{}% in {} matches'.format(round(100*k/len(hist), 2), len(hist))
     except ZeroDivisionError:
         return 'No matches found'
-def win_lose(player_id):  # in dire need of refactoring
-    global match, player_index, game_status
+
+
+def win_lose(player_id, match):  # in dire need of refactoring
+    global player_index, game_status
     array3 = []
     game_type = "Solo "
     for i in range(10):
@@ -146,16 +130,13 @@ def win_lose(player_id):  # in dire need of refactoring
 
 
 def last_match(player_id, match_number):
-    global match, match_search_args, hero_dic, item_dic, game_mode_dic
-    custom_args = {
-                'players.account_id': player_id}
-    custom_args.update(match_search_args)
-    cursor = db['matches_all'].find(custom_args)
-    cursor.sort('start_time', -1)
-    match = list(cursor)[match_number]
+    global player_index, game_status
+    args = {
+            'players.account_id': player_id}
 
+    match = db.get_match_list(args)[match_number]
     stats = {}
-    stats['result'] = win_lose(player_id)
+    stats['result'] = win_lose(player_id, match)
     # =========================== hero images
     img_empty = cv2.imread('images/heroes/empty.png', -1)
     img_dic = {}
@@ -214,7 +195,6 @@ def last_match(player_id, match_number):
 
 
 def avg_stats(player_id, number_of_games):
-    global match_search_args
     array2 = [0]*8
     array_stat = ['kills',
                   'deaths',
@@ -225,12 +205,8 @@ def avg_stats(player_id, number_of_games):
                   'xp_per_min',
                   'level'
                   ]
-    custom_args = {
-                'players.account_id': player_id}
-    custom_args.update(match_search_args)
-    cursor = db['matches_all'].find(custom_args)
-    cursor.sort('start_time', -1)
-    hist = list(cursor)
+    args = {'players.account_id': player_id}
+    hist = db.get_match_list(args)
     for j in range(number_of_games):
         match = hist[j]
 
@@ -252,7 +228,6 @@ def avg_stats(player_id, number_of_games):
 
 
 def avg_stats_with_hero(player_id, hero_id):
-    global match_search_args
     array2 = [0]*8
     array_stat = ['kills',
                   'deaths',
@@ -263,13 +238,11 @@ def avg_stats_with_hero(player_id, hero_id):
                   'xp_per_min',
                   'level'
                   ]
-    custom_args = {
-            'players':
+    args = {'players':
             {'$elemMatch': {"account_id": player_id, "hero_id": hero_id}},
             }
-    custom_args.update(match_search_args)
-    cursor = db['matches_all'].find(custom_args)
-    hist = list(cursor)
+
+    hist = db.get_match_list(args)
     k = 0
 
     for m, game in enumerate(hist):
@@ -299,13 +272,9 @@ def avg_stats_with_hero(player_id, hero_id):
 
 
 def big_pic(player_id, match_number):
-    custom_args = {
-                'players.account_id': player_id}
-    custom_args.update(match_search_args)
-    cursor = db['matches_all'].find(custom_args)
-    cursor.sort('start_time', -1)
-    match = list(cursor)[match_number]
-
+    args = {
+            'players.account_id': player_id}
+    match = db.get_match_list(args)[match_number]
     array3 = []
     # radiant team
     for i in range(5):
@@ -426,15 +395,9 @@ def big_pic(player_id, match_number):
 
 # not used
 def winrate_solo(player_id):
-
-
-    custom_args = {
-                'players.account_id': player_id}
-    custom_args.update(match_search_args)
-    cursor = db['matches_all'].find(custom_args)
-    cursor.sort('start_time', -1)
-    hist = list(cursor)
-
+    args = {
+            'players.account_id': player_id}
+    hist = db.get_match_list(args)
     array2 = [0]*5
     array3 = [0]*5
     for game in hist:
@@ -468,18 +431,15 @@ def winrate_solo(player_id):
 
 def all_time_records(player_id, *hero_id):
     if not hero_id:
-        custom_args = {
-                    'players.account_id': player_id}
+        args = {
+                'players.account_id': player_id}
     else:
-        custom_args = {
-                'players':
-                {'$elemMatch': {"account_id": player_id, "hero_id": hero_id[0]}},
-                }
+        args = {
+            'players':
+            {'$elemMatch': {"account_id": player_id, "hero_id": hero_id[0]}},
+            }
 
-    custom_args.update(match_search_args)
-    cursor = db['matches_all'].find(custom_args)
-    cursor.sort('start_time', -1)
-    hist = list(cursor)
+    hist = db.get_match_list(args)
     array2 = [[0 for x in range(3)] for y in range(11)]
     array_stat = ['kills',
                   'deaths',

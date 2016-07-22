@@ -1,24 +1,19 @@
 from token_and_api_key import *
-import pymongo
 from .stat_func import big_pic
 from random import randint
 from random import shuffle
-from .stat_func import match_search_args
 from .hero_dictionary import hero_dic
+from cogs.utils.DotaDatabase import DotaDatabase
 
+db = DotaDatabase('dota2-db')
+db.connect()
 
-conn = pymongo.MongoClient()
-db = conn['dota2-db']
 
 def guessing_game():
-    global match_search_args
     player_id = array_of_ids[randint(0, len(array_of_ids)-1)]
-    custom_args = {
+    args = {
                 'players.account_id': player_id}
-    custom_args.update(match_search_args)
-    cursor = db['matches_all'].find(custom_args)
-    cursor.sort('start_time', -1)
-    hist = list(cursor)
+    hist = db.get_match_list(args)
     match_number = randint(0, len(hist)-1)
     match = hist[match_number]
     array3 = []

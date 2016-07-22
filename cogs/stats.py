@@ -1,8 +1,11 @@
 from discord.ext import commands
 import discord
 from token_and_api_key import *
-from .utils.stat_func import *
+from .utils import stat_func as sf
 from .utils.hero_graph import hero_per_month
+from .utils.hero_dictionary import hero_dic
+
+
 
 class Stats:
     """Dota-related stats"""
@@ -13,7 +16,7 @@ class Stats:
     async def last(self, ctx, *, number: int):
         """!last 0 - your last match"""
         player_id = player_dic[ctx.message.author.name]
-        reply = last_match(player_id, number)  # !last 0 == last match
+        reply = sf.last_match(player_id, number)  # !last 0 == last match
 
         await self.bot.send_file(
             ctx.message.channel, 'images/lineup/lineup.png', content=reply)
@@ -25,7 +28,7 @@ class Stats:
         """Same as !last but for any player"""
         player_id = player_dic[player_name.split()[1]]
         number = int(player_name.split()[0])
-        reply = last_match(player_id, number)
+        reply = sf.last_match(player_id, number)
 
         await self.bot.send_file(
             ctx.message.channel, 'images/lineup/lineup.png', content=reply)
@@ -36,7 +39,7 @@ class Stats:
     async def stats(self, ctx, games: int):
         """Your average stats in last <n> games"""
         player_id = player_dic[ctx.message.author.name]
-        reply = avg_stats(player_id, games)
+        reply = sf.avg_stats(player_id, games)
         await self.bot.say(reply)
 
     @commands.command(pass_context=True)
@@ -48,7 +51,7 @@ class Stats:
                 list(hero_dic.values()).index(hero_name)]
         except ValueError:
             await self.bot.say("Invalid hero name")
-        reply = winrate_hero(player_id, hero_id)
+        reply = sf.winrate_hero(player_id, hero_id)
         await self.bot.say(reply)
 
     @commands.command(pass_context=True)
@@ -58,7 +61,7 @@ class Stats:
         player_id = player_dic[ctx.message.author.name]
         for i, name in enumerate(names):
             names[i] = player_dic[name]
-        reply = winrate_with(player_id, names)
+        reply = sf.winrate_with(player_id, names)
         await self.bot.say(reply)
 
     @commands.command(pass_context=True)
@@ -70,7 +73,7 @@ class Stats:
         hero_id = list(hero_dic.keys())[list(
             hero_dic.values()).index(hero_name)]
 
-        reply = my_winrate_with_player_on(player_id, player_id2, hero_id)
+        reply = sf.my_winrate_with_player_on(player_id, player_id2, hero_id)
         await self.bot.say(reply)
 
     @commands.command(pass_context=True)
@@ -79,7 +82,7 @@ class Stats:
         player_id = player_dic[ctx.message.author.name]
         hero_id = list(hero_dic.keys())[
             list(hero_dic.values()).index(hero_name)]
-        reply = avg_stats_with_hero(player_id, hero_id)
+        reply = sf.avg_stats_with_hero(player_id, hero_id)
         await self.bot.say(reply)
 
     @commands.command(pass_context=True)
@@ -87,7 +90,7 @@ class Stats:
         """End-game screen with kda and items for all players. !game_stat 0 - your last match"""
         player_id = player_dic[ctx.message.author.name]
         reply = last_match(player_id, match_number)
-        big_pic(player_id, match_number)
+        sf.big_pic(player_id, match_number)
         await self.bot.send_file(
             ctx.message.channel,
             'images/lineup/itemlist2.png',
@@ -113,9 +116,9 @@ class Stats:
         if hero_name:
             hero_id = list(hero_dic.keys())[
                 list(hero_dic.values()).index(hero_name[0])]
-            reply = all_time_records(player_id, hero_id)
+            reply = sf.all_time_records(player_id, hero_id)
         else:
-            reply = all_time_records(player_id)
+            reply = sf.all_time_records(player_id)
         await self.bot.say(reply)
 
 

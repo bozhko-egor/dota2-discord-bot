@@ -9,7 +9,6 @@ class PRO:
     def __init__(self, bot):
         self.bot = bot
 
-
     @commands.command()
     async def pro_games(self):
         """List of live or upcoming Dota2 pro games"""

@@ -74,4 +74,3 @@ if __name__ == '__main__':
 
     db = DotaDatabase('dota2-db')
     db.connect()
-    
