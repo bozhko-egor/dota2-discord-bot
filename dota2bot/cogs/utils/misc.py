@@ -1,10 +1,10 @@
 from token_and_api_key import *
 import pymongo
-from stat_func import big_pic
+from .stat_func import big_pic
 from random import randint
 from random import shuffle
-from stat_func import match_search_args
-from hero_dictionary import hero_dic
+from .stat_func import match_search_args
+from .hero_dictionary import hero_dic
 
 
 conn = pymongo.MongoClient()

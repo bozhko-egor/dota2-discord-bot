@@ -1,9 +1,9 @@
 import pymongo
 import cv2
 import numpy as np
-from hero_dictionary import game_mode_dic
-from hero_dictionary import hero_dic
-from hero_dictionary import item_dic
+from .hero_dictionary import game_mode_dic
+from .hero_dictionary import hero_dic
+from .hero_dictionary import item_dic
 from token_and_api_key import *
 import time
 from datetime import datetime, timedelta

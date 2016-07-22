@@ -1,6 +1,6 @@
 from discord.ext import commands
 import discord
-import stat_func
+from .utils import stat_func
 
 
 class Meta:

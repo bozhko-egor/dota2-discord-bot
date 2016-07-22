@@ -1,8 +1,8 @@
 from discord.ext import commands
 import discord
 from token_and_api_key import *
-from stat_func import *
-from hero_graph import hero_per_month
+from .utils.stat_func import *
+from .utils.hero_graph import hero_per_month
 
 class Stats:
     """Dota-related stats"""

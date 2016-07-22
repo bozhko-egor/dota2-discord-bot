@@ -1,7 +1,7 @@
 import pymongo
 import math
 import matplotlib.pyplot as plt
-from hero_dictionary import hero_dic
+from .hero_dictionary import hero_dic
 import matplotlib.dates as mdates
 conn = pymongo.MongoClient()
 db = conn['dota2-db']

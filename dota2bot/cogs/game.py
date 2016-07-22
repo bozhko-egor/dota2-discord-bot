@@ -1,6 +1,6 @@
 from discord.ext import commands
 import discord
-from misc import guessing_game
+from .utils.misc import guessing_game
 from random import randint
 import json
 
@@ -51,7 +51,6 @@ class Game:
         if ctx.invoked_subcommand is None:
             await bot.say('Invalid quiz command passed...')
 
-
     @quiz.command(pass_context=True)
     async def hard(self, ctx):
         with open('ref/abil_new.json') as f:
@@ -99,7 +98,7 @@ class Game:
                 fmt.format(answer)
                 )
             return
-        if guess.content == answer:
+        if int(guess.content) == answer:
 
             await self.bot.say('Yay! You are right.')
 

@@ -1,6 +1,6 @@
 from discord.ext import commands
 import discord
-from tournament_info import get_schedule
+from .utils.tournament_info import get_schedule
 
 
 class PRO:

@@ -7,7 +7,7 @@ conn = pymongo.MongoClient()
 db = conn['dota2-db']
 
 k = 0
-ids_to_parse = [54175368, 33333138, 33996915, 56232406]
+ids_to_parse = []
 
 hero_ids = hero_dic.keys()
 for player_id in ids_to_parse:

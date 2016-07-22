@@ -1,6 +1,6 @@
 from discord.ext import commands
 import discord
-from hero_dictionary import hero_dic, item_dic
+from .utils.hero_dictionary import hero_dic, item_dic
 
 class Pics:
 

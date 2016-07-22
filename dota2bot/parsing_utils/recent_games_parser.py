@@ -40,5 +40,5 @@ def get_recent_matches(player_id):
         print('No new matches to parse')
     return p
 
-#if __name__ == '__main__':
-#    get_recent_matches()
+if __name__ == '__main__':
+    print(get_recent_matches())
