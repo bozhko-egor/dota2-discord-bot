@@ -1,10 +1,8 @@
 from token_and_api_key import *
 import numpy as np
 import matplotlib.pyplot as plt
-from cogs.utils.DotaDatabase import DotaDatabase
+from .resources import db
 
-db = DotaDatabase('dota2-db')
-db.connect()
 player_id = 56232406
 args = {'match_id': 2356515163}
 

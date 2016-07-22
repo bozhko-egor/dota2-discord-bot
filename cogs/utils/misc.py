@@ -3,10 +3,7 @@ from .stat_func import big_pic
 from random import randint
 from random import shuffle
 from .hero_dictionary import hero_dic
-from cogs.utils.DotaDatabase import DotaDatabase
-
-db = DotaDatabase('dota2-db')
-db.connect()
+from .resources import db
 
 
 def guessing_game(server):

@@ -6,10 +6,8 @@ from .hero_dictionary import item_dic
 from token_and_api_key import *
 import time
 from datetime import datetime, timedelta
-from cogs.utils.DotaDatabase import DotaDatabase
+from .resources import db
 
-db = DotaDatabase('dota2-db')
-db.connect()
 
 
 def time_diff(start_time):

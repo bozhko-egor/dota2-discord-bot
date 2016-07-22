@@ -1,9 +1,8 @@
 from token_and_api_key import *
 from .parser import Parser
-from cogs.utils.DotaDatabase import DotaDatabase
+from cogs.utils.resources import db
 
-db = DotaDatabase('dota2-db')
-db.connect()
+
 
 def get_recent_matches(player_id):
     p = 0

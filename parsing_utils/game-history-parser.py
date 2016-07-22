@@ -1,10 +1,7 @@
 from parser import Parser
 from token_and_api_key import *
 from hero_dictionary import hero_dic
-from cogs.utils.DotaDatabase import DotaDatabase
-
-db = DotaDatabase('dota2-db')
-db.connect()
+from cogs.utils.resources import db
 
 k = 0
 ids_to_parse = []

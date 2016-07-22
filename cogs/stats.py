@@ -4,6 +4,7 @@ from token_and_api_key import *
 from .utils import stat_func as sf
 from .utils.hero_graph import hero_per_month
 from .utils.hero_dictionary import hero_dic
+from .utils.resources import db
 
 
 
@@ -15,7 +16,7 @@ class Stats:
     @commands.command(pass_context=True)
     async def last(self, ctx, *, number: int):
         """!last 0 - your last match"""
-        player_id = player_dic[ctx.message.author.name]
+        player_id = db.get_acc_id(ctx.message.author.id, ctx.message.server.id)
         reply = sf.last_match(player_id, number)  # !last 0 == last match
 
         await self.bot.send_file(

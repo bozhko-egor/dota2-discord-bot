@@ -7,6 +7,7 @@ class Meta:
     def __init__(self, bot):
         self.bot = bot
 
+
     @commands.command()
     async def uptime(self):
         """Bot's current uptime"""
@@ -28,6 +29,17 @@ class Meta:
         perms.attach_files = True
         await self.bot.say(discord.utils.oauth_url(self.bot.client_id, perms))
 
+
+    @commands.command()
+    async def about(self):
+        """Tells you information about the bot itself."""
+        revision = os.popen(r'git show -s HEAD --format="%s (%cr)"').read().strip()
+        result = ['**About Me:**']
+        result.append('- Author: Егор#5310 (Discord ID: 134716781750124544)')
+        result.append('- Library: discord.py (Python)')
+        result.append('- Latest Change: {}'.format(revision))
+        result.append('- Uptime: {}'.format(stat_func.time_diff(self.bot.uptime)))
+        await self.bot.say('\n'.join(result))
 
 def setup(bot):
     bot.add_cog(Meta(bot))

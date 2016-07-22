@@ -2,10 +2,7 @@ import math
 import matplotlib.pyplot as plt
 from .hero_dictionary import hero_dic
 import matplotlib.dates as mdates
-from cogs.utils.DotaDatabase import DotaDatabase
-
-db = DotaDatabase('dota2-db')
-db.connect()
+from .resources import db
 
 
 def hero_per_month(player_id, hero_id):
