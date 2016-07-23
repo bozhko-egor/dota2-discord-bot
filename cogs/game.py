@@ -16,7 +16,7 @@ class Game:
 
     @commands.command(pass_context=True)
     async def guess(self, ctx):
-        """You need to guees hero you or your friend played that game"""
+        """You need to guess hero you or your friend played that game"""
         server = ctx.message.server.id
         reply = guessing_game(server)
         await self.bot.send_file(

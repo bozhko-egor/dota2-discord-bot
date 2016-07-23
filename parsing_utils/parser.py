@@ -67,6 +67,11 @@ class Parser:
         else:
             return data['matches']
 
+    def get_steam_info(account_id):
+        steamid64 = 76561197960265728 + int(account_id)
+        html = urlopen(get_account_info.format(api_key, steamid64)).read()
+        data = json.loads(html.decode('utf-8'))
+        return data['response']
     #def get playernumber:
 
     #def get league listing

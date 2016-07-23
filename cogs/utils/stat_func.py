@@ -5,28 +5,33 @@ from .hero_dictionary import hero_dic
 from .hero_dictionary import item_dic
 from token_and_api_key import *
 import time
-from datetime import datetime, timedelta
+import datetime
 from .resources import db
 
 
 
 def time_diff(start_time):
-    time_passed = timedelta(seconds=int(time.time() - start_time))
-    d = datetime(1, 1, 1, 1, 1, 1) + time_passed
-    if d.year-1 != 0:
-        return "{}y {}mo".format(d.year-1, d.month-1)
-    else:
-        if d.month-1 != 0:
-            return "{}mo {}d".format(
-                d.month-1, d.day-1)
+    now = int(time.time())
+    delta = now - start_time
+    hours, remainder = divmod(delta, 3600)
+    minutes, seconds = divmod(remainder, 60)
+    days, hours = divmod(hours, 24)
+    if days:
+        if days == 1:
+            fmt = '{d} day, {h} hours, {m} minutes, and {s} seconds'
         else:
-            if d.day-1 != 0:
-                return "{}d {}h".format(d.day-1, d.hour-1)
+            fmt = '{d} days, {h} hours, {m} minutes, and {s} seconds'
+
+    else:
+        if hours:
+            if hours == 1:
+                fmt = '{h} hour, {m} minutes, and {s} seconds'
             else:
-                if d.hour-1 != 0:
-                    return "{}h {}m".format(d.hour-1, d.minute-1)
-                else:
-                    return "{}m {}s".format(d.minute-1, d.second-1)
+                fmt = '{h} hours, {m} minutes, and {s} seconds'
+
+        else:
+            fmt = '{m} minutes and {s} seconds'
+    return fmt.format(d=days, h=hours, m=minutes, s=seconds)
 
 
 def my_winrate_with_player_on(player_id1, player_id2, hero_id):
@@ -177,7 +182,7 @@ def last_match(player_id, match_number):
         **match['players'][player_index])
     stats['game_mode'] = game_mode_dic[match['game_mode']]
 
-    stats['date'] = datetime.fromtimestamp(
+    stats['date'] = datetime.datetime.fromtimestamp(
         int(match['start_time'])).strftime('%d-%m-%Y %H:%M:%S')
 
     stats['time_passed'] = time_diff(match['start_time'])
