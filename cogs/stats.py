@@ -6,7 +6,7 @@ from .utils.hero_graph import hero_per_month
 from .utils.hero_dictionary import hero_dic
 from .utils.resources import db
 from csv import reader
-
+from .utils.post_game_screen import post_game
 
 class Stats:
     """Dota-related stats"""
@@ -68,7 +68,7 @@ class Stats:
     @commands.command(pass_context=True)
     async def wr_with(self, ctx, *, msg):
         """Your winrate with players (takes up to 4 arguments)"""
-        names = msg.split()
+        #NAMES!!!!!!!!!!!!!!!!
         player_id = db.get_acc_id(ctx.message.author.id, ctx.message.server.id)
         players = []
         for member in ctx.message.server.members:
@@ -145,6 +145,16 @@ class Stats:
             reply = sf.all_time_records(player_id)
         await self.bot.say(reply)
 
-
+    @commands.command(pass_context=True)
+    async def final_score(self, ctx, number: int):
+        player_id = db.get_acc_id(ctx.message.author.id, ctx.message.server.id)
+        criteria = {'players.account_id': player_id}
+        matches = db.get_match_list(criteria)
+        try:
+            match_id = matches[number]['match_id']
+        except ValueError:
+            await self.bot.say("Invalid match number")
+        post_game(match_id)
+        await self.bot.send_file(ctx.message.channel, 'images/lineup/postgame.png')
 def setup(bot):
     bot.add_cog(Stats(bot))

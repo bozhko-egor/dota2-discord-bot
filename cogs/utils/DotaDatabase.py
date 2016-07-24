@@ -34,6 +34,17 @@ class DotaDatabase:
             dic.update(entry[str(server)])
         return list(dic.values())
 
+    def update_name(self, steam_name, match_id, account_id):
+        self.db['matches_all'].update_one(
+                            {'$and':
+                                [
+                                    {'match_id': match_id},
+                                    {"players.account_id": account_id}
+                                ]
+                            },
+                            {"$set": {"players.$.personaname": steam_name}}
+                        )
+
     def get_server_list(self):
         # there definetly should be a better way
         servers = list(self.db['steamids'].find())

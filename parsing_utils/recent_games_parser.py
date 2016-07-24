@@ -28,9 +28,28 @@ def get_recent_matches(player_id):
         return "Dota 2 api is down"
     if len(match_ids) != 0:
         for i in match_ids:
-            data2 = Parser.get_match_details(i)
-            if data2:
-                db.add_match_stat(data2)
+            match = Parser.get_match_details(i)
+            if match:
+                db.add_match_stat(match)
+
+                dota_ids = []
+                for j in range(10):
+                    dota_ids.append(match['players'][j]['account_id'])
+
+                steam_arr = Parser.get_steam_info(dota_ids)
+
+                for j in range(10):
+
+                    player = match['players'][j]
+
+                    steam_name = 0
+                    for _, entry in enumerate(steam_arr):
+                        if player['account_id'] + 76561197960265728 == int(entry['steamid']):
+                            steam_name = entry['personaname']
+                    if not steam_name:
+                        steam_name = "Unknown"
+                    db.update_name(steam_name, match['match_id'], player['account_id'])
+
                 p += 1
             else:
                 return "Dota 2 api is down"

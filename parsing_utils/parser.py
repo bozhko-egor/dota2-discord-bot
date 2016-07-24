@@ -67,11 +67,23 @@ class Parser:
         else:
             return data['matches']
 
-    def get_steam_info(account_id):
-        steamid64 = 76561197960265728 + int(account_id)
-        html = urlopen(get_account_info.format(api_key, steamid64)).read()
+    def get_steam_info(account_ids):
+
+        account_ids = [x + 76561197960265728 for x in account_ids]
+        url = get_account_info
+        for ID in account_ids:
+            url += '{},'.format(str(ID))
+        html = urlopen(url.format(api_key)).read()
         data = json.loads(html.decode('utf-8'))
-        return data['response']
+        return data['response']['players']
+
+
+    def get_steam_nickname(account_ids):
+        data = Parser.get_steam_info(account_ids)
+        if data:
+            return data[0]['personaname']
+        else:
+            return "Unknown"
     #def get playernumber:
 
     #def get league listing
