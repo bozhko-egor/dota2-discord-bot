@@ -5,6 +5,7 @@ import datetime
 from token_and_api_key import *
 from .resources import db
 from .hero_dictionary import *
+
 def length_check(name, font):
     global draw
     n = 0
@@ -41,7 +42,7 @@ def fill_template(hero, item, team, match):
         for m in range(6):
             try:
                 item_name = item_dic[player['item_{}'.format(m)]]
-                
+
                 item = cv2.imread('images/items/{} icon.png'.format(item_name.lower()), -1)
                 item_list.append(item)
             except KeyError:
@@ -104,8 +105,9 @@ def post_game(match_id):
         date = datetime.datetime.fromtimestamp(
                 int(match['start_time'])).strftime('%d-%m-%Y %H:%M:%S')
 
-        write_param(269, 78, match_id, font)
-        write_param(269, 51, game_mode, font)
-        write_param(321, 78, duration, font)
-        write_param(321, 51, date, font)
-        im.save('images/lineup/postgame.png')
+    write_param(269, 78, match_id, font)
+    write_param(269, 51, game_mode, font)
+    write_param(321, 78, duration, font)
+    write_param(321, 51, date, font)
+
+    im.save('images/lineup/postgame.png')

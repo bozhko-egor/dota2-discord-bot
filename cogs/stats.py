@@ -13,16 +13,30 @@ class Stats:
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(pass_context=True)
-    async def last(self, ctx, *, number: int):
-        """!last 0 - your last match"""
+    @commands.group(pass_context=True)
+    async def last(self, ctx):
+        """!last - your last match"""
+        if ctx.invoked_subcommand is None:
+            await bot.say('Invalid sub command passed')
+
+    @last.command(pass_context=True)
+    async def brief(self, ctx):
         player_id = db.get_acc_id(ctx.message.author.id, ctx.message.server.id)
-        reply = sf.last_match(player_id, number)  # !last 0 == last match
+        reply = sf.last_match(player_id, 0)
 
         await self.bot.send_file(
             ctx.message.channel, 'images/lineup/lineup.png', content=reply)
         await self.bot.send_file(
             ctx.message.channel, 'images/lineup/itemlist.png')
+
+    @last.command(pass_context=True)
+    async def full(self, ctx):
+        player_id = db.get_acc_id(ctx.message.author.id, ctx.message.server.id)
+        criteria = {'players.account_id': player_id}
+        matches = db.get_match_list(criteria)
+        match_id = matches[0]['match_id']
+        post_game(match_id)
+        await self.bot.send_file(ctx.message.channel, 'images/lineup/postgame.png')
 
     @commands.command(pass_context=True)
     async def p_last(self, ctx, number: int, *, player_name: str):
@@ -110,18 +124,6 @@ class Stats:
         await self.bot.say(reply)
 
     @commands.command(pass_context=True)
-    async def game_stat(self, ctx, match_number: int):
-        """End-game screen with kda and items for all players. !game_stat 0 - your last match"""
-        player_id = db.get_acc_id(ctx.message.author.id, ctx.message.server.id)
-        reply = sf.last_match(player_id, match_number)
-        sf.big_pic(player_id, match_number)
-        await self.bot.send_file(
-            ctx.message.channel,
-            'images/lineup/itemlist2.png',
-            content=reply
-            )
-
-    @commands.command(pass_context=True)
     async def hero_graph(self, ctx, hero_name):
         """Graph with your number of games played as a <hero_name> per month"""
         player_id = db.get_acc_id(ctx.message.author.id, ctx.message.server.id)
@@ -146,7 +148,8 @@ class Stats:
         await self.bot.say(reply)
 
     @commands.command(pass_context=True)
-    async def final_score(self, ctx, number: int):
+    async def game_stat(self, ctx, number: int):
+        """End-game screen with kda and items for all players. !game_stat 0 - your last match"""
         player_id = db.get_acc_id(ctx.message.author.id, ctx.message.server.id)
         criteria = {'players.account_id': player_id}
         matches = db.get_match_list(criteria)
@@ -154,7 +157,9 @@ class Stats:
             match_id = matches[number]['match_id']
         except ValueError:
             await self.bot.say("Invalid match number")
-        post_game(match_id)
-        await self.bot.send_file(ctx.message.channel, 'images/lineup/postgame.png')
+        else:
+            post_game(match_id)
+            await self.bot.send_file(ctx.message.channel, 'images/lineup/postgame.png')
+
 def setup(bot):
     bot.add_cog(Stats(bot))

@@ -191,9 +191,8 @@ def last_match(player_id, match_number):
 
     # dotabuff = "http://www.dotabuff.com/matches/{}".format(last_match_id)
 
-    reply = """({game_mode}) {result} KDA: {kda}, Duration: {m}m{s}s,
-    played on {date} ({time_passed} ago), {game_status}""".format(**stats)
-    reply = reply.replace('\n', ' ')
+    reply = """{result}, KDA: {kda}, {game_status}""".format(**stats)
+    #reply = reply.replace('\n', ' ')
     return reply
 
 
@@ -273,7 +272,7 @@ def avg_stats_with_hero(player_id, hero_id):
     reply = reply.replace('\n', ' ')
     return reply
 
-
+''' # old post game_screen
 def big_pic(player_id, match_number):
     args = {
             'players.account_id': player_id}
@@ -395,7 +394,7 @@ def big_pic(player_id, match_number):
     pic2 = np.vstack(array3)
     pic3 = np.vstack([pic1, pic2])
     cv2.imwrite('images/lineup/itemlist2.png', pic3)
-
+'''
 # not used
 def winrate_solo(player_id):
     args = {

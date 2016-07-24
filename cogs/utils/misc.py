@@ -1,5 +1,4 @@
 from token_and_api_key import *
-from .stat_func import big_pic
 from random import randint
 from random import shuffle
 from .hero_dictionary import hero_dic
