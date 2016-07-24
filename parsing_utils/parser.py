@@ -84,6 +84,27 @@ class Parser:
             return data[0]['personaname']
         else:
             return "Unknown"
+
+    def get_top_streams(game_name):
+        url = get_top_twitch_streams
+
+        url += game_name.replace(' ', '+')
+        html = urlopen(url).read()
+        streams = json.loads(html.decode('utf-8'))['streams']
+
+
+        template = "{5} streams:\n\n**1.** {0}\n\n**2.** {1}\n\n**3.** {2}\n\n**4.** {3}\n\n**5.** {4}"
+        message = "{} ({}viewers) `{}`"
+        entries = []
+        for i in range(5):
+            msg_new = message.format(
+                streams[i]['channel']['status'].replace('`', "'"),
+                streams[i]['viewers'],
+                streams[i]['channel']['url']
+                )
+            entries.append(msg_new)
+        template = template.format(*entries, game_name.capitalize())
+        return template
     #def get playernumber:
 
     #def get league listing

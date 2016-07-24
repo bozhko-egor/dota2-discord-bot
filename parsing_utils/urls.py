@@ -7,3 +7,4 @@ get_games = "https://api.steampowered.com/IDOTA2Match_570/GetLiveLeagueGames/v00
 get_team_list = "https://api.steampowered.com/IDOTA2Match_570/GetTeamInfoByTeamID/v001/?key={0}"
 get_account_info = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={0}&steamids="
 get_upcoming_games = "http://dailydota2.com/match-api"
+get_top_twitch_streams = "https://api.twitch.tv/kraken/streams?game="

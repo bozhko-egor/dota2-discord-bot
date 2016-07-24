@@ -1,7 +1,7 @@
 from discord.ext import commands
 import discord
 from .utils.tournament_info import get_schedule
-
+from parsing_utils.parser import Parser
 
 class PRO:
     """Everything related to pro-games"""
@@ -14,7 +14,11 @@ class PRO:
         """List of live or upcoming Dota2 pro games"""
         await self.bot.say(get_schedule())
 
-
+    @commands.command(pass_context=True)
+    async def streams(self, ctx, *, game_name):
+        """Top 5 streams of <game> live on Twitch"""
+        reply = Parser.get_top_streams(game_name)
+        await self.bot.say(reply)
 
 
 def setup(bot):
