@@ -7,6 +7,7 @@ from .utils.hero_dictionary import hero_dic
 from .utils.resources import db
 from csv import reader
 from .utils.post_game_screen import post_game
+import shlex
 
 class Stats:
     """Dota-related stats"""
@@ -68,7 +69,7 @@ class Stats:
         await self.bot.say(reply)
 
     @commands.command(pass_context=True)
-    async def wr(self, ctx, hero_name):
+    async def wr(self, ctx, *, hero_name):
         """Your winrate playing as a <hero_name>"""
         player_id = db.get_acc_id(ctx.message.author.id, ctx.message.server.id)
         try:
@@ -83,6 +84,7 @@ class Stats:
     async def wr_with(self, ctx, *, msg):
         """Your winrate with players (takes up to 4 arguments)"""
         #NAMES!!!!!!!!!!!!!!!!
+        names = shlex.split(msg)
         player_id = db.get_acc_id(ctx.message.author.id, ctx.message.server.id)
         players = []
         for member in ctx.message.server.members:

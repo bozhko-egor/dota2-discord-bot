@@ -23,6 +23,8 @@ def get_recent_matches(player_id):
                 print("{}".format(k))
                 k += 1
             else:
+                if hist[1]['match_id'] != data['matches'][k+1]['match_id']:
+                    match_ids.append(data['matches'][k]['match_id'])  # rare ocassion of missing matches in db
                 break
     else:
         return "Dota 2 api is down"

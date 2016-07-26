@@ -44,7 +44,7 @@ async def auto_parsing():
             for player_id in db.get_all_ids_on_server(server):
                 reply = recent_games_parser.get_recent_matches(player_id)
 
-            await bot.send_message(channel, reply)
+                await bot.send_message(channel, reply)
 
         await asyncio.sleep(60*60)
 
@@ -66,5 +66,5 @@ if __name__ == '__main__':
             print('Failed to load extension {}\n{}: {}'.format(extension, type(e).__name__, e))
     launch_time = int(time.time())
     bot.client_id = client_id
-    #bot.loop.create_task(auto_parsing())
+    bot.loop.create_task(auto_parsing())
     bot.run(token)

@@ -23,7 +23,7 @@ class DotaDatabase:
         acc_id = self.db['steamids'].find_one(
             {'{}.{}'.format(str(server), str(discord_id)): {'$exists': 1}})
         if not acc_id:
-            return "No such db entry"
+            return
         return acc_id[str(server)][str(discord_id)]
 
     def get_all_ids_on_server(self, server):
@@ -91,6 +91,24 @@ class DotaDatabase:
         cursor.sort('start_time', sort)
         return list(cursor)
 
+    def get_all_ids(self):
+        servers = list(self.db['steamids'].find())
+        server_list = []
+        for entry in servers:
+            for key in entry.keys():
+                if key != '_id' and key not in server_list:
+                    server_list.append(key)
+        user_list = []
+        for server in server_list:
+            cursor = list(self.db['steamids'].find({str(server): {'$exists': 1}}))
+            dic = {}
+            for entry in cursor:
+                dic.update(entry[str(server)])
+            users = list(dic.values())
+            for user in users:
+                if user not in user_list:
+                    user_list.append(user)
+        return user_list
 
 if __name__ == '__main__':
 

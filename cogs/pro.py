@@ -4,7 +4,7 @@ from .utils.tournament_info import get_schedule
 from parsing_utils.parser import Parser
 
 class PRO:
-    """Everything related to pro-games"""
+    """Everything related to pro games"""
 
     def __init__(self, bot):
         self.bot = bot

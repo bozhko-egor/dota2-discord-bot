@@ -62,7 +62,7 @@ def winrate_with(player_id1, names):
         ]
     args = {'$and': ids}
     if len(names) == 0 or len(names) > 4:
-        return "Please enter valid number of names"
+        return "Please enter valid player name(s)"
     else:
         for player_id in names:
             args['$and'].append({'players.account_id': player_id})
