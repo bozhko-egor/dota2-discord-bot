@@ -5,6 +5,7 @@ import datetime
 from token_and_api_key import *
 from .resources import db
 from .hero_dictionary import *
+from random import randint
 
 def length_check(name, font):
     global draw
@@ -30,7 +31,9 @@ def fill_template(hero, item, team, match):
         hero_name = hero_dic[player['hero_id']]
 
         hero = cv2.imread('images/heroes/{} icon.png'.format(hero_name.lower()), -1)
-        roi = template[y + k * 36: y + 32 + k * 36, x: x + 32]
+        roi = template[
+            y + k * 36: y + 32 + k * 36,
+            x: x + 32]
         for i in range(32):
             for j in range(32):
                 if hero[i, j][3] == 255:
@@ -57,7 +60,7 @@ def fill_template(hero, item, team, match):
 def write_param(x, y, param, font):
     global draw
     length, _ = draw.textsize(param, font=font)
-    start_point = x - length if x == 269 else x
+    start_point = x - length if x in [269, 190] else x
     draw.text((start_point, y), param, font=font, fill='black')
 
 def post_game(match_id):
@@ -67,9 +70,9 @@ def post_game(match_id):
     font1 = ImageFont.truetype(font1_path, 19)
 
     if bool(match['radiant_win']):
-        template = cv2.imread('images/radiant.png', -1)
+        template = cv2.imread('images/templates/radiant.png', -1)
     else:
-        template = cv2.imread('images/dire.png', -1)
+        template = cv2.imread('images/templates/dire.png', -1)
 
     fill_template((14, 142), (309, 142), 0, match)
     fill_template((14, 375), (309, 375), 1, match)
@@ -101,6 +104,7 @@ def post_game(match_id):
         match_id = 'Match id {}'.format(match['match_id'])
         game_mode = game_mode_dic[match['game_mode']]
         m, s = divmod(match['duration'], 60)
+        s = s if len(str(s)) == 2 else "{}{}".format(0, s)  # make secons 0x format
         duration = "Duration {0}:{1}".format(m, s)
         date = datetime.datetime.fromtimestamp(
                 int(match['start_time'])).strftime('%d-%m-%Y %H:%M:%S')
@@ -111,3 +115,51 @@ def post_game(match_id):
     write_param(321, 51, date, font)
 
     im.save('images/lineup/postgame.png')
+
+
+def post_game_guess(match):
+    global draw, template
+
+    font = ImageFont.truetype(font_path, 19)
+    font1 = ImageFont.truetype(font1_path, 19)
+
+    if bool(match['radiant_win']):
+        template = cv2.imread('images/templates/game_radiant.png', -1)
+    else:
+        template = cv2.imread('images/templates/game_dire.png', -1)
+
+    fill_template((14, 142), (152, 142), 0, match)
+    fill_template((14, 375), (152, 375), 1, match)
+    cv2.imwrite('images/lineup/game_postgame.png', template)
+
+    im = Image.open('images/lineup/game_postgame.png')
+    draw = ImageDraw.Draw(im)
+
+    for i in range(10):
+        player = match['players'][i]
+        y_param = 150 if i < 5 else 203
+        kda = [
+            player['kills'],
+            player['deaths'],
+            player['assists']
+            ]
+        kda = [str(x) for x in kda]
+        for j, stat in enumerate(kda):
+            length, _ = draw.textsize(str(stat), font=font1)
+            start_point = 68 - length//2 + j*31  # 68 - center of first kda number
+            draw.text((start_point, y_param + i * 36), stat, font=font1, fill='white')
+
+        match_id = 'Match {}'.format(match['match_id'])
+        game_mode = game_mode_dic[match['game_mode']]
+        m, s = divmod(match['duration'], 60)
+        s = s if len(str(s)) == 2 else "{}{}".format(0, s)  # make secons 0x format
+        duration = "Duration {0}:{1}".format(m, s)
+        date = datetime.datetime.fromtimestamp(
+                int(match['start_time'])).strftime('%d-%m-%Y %H:%M:%S')
+
+    write_param(190, 78, match_id, font)
+    write_param(190, 51, game_mode, font)
+    write_param(242, 78, duration, font)
+    write_param(242, 51, date, font)
+
+    im.save('images/lineup/game_postgame.png')

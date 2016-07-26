@@ -1,2 +1,3 @@
 token_and_api_key.py
 *.pyc
+images/lineup/*

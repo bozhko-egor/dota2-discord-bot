@@ -3,7 +3,7 @@ from random import randint
 from random import shuffle
 from .hero_dictionary import hero_dic
 from .resources import db
-
+from .post_game_screen import post_game_guess
 
 def guessing_game(server):
     ids = db.get_all_ids_on_server(server)
@@ -29,12 +29,12 @@ def guessing_game(server):
     if (player_index > 4 and match['radiant_win']) or (
         player_index < 5 and not match['radiant_win']
     ):
-        game_status = "Lost. " + game_type + ", ".join(array3)
+        game_status = game_type + ", ".join(array3)
     elif (player_index > 4 and not match['radiant_win']) or (
           player_index < 5 and match['radiant_win']
     ):
-        game_status = "Won. " + game_type + ", ".join(array3)
+        game_status = game_type + ", ".join(array3)
     hero_id = hist[match_number]['players'][player_index]['hero_id']
     hero = hero_dic[hero_id]
-    big_pic(player_id, match_number)
+    post_game_guess(match)
     return [hero, dic_reverse[player_id], game_status]
