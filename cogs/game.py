@@ -28,6 +28,7 @@ class Game:
 
     @leaderboard.command(pass_context=True, name='guess')
     async def _guess(self, ctx):
+        """Leaderboard for !guess game"""
         reply = '\n'
         for i, entry in enumerate(db.get_leaderboard(
                 ctx.message.server.id,
@@ -50,6 +51,7 @@ class Game:
 
     @leaderboard.command(pass_context=True, name='quiz-easy')
     async def _quiz1(self, ctx):
+        """Leaderboard for quiz-easy game"""
         reply = '\n'
         for i, entry in enumerate(db.get_leaderboard(
                 ctx.message.server.id,
@@ -69,6 +71,7 @@ class Game:
                     int(date)).strftime('%d-%m-%Y')
                 )
         await self.bot.say(reply)
+
     @commands.command(pass_context=True)
     async def guess(self, ctx):
         """You need to guess hero you or your friend played that game"""
@@ -146,7 +149,9 @@ class Game:
             ]
         Question = "What's the {} of the {}'s level {} {}?"
         current_streak = 0
+        pct_ = 0.25
         while True:
+            pct_ = pct_ - 0.05 if current_streak > 2 and current_streak % 3 == 0 and pct_ != 0 else pct_
             if current_streak > 0:
                 await self.bot.say('Your current streak is {}'.format(current_streak))
             while True:
@@ -190,13 +195,13 @@ class Game:
                         'quizeasy-leaderboard'
                         )
                 break
-            if int(guess.content) == answer:
+            if answer * (1-pct_) <= int(guess.content) <= answer * (1 + pct_):
 
-                await self.bot.say('Yay! You are right.')
+                await self.bot.say('Yay! You are right.({})'.format(answer))
                 current_streak += 1
             else:
                 await self.bot.say(
-                    'Nope. It is actually {}.\n Game over. Your score:{}'.format(answer, current_streak))
+                    'Nope. It is actually {} +-{}.\n Game over. Your score:{}'.format(answer, pct_*answer, current_streak))
                 if current_streak > 0:
                     db.add_leaderboard_guess(
                         ctx.message.server.id,

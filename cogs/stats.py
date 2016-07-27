@@ -39,9 +39,14 @@ class Stats:
         post_game(match_id)
         await self.bot.send_file(ctx.message.channel, 'images/lineup/postgame.png')
 
-    @commands.command(pass_context=True)
-    async def p_last(self, ctx, number: int, *, player_name: str):
+    @commands.group(pass_context=True)
+    async def p_last(self, ctx):
         """Same as !last but for another player"""
+        if ctx.invoked_subcommand is None:
+            await bot.say('Invalid sub command passed')
+
+    @p_last.command(pass_context=True, name='brief')
+    async def _brief(self, ctx, *, player_name):
         members = ctx.message.server.members
         discord_id = 0
         for member in members:
@@ -51,7 +56,7 @@ class Stats:
 
             reply = sf.last_match(
                 db.get_acc_id(discord_id, ctx.message.server.id),
-                number)
+                0)
 
             await self.bot.send_file(
                 ctx.message.channel, 'images/lineup/lineup.png', content=reply)
@@ -60,6 +65,22 @@ class Stats:
         else:
             await self.bot.say('Invalid player name')
 
+    @p_last.command(pass_context=True, name='full')
+    async def _full(self, ctx, *, player_name):
+        members = ctx.message.server.members
+        discord_id = 0
+        for member in members:
+            if player_name == member.name:
+                discord_id = member.id
+        if discord_id:
+            player_id = db.get_acc_id(discord_id, ctx.message.server.id)
+            criteria = {'players.account_id': player_id}
+            matches = db.get_match_list(criteria)
+            match_id = matches[0]['match_id']
+            post_game(match_id)
+            await self.bot.send_file(ctx.message.channel, 'images/lineup/postgame.png')
+        else:
+            await self.bot.say('Invalid player name')
 
     @commands.command(pass_context=True)
     async def stats(self, ctx, games: int):
