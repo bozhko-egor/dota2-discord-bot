@@ -1,10 +1,10 @@
-## dota2-discord-bot
-uses dota2 api to parse match history into db.
+# dota2-discord-bot
 
-dota2-bot v. 0.99a
-   
+Discord bot that provides Dota2 related utilities.
+
+
 ## List of commands:
-command prefix = !
+Command prefix = `!`
 
 1. Stats:
   - `wr`          - Your winrate playing as `hero_name`
@@ -31,7 +31,7 @@ command prefix = !
   - `uptime`      - Bot's current uptime
   - `join`        - Joins a server.
   - `about`       - Tells you information about the bot itself.
-  - `help`        - help
+  - `help`        - Help message
   - `parse_my_game_history` - Parses your game history into db
   - `add_steamid ` - Makes connection discord id - steam id
 3. PRO:
@@ -43,43 +43,51 @@ command prefix = !
   - `hero`        - `hero_name`'s icon
 5. Game:
   - `guess`       - You need to guees hero you or your friend played that game  
+<center>![Image of game guess](https://github.com/bozhko-egor/dota2-discord-bot/blob/master/images/examples/example_game.png?raw=true)</center>
   - `quiz`        - Dota-themed quiz.
-  - `leaderboard` - highscores for `game_name` on this server.
+  - `leaderboard` - Highscores for `game_name` on this server.
 6. Voice:
   - `voice`       - Plays voice line into your current voice channel. No spam pls.
 
 
-Hero icons are extracted from the game Dota 2. The copyright for it is held by Valve Corporation, who created the software.
+#Running your instance of bot
 
-##Running
-
-# Config
+## Config
 To launch your own version of bot you need to create one configuration file: `token_and_api_key.py` with lines:
 
-`api_key = "Dota2 api key here"`
+`api_key = "Dota2 api key here"` You can get one [here](https://steamcommunity.com/login/home/?goto=%2Fdev%2Fapikey)/
 
-`token = "your discord token"`
+`token = "your discord token"` You can get one [here](https://discordapp.com/developers/applications/me).
 
 `client_id = discord client id`
 
-`log_chat_id= chat id in which bot will post logs`
+`log_chat_id = chat id in which bot will post logs`
+
+`font_path = path to fonts you want to use in !game_stat` - Main text font.
+
+`font1_path` - Font of the numerals
+
+##Requirements
+1. Python 3.5+
+2. discord.py
+3. Pymongo
+4. NumPy
+5. OpenCV 3.0+
+
+## Also you need running instance of MongoDB.
+
+##Adding matches
+
+You can add your games to DB following these simple steps:
+
+1. `!add_steamid <32bit steamid>` - Makes connection connection steam id - your Discord id
+2. `!parse_my_game_history` - Parses your matches into DB. Takes about 10-15 min per 1000 games. 
+
+**NOTE: Dota2 API gives a maximum of 500 last games for each hero you play. So if you have more than 500 games as same hero bot may not be able to get full stats.**
+
+**NOTE2: Make sure you have "Expose Public Match Data" setting enabled in the Dota 2.**
 
 
-`font_path = path to fonts you want to use in !game_stat - main text`
 
-`font1_path = -  numerals`
 
-#Requirements
-1. discord.py
-2. opencv 3.0
-3. pymongo
-4. numpy
-
-# Also you need running instance of MongoDB.
-
-#Adding matches
-
-You can add your games to db following these simple steps:
-
-1. `!add_steamid <32bit steamid>` - add connection steamid-your discord id
-2.  `!parse_my_game_history` - parses your matches to db. Takes about 10-15 min per 1000 games. **NOTE: Dota2 api gives a maximum of 500 last games for each hero you play. So if you have more than 500 games as same hero bot may not be able to get full stats.**
+###Hero icons are extracted from the game Dota 2. The copyright for it is held by Valve Corporation, who created the software.
