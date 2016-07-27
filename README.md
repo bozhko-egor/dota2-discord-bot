@@ -4,20 +4,20 @@ Discord bot that provides Dota2 related utilities.
 
 
 
-Use [**this**](https://discordapp.com/oauth2/authorize?client_id=189656913246420992&scope=bot&permissions=268561414) link to invite bot to your server.
+Use [**this**](https://discordapp.com/oauth2/authorize?client_id=189656913246420992&scope=bot&permissions=268561414) link to invite the bot to your server.
 
 ##Adding matches
 
-You can add your games to bot's DB following these simple steps:
+You can add your games to the bot's DB following these simple steps:
 
-1. `!add_steamid <32bit steamid>` - Makes connection connection Steam id - your Discord id
+1. `!add_steamid <32bit steamid>` - links Steam ID to your Discord ID.
 2. `!parse_my_game_history` - Parses your matches into DB. Takes about 10-15 min per 1000 games. 
 
 **NOTE: Dota2 API gives a maximum of 500 last games for each hero you play. So if you have more than 500 games as same hero bot may not be able to get full stats.**
 
 **NOTE2: Make sure you have "Expose Public Match Data" setting enabled in the Dota 2.**
 
-**NOTE3: After successfully adding your Steam id bot will automatically parse your Dota 2 matches into db every hour**
+**NOTE3: After successfully adding your Steam id bot will automatically parse your Dota 2 matches into DB every hour**
 ## List of commands:
 Command prefix = `!`
 
@@ -54,14 +54,14 @@ Command prefix = `!`
 4. Pics:
   - `item`        - Picture of `item_name`
   - `wow`         - Eddy Wally
-  - `hero`        - `hero_name`'s icon
+  - `hero`        - `hero_name` 's icon
 5. Game:
-  - `guess`       - You need to guees hero you or your friend played that game  
+  - `guess`       - You need to guess the hero you or your friend played that game  
 <center>![Image of game guess](https://github.com/bozhko-egor/dota2-discord-bot/blob/master/images/examples/example_game.png?raw=true)</center>
   - `quiz`        - Dota-themed quiz.
   - `leaderboard` - Highscores for `game_name` on this server.
 6. Voice:
-  - `voice`       - Plays voice line into your current voice channel. No spam pls.
+  - `voice`       - Plays voice line into your current voice channel. no spam pls.
 
 
 #Running your instance of bot
