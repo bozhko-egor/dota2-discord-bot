@@ -39,7 +39,7 @@ class Meta:
     @commands.command()
     async def join(self):
         """Joins a server."""
-        perms = dhidden=Trueiscord.Permissions.none()
+        perms = discord.Permissions.none()
         perms.read_messages = True
         perms.send_messages = True
         perms.manage_roles = True
