@@ -170,7 +170,7 @@ class Game:
             ability_array = abilities[hero]['Abilities'][ability_number][ability][parameter].split()
             lvl = randint(0, len(ability_array) - 1) + 1
             answer = int(float(ability_array[lvl - 1]))
-            await self.bot.say(Question.format(parameter, hero, lvl, ability.replace('_',' ').capitalize()))
+            await self.bot.say(Question.format(parameter, hero, lvl, ability.replace('_', ' ').capitalize()))
 
             def guess_check(m):
                 return ctx.message.content
@@ -195,8 +195,18 @@ class Game:
                         'quizeasy-leaderboard'
                         )
                 break
-            if answer * (1-pct_) <= int(guess.content) <= answer * (1 + pct_):
 
+            if pct_*answer < pct_*100/5:
+                increment = pct_*20
+            else:
+                increment = answer * pct_
+
+            try:
+                int(guess.content)
+            except ValueError:
+                await self.bot.say('Nope. It is actually {} +-{}.\n Game over. Your score:{}'.format(answer, pct_*answer, current_streak))
+                break
+            if answer - increment <= int(guess.content) <= answer + increment:
                 await self.bot.say('Yay! You are right.({})'.format(answer))
                 current_streak += 1
             else:

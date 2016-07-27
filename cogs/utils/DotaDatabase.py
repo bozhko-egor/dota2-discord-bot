@@ -122,7 +122,7 @@ class DotaDatabase:
 
     def get_leaderboard(self, server, collection):
         cursor = self.db[collection].find({str(server): {'$exists': 1}})
-
+        cursor.sort("{}.score".format(server), -1)
         leaderboard = list(cursor)
         highscores = []
         entry = 5 if len(leaderboard) > 5 else len(leaderboard)
