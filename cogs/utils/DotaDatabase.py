@@ -1,5 +1,5 @@
 import pymongo
-
+import time
 
 class DotaDatabase:
     """class to simplify calls to db"""
@@ -109,6 +109,29 @@ class DotaDatabase:
                 if user not in user_list:
                     user_list.append(user)
         return user_list
+
+    def add_leaderboard_guess(self, server, discord_id, score, collection):
+        self.db[collection].insert_one(
+            {
+                str(server): {
+                    'discord_id': discord_id,
+                    'score': score,
+                    'date': time.time()}
+            }
+            )
+
+    def get_leaderboard(self, server, collection):
+        cursor = self.db[collection].find({str(server): {'$exists': 1}})
+
+        leaderboard = list(cursor)
+        highscores = []
+        entry = 5 if len(leaderboard) > 5 else len(leaderboard)
+        for i in range(entry):
+            highscores.append(leaderboard[i][server])
+
+        def get_key(item):
+            return item['score']
+        return sorted(highscores, key=get_key, reverse=True)
 
 if __name__ == '__main__':
 

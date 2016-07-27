@@ -9,6 +9,7 @@ from parsing_utils.game_history_parser import history_parser
 from token_and_api_key import log_chat_id
 from cogs.utils.hero_dictionary import hero_dic
 
+
 class Meta:
 
     def __init__(self, bot):
@@ -85,9 +86,9 @@ class Meta:
         else:
             await self.bot.say('Invalid player name')
 
-    @commands.command(pass_context=True)
+    @commands.command(pass_context=True, no_pm=True)
     async def add_steamid(self, ctx, steamid: int):
-        """Adds your steam id to parse_list and makes connection discord id - steam id"""
+        """Makes connection discord id - steam id"""
         discord_id = ctx.message.author.id
         reply = db.add_id(discord_id, ctx.message.server.id, steamid)
         if reply:
@@ -95,7 +96,7 @@ class Meta:
         else:
             await self.bot.say("Done!")
 
-    @commands.command(pass_context=True)
+    @commands.command(pass_context=True, no_pm=True)
     async def delete_steamid(self, ctx):
         discord_id = ctx.message.author.id
         reply = db.delete_id(discord_id, ctx.message.server.id)
@@ -128,17 +129,26 @@ class Meta:
         discord_id = ctx.message.author.id
         player_id = db.get_acc_id(discord_id, ctx.message.server.id)
         if not player_id:
-            await self.bot.say()
             await self.bot.say("No such db entry\nTry adding your steam id first `!add_steamid <steamid>`")
         else:
-            await self.bot.send_message(ctx.message.author, 'This is my current progress. I will edit the message below as i load more matches:')
+            await self.bot.send_message(ctx.message.author, 'This is current progress. I will edit the message below as i load more matches:')
             message = await self.bot.send_message(ctx.message.author, '0%')
             for hero_id in hero_dic.keys():
-                _, matches = history_parser(player_id, hero_id)
-                heroes_parsed += 1
-                count += matches
-                await self.bot.edit_message(message, '{}%'.format(int(heroes_parsed*100/111)))
+                matches = history_parser(player_id, hero_id)
+                if not matches:
+                    await self.bot.send_message(ctx.message.author, "Dota 2 API is down. Please try again later.")
+                    break
+                else:
+                    heroes_parsed += 1
+                    count += matches
+                    await self.bot.edit_message(message, '{}%'.format(int(heroes_parsed*100/111)))
             await self.bot.send_message(ctx.message.author, 'A total of {} matches were parsed'.format(count))
+
+    @commands.command(name='quit', hidden=True)
+    @checks.is_owner()
+    async def _quit(self):
+        """Quits the bot."""
+        await self.bot.logout()
 
 def setup(bot):
     bot.add_cog(Meta(bot))

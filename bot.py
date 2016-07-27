@@ -66,5 +66,5 @@ if __name__ == '__main__':
             print('Failed to load extension {}\n{}: {}'.format(extension, type(e).__name__, e))
     launch_time = int(time.time())
     bot.client_id = client_id
-    bot.loop.create_task(auto_parsing())
+    #bot.loop.create_task(auto_parsing())
     bot.run(token)
