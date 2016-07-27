@@ -3,6 +3,21 @@
 Discord bot that provides Dota2 related utilities.
 
 
+
+Use [**this**](https://discordapp.com/oauth2/authorize?client_id=189656913246420992&scope=bot&permissions=268561414) link to invite bot to your server.
+
+##Adding matches
+
+You can add your games to bot's DB following these simple steps:
+
+1. `!add_steamid <32bit steamid>` - Makes connection connection Steam id - your Discord id
+2. `!parse_my_game_history` - Parses your matches into DB. Takes about 10-15 min per 1000 games. 
+
+**NOTE: Dota2 API gives a maximum of 500 last games for each hero you play. So if you have more than 500 games as same hero bot may not be able to get full stats.**
+
+**NOTE2: Make sure you have "Expose Public Match Data" setting enabled in the Dota 2.**
+
+**NOTE3: After successfully adding your Steam id bot will automatically parse your Dota 2 matches into db every hour**
 ## List of commands:
 Command prefix = `!`
 
@@ -14,9 +29,8 @@ Command prefix = `!`
 
  ![Image of full](https://github.com/bozhko-egor/dota2-discord-bot/blob/master/images/examples/example_game.png?raw=true)
 
-      `last brief`:
- ![Image of brief](https://github.com/bozhko-egor/dota2-discord-bot/blob/master/images/examples/lineup_example.png?raw=true)
- ![Image of brief2](https://github.com/bozhko-egor/dota2-discord-bot/blob/master/images/examples/itemlist_example.png?raw=true)
+        `last brief`: 
+  ![Image of brief](https://github.com/bozhko-egor/dota2-discord-bot/blob/master/images/examples/lineup_example.png?raw=true) ![Image of brief2](https://github.com/bozhko-egor/dota2-discord-bot/blob/master/images/examples/itemlist_example.png?raw=true)
   - `stats`       - Your average stats in last `n` games
   - `p_last`      - Same as !last but for another player
   - `wr_with_hero`- Your winrate with `player` on specific `hero`
@@ -25,7 +39,7 @@ Command prefix = `!`
   - `hero_graph`  - Graph with your number of games played as a `hero_name` per month
  
   ![Image of hero_graph](https://github.com/bozhko-egor/dota2-discord-bot/blob/master/images/graphs/hero.png?raw=true)
-  - `game_stat <number>` - End-game screen with kda and items for all players for game №<number>, where 0 - your last game, -1 - your first game
+  - `game_stat <number>` - End-game screen with kda and items for all players for game №<number>, where `!game_stat 0` - your last game, `!game_stat -1` - your first game
      - `records`     - Your all-time records. Also takes <hero_name> argument for your hero-specific records.
 2. Meta:
   - `uptime`      - Bot's current uptime
@@ -76,16 +90,6 @@ To launch your own version of bot you need to create one configuration file: `to
 
 ## Also you need running instance of MongoDB.
 
-##Adding matches
-
-You can add your games to DB following these simple steps:
-
-1. `!add_steamid <32bit steamid>` - Makes connection connection steam id - your Discord id
-2. `!parse_my_game_history` - Parses your matches into DB. Takes about 10-15 min per 1000 games. 
-
-**NOTE: Dota2 API gives a maximum of 500 last games for each hero you play. So if you have more than 500 games as same hero bot may not be able to get full stats.**
-
-**NOTE2: Make sure you have "Expose Public Match Data" setting enabled in the Dota 2.**
 
 
 
