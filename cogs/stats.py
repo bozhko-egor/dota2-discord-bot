@@ -18,7 +18,7 @@ class Stats:
     async def last(self, ctx):
         """!last - your last match"""
         if ctx.invoked_subcommand is None:
-            await bot.say('Invalid sub command passed')
+            await self.bot.say('Invalid sub command passed')
 
     @last.command(pass_context=True)
     async def brief(self, ctx):

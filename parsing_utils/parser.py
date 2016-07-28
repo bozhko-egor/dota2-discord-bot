@@ -21,7 +21,7 @@ class Parser:
     def get_match_details(match_id):
         try:
             html = urlopen(get_match_url.format(match_id, api_key)).read()
-        except urllib.HTTPError:
+        except urllib.error.HTTPError:
             return
         data = json.loads(html.decode('utf-8'))
         return data['result']

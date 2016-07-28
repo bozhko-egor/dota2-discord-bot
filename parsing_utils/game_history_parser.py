@@ -52,7 +52,7 @@ def history_parser(player_id, hero_id):
                         if not steam_name:
                             steam_name = "Unknown"
                         db.update_name(steam_name, match['match_id'], player['account_id'])
-        except TypeError:
+        except (TypeError, IndexError):
             k += 1
             if k > 5:
                 return
