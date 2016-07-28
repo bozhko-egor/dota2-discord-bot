@@ -27,7 +27,7 @@ Command prefix = `!`
  
       `last full`:
 
- ![Image of full](https://github.com/bozhko-egor/dota2-discord-bot/blob/master/images/examples/example_game.png?raw=true)
+ ![Image of full](https://github.com/bozhko-egor/dota2-discord-bot/blob/master/images/examples/postgame_example.png?raw=true)
 
         `last brief`: 
   ![Image of brief](https://github.com/bozhko-egor/dota2-discord-bot/blob/master/images/examples/lineup_example.png?raw=true) ![Image of brief2](https://github.com/bozhko-egor/dota2-discord-bot/blob/master/images/examples/itemlist_example.png?raw=true)
