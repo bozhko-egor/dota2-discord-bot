@@ -18,10 +18,13 @@ def get_recent_matches(player_id):
     if data:
         k = 0
         while True:
-            if hist[0]['match_id'] != data['matches'][k]['match_id']:
-                match_ids.append(data['matches'][k]['match_id'])
-                print("{}".format(k))
-                k += 1
+            try:
+                if hist[0]['match_id'] != data['matches'][k]['match_id']:
+                    match_ids.append(data['matches'][k]['match_id'])
+                    print("{}".format(k))
+                    k += 1
+            except IndexError:
+                return
             else:
                 if hist[1]['match_id'] != data['matches'][k+1]['match_id']:
                     match_ids.append(data['matches'][k]['match_id'])  # rare ocassion of missing matches in db
