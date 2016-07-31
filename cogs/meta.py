@@ -1,6 +1,6 @@
 from discord.ext import commands
 import discord
-from .utils import stat_func, checks
+from .utils import stats_related, checks
 import os
 from .utils.resources import db
 from csv import reader
@@ -27,8 +27,6 @@ class Meta:
         message = await self.bot.say('0')
         for i in range(1, 100):
             await self.bot.edit_message(message, '{}'.format(i))
-
-
 
     @commands.command()
     async def uptime(self):
@@ -111,38 +109,6 @@ class Meta:
         with open('patchnotes.txt', 'r') as f:
             changelog = f.read()
         await self.bot.say(changelog)
-
-    @commands.command(hidden=True)
-    @checks.is_owner()
-    async def reparse_all(self):
-        channel = discord.Object(id=log_chat_id)
-        for player_id in db.get_all_ids():
-                for hero_id in hero_dic.keys():
-                    reply = history_parser(player_id, hero_id)
-                    await self.bot.send_message(channel, reply)
-
-    @commands.command(pass_context=True)
-    async def parse_my_game_history(self, ctx):
-        """Parses your game history into db"""
-        count = 0
-        heroes_parsed = 0
-        discord_id = ctx.message.author.id
-        player_id = db.get_acc_id(discord_id, ctx.message.server.id)
-        if not player_id:
-            await self.bot.say("No such db entry\nTry adding your steam id first `!add_steamid <steamid>`")
-        else:
-            await self.bot.send_message(ctx.message.author, 'This is current progress. I will edit the message below as i load more matches:')
-            message = await self.bot.send_message(ctx.message.author, '0%')
-            for hero_id in hero_dic.keys():
-                matches = history_parser(player_id, hero_id)
-                if not matches:
-                    await self.bot.send_message(ctx.message.author, "Dota 2 API is down. Please try again later.")
-                    break
-                else:
-                    heroes_parsed += 1
-                    count += matches
-                    await self.bot.edit_message(message, '{}%'.format(int(heroes_parsed*100/111)))
-            await self.bot.send_message(ctx.message.author, 'A total of {} matches were parsed'.format(count))
 
     @commands.command(name='quit', hidden=True)
     @checks.is_owner()

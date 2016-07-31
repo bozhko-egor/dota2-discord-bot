@@ -6,6 +6,8 @@ from token_and_api_key import *
 from .resources import db
 from .hero_dictionary import *
 from random import randint
+from yasp_api.matches import Match
+
 
 def length_check(name, font):
     global draw
@@ -65,7 +67,7 @@ def write_param(x, y, param, font):
 
 def post_game(match_id):
     global draw, template
-    match = db.get_match_stat(match_id)
+    match = Match(match_id).info()
     font = ImageFont.truetype(font_path, 19)
     font1 = ImageFont.truetype(font1_path, 19)
 
