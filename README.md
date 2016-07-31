@@ -2,22 +2,17 @@
 
 Discord bot that provides Dota2 related utilities.
 
+Uses YASP-API to get stats and match details.
 
 
 Use [**this**](https://discordapp.com/oauth2/authorize?client_id=189656913246420992&scope=bot&permissions=268561414) link to invite the bot to your server.
 
-##Adding matches
+All you need to do is link your Steam ID  to your Discord ID:
 
-You can add your games to the bot's DB following these simple steps:
+`!add_steamid <32bit steamid>` 
 
-1. `!add_steamid <32bit steamid>` - links Steam ID to your Discord ID.
-2. `!parse_my_game_history` - Parses your matches into DB. Takes about 10-15 min per 1000 games. 
+**NOTE: Make sure you have "Expose Public Match Data" setting enabled in the Dota 2.**
 
-**NOTE: Dota2 API gives a maximum of 500 last games for each hero you play. So if you have more than 500 games as same hero bot may not be able to get full stats.**
-
-**NOTE2: Make sure you have "Expose Public Match Data" setting enabled in the Dota 2.**
-
-**NOTE3: After successfully adding your Steam id bot will automatically parse your Dota 2 matches into DB every hour**
 ## List of commands:
 Command prefix = `!`
 
@@ -31,11 +26,9 @@ Command prefix = `!`
 
         `last brief`: 
   ![Image of brief](https://github.com/bozhko-egor/dota2-discord-bot/blob/master/images/examples/lineup_example.png?raw=true) ![Image of brief2](https://github.com/bozhko-egor/dota2-discord-bot/blob/master/images/examples/itemlist_example.png?raw=true)
-  - `stats`       - Your average stats in last `n` games
   - `p_last`      - Same as !last but for another player
   - `wr_with_hero`- Your winrate with `player` on specific `hero`
   - `wr_with`     - Your winrate with players (takes up to 4 arguments)
-  - `avg`         - Your average stats playing as a `hero_name`
   - `hero_graph`  - Graph with your number of games played as a `hero_name` per month
  
   ![Image of hero_graph](https://github.com/bozhko-egor/dota2-discord-bot/blob/master/images/graphs/hero.png?raw=true)
@@ -64,31 +57,6 @@ Command prefix = `!`
   - `voice`       - Plays voice line into your current voice channel. no spam pls.
 
 
-#Running your instance of bot
-
-## Config
-To launch your own version of bot you need to create one configuration file: `token_and_api_key.py` with lines:
-
-`api_key = "Dota2 api key here"` You can get one [here](https://steamcommunity.com/login/home/?goto=%2Fdev%2Fapikey)/
-
-`token = "your discord token"` You can get one [here](https://discordapp.com/developers/applications/me).
-
-`client_id = discord client id`
-
-`log_chat_id = chat id in which bot will post logs`
-
-`font_path = path to fonts you want to use in !game_stat` - Main text font.
-
-`font1_path` - Font of the numerals
-
-##Requirements
-1. Python 3.5+
-2. discord.py
-3. Pymongo
-4. NumPy
-5. OpenCV 3.0+
-
-## Also you need running instance of MongoDB.
 
 
 
