@@ -26,6 +26,14 @@ class DotaDatabase:
             return
         return acc_id[str(server)][str(discord_id)]
 
+    def get_discord_id(self, steamid, server):
+        cursor = list(self.db['steamids'].find({str(server): {'$exists': 1}}))
+        for entry in cursor:
+            for key, value in entry[str(server)].items():
+                if value == steamid:
+                    _id = key
+        return _id
+
     def get_all_ids_on_server(self, server):
         # there should be a better way
         cursor = list(self.db['steamids'].find({str(server): {'$exists': 1}}))

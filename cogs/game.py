@@ -81,7 +81,7 @@ class Game:
         while True:
             if current_streak > 0:
                 await self.bot.say('Your current streak is {}'.format(current_streak))
-            reply = guessing_game(server)
+            reply = guessing_game(server, ctx)
             await self.bot.send_file(
                     ctx.message.channel,
                     'images/lineup/game_postgame.png',

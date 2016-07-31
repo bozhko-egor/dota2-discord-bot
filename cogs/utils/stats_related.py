@@ -89,20 +89,23 @@ def my_winrate_with_player_on(player_id1, player_id2, hero_id):
             return 'No matches found'
 
 
-def win_lose(player_id, match):  # in dire need of refactoring
+def win_lose(player_id, match, ctx):  # in dire need of refactoring
     global player_index, game_status
     array3 = []
     game_type = "Solo "
+    ids = db.get_all_ids_on_server(ctx.message.server.id)
     for i in range(10):
         if player_id == match['players'][i]['account_id']:
             player_index = i
 
-        if match['players'][i]['account_id'] in list(player_dic.values()) and (
+        if match['players'][i]['account_id'] in ids and (
                 match['players'][i]['account_id'] != player_id):
-                game_type = "party with: "
-                array3.append('{} ({})'.format(
-                    dic_reverse[match['players'][i]['account_id']],
-                    hero_dic[match['players'][i]['hero_id']]))
+                game_type = "Party with: "
+                discord_id = db.get_discord_id(match['players'][i]['account_id'], ctx.message.server.id)
+                for member in ctx.message.server.members:
+                    if discord_id == member.id:
+                        player_name = member.name
+                array3.append('{}'.format(player_name))
     game_status = game_type + ", ".join(array3)
     if (player_index > 4 and match['radiant_win']) or (
         player_index < 5 and not match['radiant_win']
@@ -116,12 +119,12 @@ def win_lose(player_id, match):  # in dire need of refactoring
             hero_dic[match['players'][player_index]['hero_id']])
 
 
-def last_match(player_id, match_number):
+def last_match(player_id, match_number, ctx):
     global player_index, game_status
     match_id = Player(player_id).stat_func('matches')[match_number]['match_id']
     match = Match(match_id).info()
     stats = {}
-    stats['result'] = win_lose(player_id, match)
+    stats['result'] = win_lose(player_id, match, ctx)
     # =========================== hero images
     img_empty = cv2.imread('images/heroes/empty.png', -1)
     img_dic = {}

@@ -7,7 +7,7 @@ from .post_game_screen import post_game_guess
 from yasp_api.matches import Match
 from yasp_api.player import Player
 
-def guessing_game(server):
+def guessing_game(server, ctx):
     ids = db.get_all_ids_on_server(server)
     player_id = ids[randint(0, len(ids)-1)]
     hist = Player(player_id).stat_func('matches')
@@ -20,11 +20,14 @@ def guessing_game(server):
         if player_id == match['players'][i]['account_id']:
             player_index = i
 
-        if match['players'][i]['account_id'] in list(player_dic.values()) and (
+        if match['players'][i]['account_id'] in ids and (
                 match['players'][i]['account_id'] != player_id):
                 game_type = "Party with: "
-                array3.append('{}'.format(
-                    dic_reverse[match['players'][i]['account_id']]))
+                discord_id = db.get_discord_id(match['players'][i]['account_id'], ctx.message.server.id)
+                for member in ctx.message.server.members:
+                    if discord_id == member.id:
+                        player_name = member.name
+                array3.append('{}'.format(player_name))
 
     shuffle(array3)
     if (player_index > 4 and match['radiant_win']) or (
@@ -37,5 +40,11 @@ def guessing_game(server):
         game_status = game_type + ", ".join(array3)
     hero_id = match['players'][player_index]['hero_id']
     hero = hero_dic[hero_id]
+
+    discord_id_1 = db.get_discord_id(player_id, ctx.message.server.id)
+    for member in ctx.message.server.members:
+        if discord_id_1 == member.id:
+            name = member.name
     post_game_guess(match)
-    return [hero, dic_reverse[player_id], game_status]
+
+    return [hero, name, game_status]

@@ -1,6 +1,5 @@
 from discord.ext import commands
 import discord
-from token_and_api_key import *
 from .utils import stats_related as sf
 from .utils.hero_graph import hero_per_month
 from .utils.hero_dictionary import hero_dic
@@ -32,7 +31,7 @@ class Stats:
     @last.command(pass_context=True)
     async def brief(self, ctx):
         player_id = db.get_acc_id(ctx.message.author.id, ctx.message.server.id)
-        reply = sf.last_match(player_id, 0)
+        reply = sf.last_match(player_id, 0, ctx)
 
         await self.bot.send_file(
             ctx.message.channel, 'images/lineup/lineup.png', content=reply)
@@ -63,7 +62,7 @@ class Stats:
 
             reply = sf.last_match(
                 db.get_acc_id(discord_id, ctx.message.server.id),
-                0)
+                0, ctx)
             await self.bot.send_file(
                 ctx.message.channel, 'images/lineup/lineup.png', content=reply)
             await self.bot.send_file(
