@@ -86,13 +86,6 @@ class Stats:
         else:
             await self.bot.say('Invalid player name')
 
-    @commands.command(pass_context=True)################################
-    async def stats(self, ctx, games: int):
-        """Your average stats in last <n> games"""
-        player_id = db.get_acc_id(ctx.message.author.id, ctx.message.server.id)
-        reply = sf.avg_stats(player_id, games)
-        await self.bot.say(reply)
-
     @commands.command(pass_context=True)
     async def wr(self, ctx, *, hero_name):
         """Your winrate playing as a <hero_name>"""
@@ -127,7 +120,7 @@ class Stats:
         except ZeroDivisionError:
             await self.bot.say("No matches found.")
 
-    @commands.command(pass_context=True)###############
+    @commands.command(pass_context=True)
     async def wr_with_hero(self, ctx, player_name, *, hero_name):
         """Your winrate with <player> on specific <hero>"""
         player_id = db.get_acc_id(ctx.message.author.id, ctx.message.server.id)
@@ -144,15 +137,6 @@ class Stats:
             await self.bot.say(reply)
         else:
             await self.bot.say('Invalid player name')
-
-    @commands.command(pass_context=True)
-    async def avg(self, ctx, *, hero_name):
-        """Your average stats playing as a <hero_name>"""
-        player_id = db.get_acc_id(ctx.message.author.id, ctx.message.server.id)
-        hero_id = list(hero_dic.keys())[
-            list(hero_dic.values()).index(hero_name)]
-        reply = sf.avg_stats_with_hero(player_id, hero_id)
-        await self.bot.say(reply)
 
     @commands.command(pass_context=True)
     async def hero_graph(self, ctx, hero_name):
@@ -191,7 +175,7 @@ class Stats:
         stat_dic = collections.OrderedDict(stat_dic)
         if hero_name:
             try:
-                stat = "All-Time Records as {}:\n\n".format(hero_name[0])
+                stat = "All-Time Records as {}:".format(hero_name[0])
                 hero_id = list(hero_dic.keys())[
                     list(hero_dic.values()).index(hero_name[0])]
                 reply = Player(player_id).stat_func('records', hero_id=hero_id)

@@ -37,23 +37,54 @@ def time_diff(start_time):
 
 
 def my_winrate_with_player_on(player_id1, player_id2, hero_id):
-        args = {
-                'players': {
-                    '$elemMatch': {"account_id": player_id2, "hero_id": hero_id}
-                },
-                'players.account_id': player_id1
-                }
-        hist = db.get_match_list(args)
-        k = 0
-        for i, game in enumerate(hist):
-            for j in range(10):
-                if game['players'][j]['account_id'] == player_id1:
-                    if game['radiant_win'] and j < 5 or (
-                            not game['radiant_win'] and j > 4):
-                        k += 1
+        matches = Player(player_id1).stat_func(
+                'matches',
+                included_account_id=player_id2,
+                with_hero_id=hero_id
+                )
+        all_matches = 0
+        won_matches = 0
+        position_list = [
+            '0',
+            '1',
+            '2',
+            '3',
+            '4',
+            '128',
+            '129',
+            '130',
+            '131',
+            '132'
+            ]
+        for match in matches:
+            for entry in position_list:
+                try:
+                    if (match['heroes'][entry]['account_id'] == player_id2 and
+                        match['heroes'][entry]['hero_id'] == hero_id):
+
+                        all_matches += 1
+                except KeyError:
+                    pass
+        hist2 = Player(player_id1).stat_func(
+                'matches',
+                included_account_id=player_id2,
+                with_hero_id=hero_id,
+                win=1
+                )
+
+        for match in hist2:
+            for entry in position_list:
+                try:
+                    if (match['heroes'][entry]['account_id'] == player_id2 and
+                        match['heroes'][entry]['hero_id'] == hero_id):
+
+                        won_matches += 1
+                except KeyError:
+                    pass
+
         try:
             return '{}% in {} matches'.format(
-                round(100*k/len(hist), 2), len(hist))
+                round(100*won_matches/all_matches, 2), all_matches)
         except ZeroDivisionError:
             return 'No matches found'
 

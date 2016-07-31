@@ -4,15 +4,16 @@ from random import shuffle
 from .hero_dictionary import hero_dic
 from .resources import db
 from .post_game_screen import post_game_guess
+from yasp_api.matches import Match
+from yasp_api.player import Player
 
 def guessing_game(server):
     ids = db.get_all_ids_on_server(server)
     player_id = ids[randint(0, len(ids)-1)]
-    args = {
-                'players.account_id': player_id}
-    hist = db.get_match_list(args)
+    hist = Player(player_id).stat_func('matches')
     match_number = randint(0, len(hist)-1)
-    match = hist[match_number]
+    match_id = hist[match_number]['match_id']
+    match = Match(match_id).info()
     array3 = []
     game_type = "Solo."
     for i in range(10):
@@ -34,7 +35,7 @@ def guessing_game(server):
           player_index < 5 and match['radiant_win']
     ):
         game_status = game_type + ", ".join(array3)
-    hero_id = hist[match_number]['players'][player_index]['hero_id']
+    hero_id = match['players'][player_index]['hero_id']
     hero = hero_dic[hero_id]
     post_game_guess(match)
     return [hero, dic_reverse[player_id], game_status]

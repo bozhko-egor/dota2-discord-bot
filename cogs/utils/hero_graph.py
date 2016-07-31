@@ -2,15 +2,12 @@ import math
 import matplotlib.pyplot as plt
 from .hero_dictionary import hero_dic
 import matplotlib.dates as mdates
-from .resources import db
-
+from yasp_api.player import Player
 
 def hero_per_month(player_id, hero_id):
-    args = {
-                'players.account_id': player_id}
-    hist = db.get_match_list(args, sort=1)
+    hist = Player(player_id).stat_func('matches', hero_id=hero_id)
+    hist = hist[::-1]
     time = hist[0]['start_time']
-
     quantity = []
     kk = 0
     m = 0
@@ -19,15 +16,13 @@ def hero_per_month(player_id, hero_id):
     for i in hist:
 
         if i['start_time'] < time:
-            for j in range(10):
-                try:
-                    if i['players'][j]['account_id'] == player_id:
 
-                        if i['players'][j]['hero_id'] == hero_id:
-                            q += 1
-                            kk += 1
-                except:
-                        pass
+            try:
+                if i['hero_id'] == hero_id:
+                    q += 1
+                    kk += 1
+            except:
+                    pass
         else:
             time += 2592000
             quantity.append(q)

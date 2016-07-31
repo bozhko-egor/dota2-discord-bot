@@ -6,6 +6,7 @@ import json
 from .utils.resources import db
 import datetime
 
+
 class Game:
 
     def __init__(self, bot):

@@ -5,7 +5,6 @@ import os
 from .utils.resources import db
 from csv import reader
 import shlex
-from parsing_utils.game_history_parser import history_parser
 from token_and_api_key import log_chat_id
 from cogs.utils.hero_dictionary import hero_dic
 
@@ -103,7 +102,7 @@ class Meta:
         else:
             await self.bot.say("Done!")
 
-    @commands.command()
+    @commands.command(hidden=True)
     async def patchnotes(self):
         """ ???"""
         with open('patchnotes.txt', 'r') as f:

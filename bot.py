@@ -2,7 +2,6 @@ import discord
 from discord.ext import commands
 from token_and_api_key import token, client_id, log_chat_id
 import time
-from cogs.utils.resources import db
 import asyncio
 
 initial_extensions = (
