@@ -30,7 +30,7 @@ class Meta:
     @commands.command()
     async def uptime(self):
         """Bot's current uptime"""
-        reply = stat_func.time_diff(self.bot.uptime)
+        reply = stats_related.time_diff(self.bot.uptime)
         await self.bot.say(reply)
 
     @commands.command()
@@ -57,7 +57,7 @@ class Meta:
         result.append('- Library: discord.py (Python)')
         result.append('- Source code : https://github.com/bozhko-egor/dota2-discord-bot')
         result.append('- Latest Change: {}'.format(revision))
-        result.append('- Uptime: {}'.format(stat_func.time_diff(self.bot.uptime)))
+        result.append('- Uptime: {}'.format(stats_related.time_diff(self.bot.uptime)))
         await self.bot.say('\n'.join(result))
 
     @commands.command(hidden=True, pass_context=True)
