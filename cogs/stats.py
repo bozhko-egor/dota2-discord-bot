@@ -138,7 +138,7 @@ class Stats:
             await self.bot.say('Invalid player name')
 
     @commands.command(pass_context=True)
-    async def hero_graph(self, ctx, hero_name):
+    async def hero_graph(self, ctx, *, hero_name):
         """Graph with your number of games played as a <hero_name> per month"""
         player_id = db.get_acc_id(ctx.message.author.id, ctx.message.server.id)
         hero_id = list(hero_dic.keys())[
@@ -225,6 +225,53 @@ class Stats:
         else:
             post_game(match_id)
             await self.bot.send_file(ctx.message.channel, 'images/lineup/postgame.png')
+
+    @commands.group(pass_context=True)
+    async def mmr(self, ctx):
+        """2 arguments - party/solo"""
+        if ctx.invoked_subcommand is None:
+            await self.bot.say('Invalid sub command passed')
+
+    @mmr.command(pass_context=True)
+    async def solo(self, ctx):
+        """You should have it registered on YASP"""
+        players = db.get_all_ids_on_server(ctx.message.server.id)
+        array = []
+        for account_id in players:
+            rank = Player(account_id).info()['solo_competitive_rank']
+            if rank is not None:
+                for member in ctx.message.server.members:
+                    if db.get_discord_id(account_id, ctx.message.server.id) == member.id:
+                        player_name = member.name
+                array.append([player_name, int(rank)])
+        leaderboard = list(sorted(array, key=lambda t: t[1], reverse=True))
+
+        stat = 'Solo MMR leaderboard for this server:'
+
+        await self.bot.say('```{}\n{}```'.format(stat, tabulate(
+                leaderboard,
+                tablefmt="plain",
+                headers="firstrow")))
+
+    @mmr.command(pass_context=True)
+    async def party(self, ctx):
+        players = db.get_all_ids_on_server(ctx.message.server.id)
+        array = []
+        for account_id in players:
+            rank = Player(account_id).info()['competitive_rank']
+            if rank is not None:
+                for member in ctx.message.server.members:
+                    if db.get_discord_id(account_id, ctx.message.server.id) == member.id:
+                        player_name = member.name
+                array.append([player_name, int(rank)])
+        leaderboard = list(sorted(array, key=lambda t: t[1], reverse=True))
+
+        stat = 'Party MMR leaderboard for this server:'
+
+        await self.bot.say('```{}\n{}```'.format(stat, tabulate(
+                leaderboard,
+                tablefmt="plain",
+                headers="firstrow")))
 
 def setup(bot):
     bot.add_cog(Stats(bot))

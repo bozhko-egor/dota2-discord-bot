@@ -34,6 +34,11 @@ async def on_message(message):
 
 
 @bot.event
+async def on_command(command, ctx):
+    bot.commands_used += 1
+
+
+@bot.event
 async def on_ready():
     print('Logged in as')
     print(bot.user.name)
@@ -43,6 +48,7 @@ async def on_ready():
         bot.uptime = int(time.time())
 
 if __name__ == '__main__':
+    bot.commands_used = 0
     for extension in initial_extensions:
         try:
             bot.load_extension(extension)
