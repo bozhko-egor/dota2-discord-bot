@@ -13,6 +13,7 @@ import datetime
 from tabulate import tabulate
 import collections
 
+
 class Stats:
     """Dota-related stats"""
     def __init__(self, bot):
@@ -272,6 +273,12 @@ class Stats:
                 leaderboard,
                 tablefmt="plain",
                 headers="firstrow")))
+
+    @commands.command(pass_context=True)
+    async def match(self, ctx, match_id: int):
+        post_game(match_id)
+        await self.bot.send_file(ctx.message.channel, 'images/lineup/postgame.png')
+
 
 def setup(bot):
     bot.add_cog(Stats(bot))

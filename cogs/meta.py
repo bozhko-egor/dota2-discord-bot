@@ -9,6 +9,7 @@ from token_and_api_key import log_chat_id
 from cogs.utils.hero_dictionary import hero_dic
 from collections import Counter
 
+
 class Meta:
 
     def __init__(self, bot):
@@ -100,13 +101,15 @@ class Meta:
     @commands.command(pass_context=True, no_pm=True)
     async def add_steamid(self, ctx, steamid: int):
         """Makes connection discord id - steam id"""
-        discord_id = ctx.message.author.id
-        reply = db.add_id(discord_id, ctx.message.server.id, steamid)
-        if reply:
-            await self.bot.say(reply)
+        if steamid.isnumeric():
+            discord_id = ctx.message.author.id
+            reply = db.add_id(discord_id, ctx.message.server.id, steamid)
+            if reply:
+                await self.bot.say(reply)
+            else:
+                await self.bot.say("Done!")
         else:
-            await self.bot.say("Done!")
-
+            await self.bot.say("Invalid input.")
     @commands.command(pass_context=True, no_pm=True)
     async def delete_steamid(self, ctx):
         discord_id = ctx.message.author.id
