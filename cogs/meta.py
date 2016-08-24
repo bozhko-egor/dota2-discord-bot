@@ -99,11 +99,11 @@ class Meta:
             await self.bot.say('Invalid player name')
 
     @commands.command(pass_context=True, no_pm=True)
-    async def add_steamid(self, ctx, steamid: int):
+    async def add_steamid(self, ctx, steamid: str):
         """Makes connection discord id - steam id"""
-        if steamid.isnumeric():
+        if steamid.isdigit():
             discord_id = ctx.message.author.id
-            reply = db.add_id(discord_id, ctx.message.server.id, steamid)
+            reply = db.add_id(discord_id, ctx.message.server.id, int(steamid))
             if reply:
                 await self.bot.say(reply)
             else:
