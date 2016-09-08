@@ -7,8 +7,8 @@ from .utils.resources import db
 from csv import reader
 from .utils.post_game_screen import post_game
 import shlex
-from yasp_api.matches import Match
-from yasp_api.player import Player
+from opendota_api.matches import Match
+from opendota_api.player import Player
 import datetime
 from tabulate import tabulate
 import collections

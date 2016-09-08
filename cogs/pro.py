@@ -1,7 +1,7 @@
 from discord.ext import commands
 import discord
 from .utils.tournament_info import get_schedule
-from parsing_utils.parser import Parser
+from .utils.parser import *
 
 class PRO:
     """Everything related to pro games"""
@@ -17,7 +17,7 @@ class PRO:
     @commands.command(pass_context=True)
     async def streams(self, ctx, *, game_name):
         """Top 5 streams of <game> live on Twitch"""
-        reply = Parser.get_top_streams(game_name)
+        reply = get_top_streams(game_name)
         await self.bot.say(reply)
 
 

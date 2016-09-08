@@ -6,7 +6,7 @@ from token_and_api_key import *
 from .resources import db
 from .hero_dictionary import *
 from random import randint
-from yasp_api.matches import Match
+from opendota_api.matches import Match
 
 
 def length_check(name, font):

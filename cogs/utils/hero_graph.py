@@ -2,7 +2,7 @@ import math
 import matplotlib.pyplot as plt
 from .hero_dictionary import hero_dic
 import matplotlib.dates as mdates
-from yasp_api.player import Player
+from opendota_api.player import Player
 
 def hero_per_month(player_id, hero_id):
     hist = Player(player_id).stat_func('matches', hero_id=hero_id)

@@ -7,8 +7,8 @@ from token_and_api_key import *
 import time
 import datetime
 from .resources import db
-from yasp_api.matches import Match
-from yasp_api.player import Player
+from opendota_api.matches import Match
+from opendota_api.player import Player
 
 
 

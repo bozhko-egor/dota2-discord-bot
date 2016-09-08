@@ -1,8 +1,8 @@
-from parsing_utils.parser import Parser
+from .parser import *
 
 
 def get_schedule(*league_ids):
-    games = Parser.get_upcoming_matches()
+    games = get_upcoming_matches()
     live = []
     upcoming = []
     reply = ''

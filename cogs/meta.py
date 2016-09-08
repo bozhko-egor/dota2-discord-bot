@@ -119,13 +119,6 @@ class Meta:
         else:
             await self.bot.say("Done!")
 
-    @commands.command(hidden=True)
-    async def patchnotes(self):
-        """ ???"""
-        with open('patchnotes.txt', 'r') as f:
-            changelog = f.read()
-        await self.bot.say(changelog)
-
     @commands.command(name='quit', hidden=True)
     @checks.is_owner()
     async def _quit(self):

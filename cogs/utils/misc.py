@@ -4,8 +4,8 @@ from random import shuffle
 from .hero_dictionary import hero_dic
 from .resources import db
 from .post_game_screen import post_game_guess
-from yasp_api.matches import Match
-from yasp_api.player import Player
+from opendota_api.matches import Match
+from opendota_api.player import Player
 
 def guessing_game(server, ctx):
     ids = db.get_all_ids_on_server(server)
