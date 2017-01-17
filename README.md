@@ -2,7 +2,7 @@
 
 Discord bot that provides Dota2 related utilities.
 
-Uses YASP-API to get stats and match details.
+Uses [OpenDota API](https://docs.opendota.com/) to get stats and match details.
 
 
 Use [**this**](https://discordapp.com/oauth2/authorize?client_id=189656913246420992&scope=bot&permissions=268561414) link to invite the bot to your server.
