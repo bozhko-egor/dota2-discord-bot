@@ -9,7 +9,6 @@ from token_and_api_key import log_chat_id
 from cogs.utils.hero_dictionary import hero_dic
 from collections import Counter
 
-
 class Meta:
 
     def __init__(self, bot):
@@ -125,6 +124,17 @@ class Meta:
         """Quits the bot."""
         await self.bot.logout()
 
+    @commands.command(pass_context=True)
+    async def get_history(self, ctx):
+        channel = ctx.message.channel
+        logs = self.bot.logs_from(channel, limit=100000)
+        name = 'logs{}-{}.txt'.format(channel.name, channel.server.name)
+        with open(name, 'a') as f:
+            async for i in logs:
+                f.write('{} {} - {}\n'.format(i.timestamp, i.author.name, i.content))
+        await self.bot.send_file(ctx.message.channel, name)
+
+        await self.bot.say("lol")
 
 def setup(bot):
     bot.add_cog(Meta(bot))
